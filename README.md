@@ -71,10 +71,13 @@ full pipeline without any restricted data.
 
 ## Rebuild the presentation
 
+English and Korean decks share the same layout and design.
+
 ```bash
 cd ppt
 npm install pptxgenjs
-node create_deck.js   # produces HEAR-WORK_AI_AJA_public_dataset_presentation_v0.7.pptx
+node create_deck.js      # English → HEAR-WORK_AI_AJA_public_dataset_presentation_v0.7.pptx
+node create_deck_ko.js   # Korean  → HEAR-WORK_AI_AJA_public_dataset_presentation_ko_v0.7.pptx
 ```
 
 ## Ethics and safety
