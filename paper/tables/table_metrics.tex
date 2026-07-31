@@ -1,0 +1,19 @@
+\begin{table}[htbp]
+\centering
+\caption{Prespecified evaluation metrics (frozen before external validation) and illustrative synthetic-data scaffold values. Synthetic values verify pipeline wiring only and carry no epidemiological meaning; real-data estimates replace them when KNHANES/NHANES files are supplied.}
+\label{tab:metrics}
+\small
+\begin{tabular}{p{0.24\linewidth}p{0.40\linewidth}p{0.26\linewidth}}
+\toprule
+Dimension & Metric(s) & Synthetic scaffold (illustrative) \\
+\midrule
+Discrimination & AUROC, AUPRC & Tinnitus: 0.64 / 0.49 \\
+Calibration & Calibration slope \& intercept, Brier score, calibration plot & Tinnitus Brier: 0.20 \\
+Clinical utility & Decision-curve net benefit & Reported per target \\
+Interpretability & SHAP predictor importance & Reported per target \\
+Fairness & Subgroup AUROC \& calibration (sex, age, employment, noise, asymmetry) & Reported per subgroup \\
+LLM extraction & Human-verified accuracy, unsupported-output rate, harmful-output review & Clinical extension \\
+Safety layer & Red-flag recall on curated vignette set & Target $\rightarrow$ 1.0 \\
+\bottomrule
+\end{tabular}
+\end{table}

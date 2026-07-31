@@ -1,0 +1,40 @@
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  node distance=10mm and 14mm,
+  box/.style={rectangle, rounded corners, draw=black!70, thick, align=center,
+    text width=30mm, minimum height=13mm, font=\small\linespread{0.9}\selectfont},
+  data/.style={box, fill=blue!8},
+  ai/.style={box, fill=green!8},
+  safe/.style={box, fill=red!8},
+  outn/.style={box, fill=orange!10},
+  arr/.style={-{Latex[length=2.5mm]}, thick}
+]
+\node[data] (knhanes) {\textbf{Stage 1}\\KNHANES\\development};
+\node[data, right=of knhanes] (nhanes) {\textbf{Stage 2}\\NHANES\\external validation};
+\node[data, right=of nhanes] (clinic) {\textbf{Stage 3}\\Ajou Univ.\ Hospital\\clinical cohort};
+
+\node[ai, below=of knhanes] (harm) {Harmonized\\feature schema};
+\node[ai, below=of nhanes] (model) {Interpretable +\\boosted models\\(calibrated)};
+\node[ai, below=of clinic] (llm) {Open medical LLM\\schema extraction};
+
+\node[safe, below=14mm of model] (redflag) {\textbf{Deterministic}\\\textbf{red-flag layer}\\(SSNHL / neuro)};
+
+\node[outn, below=of harm] (assoc) {Weighted\\associations\\(no causal claim)};
+\node[outn, below=of llm] (explain) {Guideline-linked\\explanations\\+ model cards};
+
+\draw[arr] (knhanes) -- (nhanes);
+\draw[arr] (nhanes) -- (clinic);
+\draw[arr] (knhanes) -- (harm);
+\draw[arr] (nhanes) -- (model);
+\draw[arr] (clinic) -- (llm);
+\draw[arr] (harm) -- (model);
+\draw[arr] (llm) -- (model);
+\draw[arr] (model) -- (redflag);
+\draw[arr] (harm) -- (assoc);
+\draw[arr] (llm) -- (explain);
+\draw[arr] (redflag.west) -- ++(-1.2,0) |- (explain.east);
+\end{tikzpicture}
+\caption{HEAR-WORK AI conceptual framework. Public survey data (blue) feed a harmonized schema and calibrated, interpretable models (green); an open medical language model performs schema-constrained extraction in the clinical extension. A deterministic red-flag safety layer (red) can override probabilistic output to force urgent referral, so a low predicted risk never suppresses time-critical SSNHL care. Outputs (orange) are associations and guideline-linked explanations, not diagnoses.}
+\label{fig:framework}
+\end{figure}
