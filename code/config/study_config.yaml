@@ -1,0 +1,23 @@
+study:
+  name: HEAR-WORK AI
+  primary_dataset: KNHANES
+  external_validation_dataset: NHANES
+  target_journal: American Journal of Audiology
+paths:
+  raw_knhanes: data/raw/knhanes
+  raw_nhanes: data/raw/nhanes
+  processed: data/processed
+  outputs: outputs
+analysis:
+  age_min: 40
+  age_max: 60
+  outcome_tinnitus: tinnitus_status
+  outcome_hearing: hearing_loss_pta
+  stress_variable: perceived_stress
+  survey_weight: survey_weight
+  strata: strata
+  cluster: psu
+ai:
+  model_name: google/medgemma-27b-it
+  use_llm: false
+  max_new_tokens: 512

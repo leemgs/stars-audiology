@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\caption{AI components and safety constraints}
+\label{tab:ai}
+\begin{tabular}{p{0.24\linewidth}p{0.34\linewidth}p{0.30\linewidth}}
+\toprule
+Component & Intended use & Safety constraint \\
+\midrule
+Survey harmonization & Map KNHANES/NHANES variables to common schema & Human-readable mapping file and version control \\
+Statistical baseline & Estimate adjusted associations and transparent risk scores & Survey-aware methods; no causal claims from cross-sectional data \\
+MedGemma or similar open medical LLM & Extract fixed fields from deidentified clinical notes in future cohorts & Clinician verification; no diagnosis or treatment recommendation \\
+Retrieval-augmented explanation & Draft evidence-linked explanations for researchers and clinicians & Curated sources only; unsupported outputs flagged \\
+Red-flag rule layer & Identify sudden hearing-loss or neurologic warning signs & Deterministic referral rules override probabilistic model \\
+\bottomrule
+\end{tabular}
+\end{table}

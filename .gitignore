@@ -1,1 +1,21 @@
 .env
+
+# LaTeX build intermediates (keep committed PDFs)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.toc
+
+# Node / pptx build
+ppt/node_modules/
+ppt/package-lock.json
+ppt/package.json
+
+# Python
+**/__pycache__/
+*.pyc
+
+# Data (never commit raw restricted data)
+code/data/
