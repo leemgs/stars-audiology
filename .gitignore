@@ -19,3 +19,6 @@ ppt/package.json
 
 # Data (never commit raw restricted data)
 code/data/
+
+# NHANES/KNHANES raw data (never committed)
+code/data/

@@ -42,6 +42,36 @@ auditable, not just described in prose.
 6. Validate on NHANES.
 7. Only after IRB approval, test the LLM extraction module on deidentified hospital notes.
 
+## Real NHANES results (turnkey)
+
+`src/nhanes_analysis.py` runs the **real** survey-weighted NHANES analysis and
+writes both a results JSON and a LaTeX table that the manuscript auto-includes.
+NHANES public-use files are free from the U.S. CDC (no account needed). Because
+some sandboxes block outbound access to `wwwn.cdc.gov`, either download the files
+yourself into `data/raw/nhanes/<cycle>/` or pass `--download` where access is
+allowed.
+
+```bash
+# Files needed per cycle (e.g., 2017-2018 → suffix _J):
+#   DEMO_J.XPT  AUQ_J.XPT  AUX_J.XPT  DPQ_J.XPT   (place in data/raw/nhanes/2017-2018/)
+python src/nhanes_analysis.py \
+    --cycles 2011-2012 2015-2016 2017-2018 \
+    --data-dir data/raw/nhanes \
+    --out outputs/nhanes_results.json \
+    --latex ../paper/tables/table_results.tex
+cd ../paper && bash build.sh     # the real results table now appears in the PDF
+```
+
+The estimators (Taylor-linearized survey prevalence; design-based cluster-robust
+logistic) are unit-tested for correctness:
+
+```bash
+python src/test_nhanes_analysis.py     # validates the survey math on structured data
+```
+
+KNHANES requires official KDCA approval and cannot be auto-downloaded; the same
+pipeline structure applies once approved files are provided locally.
+
 ## Safety layer
 
 The red-flag layer is deterministic and independent of any probabilistic

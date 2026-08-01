@@ -5,5 +5,25 @@ No epidemiological findings are reported in this protocol. Per the prespecified 
 \subsection{Reproducible scaffold demonstration (synthetic; not a result)}
 To show that the pipeline runs end-to-end and produces correctly structured, TRIPOD+AI-aligned outputs, the repository ships a synthetic-data demonstration. \textbf{These numbers are artifacts of randomly generated data and carry no epidemiological meaning}; they exist only to verify wiring, metric computation, and reporting format, and are deliberately kept out of the abstract and any headline. On the synthetic sample the tinnitus target yields AUROC~$\approx$~0.64, AUPRC~$\approx$~0.49, Brier~$\approx$~0.20, and the hearing-loss target yields an analogous record (Table~\ref{tab:metrics}). Substituting real KNHANES/NHANES files following the documented layout routes the identical code path to the design-consistent estimates specified above.
 
+\subsection{Real-data results (NHANES public-use)}
+The analysis code includes a complete, tested, design-based NHANES pipeline
+(\texttt{code/src/nhanes\_analysis.py}) that computes survey-weighted prevalence
+(Taylor-linearized 95\% CIs) and design-based logistic associations from the real
+CDC public-use files, and emits the table below. The estimators are unit-tested
+for correctness (\texttt{code/src/test\_nhanes\_analysis.py}); associations are
+odds ratios and are not causal.
+\IfFileExists{tables/table_results.tex}{%
+Table~\ref{tab:results} reports these estimates for adults aged 40--69 across the
+prespecified NHANES cycles.
+\input{tables/table_results}%
+}{%
+\emph{[The real NHANES results table auto-populates here once the CDC public-use
+files are placed under \texttt{code/data/raw/nhanes/} and
+\texttt{code/src/nhanes\_analysis.py} is run with \texttt{-{}-latex
+../paper/tables/table\_results.tex}. To preserve scientific integrity, no
+numbers are shown until they are produced from real data. The KNHANES analysis
+mirrors this pipeline and runs once KDCA-approved files are supplied.]}%
+}
+
 \subsection{Planned AI-component reporting}
 LLM-extracted fields will be reported with the per-field metric suite of Section~\ref{sec:ai} (exact match; precision/recall/F1; omission; span agreement; temporal/laterality/onset/duration accuracy; document-level match; run consistency; clinically significant error rate), plus clinician correction time and per-version performance. The red-flag layer will be reported per Table~\ref{tab:redflag} (dual-expert-labeled vignettes; sensitivity with 95\% CI; specificity/over-referral; subgroup and robustness), with any missed red flag audited as a critical failure and with the explicit caveat that finite-set perfection does not guarantee zero deployment misses. Model cards accompany each released model, documenting intended use (Table~\ref{tab:intended}), data provenance, subgroup metrics, and prohibitions.
