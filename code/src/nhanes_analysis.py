@@ -314,12 +314,13 @@ def derive_variables(df: pd.DataFrame) -> pd.DataFrame:
     # Occupational loud-noise exposure (AUQ300: 1=yes)
     if "AUQ300" in df:
         out["occ_noise"] = df["AUQ300"].map({1: 1, 2: 0})
-    # PHQ-9 depression score (items 0-3; >=10 = screen positive)
+    # PHQ-9 depression score (items 0-3; >=10 = screen positive). Preserve NaN:
+    # participants without a complete PHQ-9 must be MISSING, not counted as 0.
     items = [c for c in DPQ_ITEMS if c in df]
     if items:
         phq = df[items].replace({7: np.nan, 9: np.nan}).sum(axis=1, min_count=len(items))
         out["phq9"] = phq
-        out["depressed"] = (phq >= 10).astype(float)
+        out["depressed"] = np.where(phq.notna(), (phq >= 10).astype(float), np.nan)
     # Better/worse ear speech-frequency PTA
     r = [PTA_VARS[f][0] for f in SPEECH_FREQS if PTA_VARS[f][0] in df]
     l = [PTA_VARS[f][1] for f in SPEECH_FREQS if PTA_VARS[f][1] in df]
@@ -328,7 +329,10 @@ def derive_variables(df: pd.DataFrame) -> pd.DataFrame:
         ll = df[l].replace({888: np.nan, 666: np.nan}).mean(axis=1)
         out["better_ear_pta"] = np.minimum(rr, ll)
         out["worse_ear_pta"] = np.maximum(rr, ll)
-        out["hearing_loss"] = (out["better_ear_pta"] > 25).astype(float)
+        # Preserve NaN: participants without audiometry are MISSING, not "no loss".
+        out["hearing_loss"] = np.where(
+            out["better_ear_pta"].notna(),
+            (out["better_ear_pta"] > 25).astype(float), np.nan)
     out["age_band"] = pd.cut(out["age"], [39, 49, 59, 69], labels=["40-49", "50-59", "60-69"])
     return out
 
@@ -423,9 +427,21 @@ def main() -> None:
         flag = "" if (v in df and n > 0) else "   <-- MISSING/empty (check variable codes)"
         print(f"  {v:16s}: {n}{flag}")
 
+    try:
+        import statsmodels.api as _sm  # noqa: F401
+    except Exception:
+        print("\n*** WARNING: statsmodels is not installed, so association odds "
+              "ratios (assoc_*) will be null. Install it to get associations:\n"
+              "      python -m venv .venv && . .venv/bin/activate && "
+              "pip install statsmodels\n"
+              "  (or:  pip install --break-system-packages statsmodels)\n")
+
     res = run_analysis(df)
     res["cycles"] = args.cycles
     res["n_total_rows"] = int(len(df))
+    if res.get("assoc_tinnitus") is None:
+        print("NOTE: assoc_tinnitus is null (statsmodels missing or too few "
+              "complete cases for the adjusted model).")
 
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(res, indent=2), encoding="utf-8")
