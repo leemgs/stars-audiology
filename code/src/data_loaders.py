@@ -36,7 +36,7 @@ def calculate_pta(df: pd.DataFrame, ear_prefix: str, freqs: Iterable[str]) -> pd
 
 
 def harmonize_generic(df: pd.DataFrame, mapping: Dict[str, str], dataset_name: str) -> pd.DataFrame:
-    """Rename columns into the HEAR-WORK common schema.
+    """Rename columns into the StressEar common schema.
 
     mapping maps common_name -> dataset_specific_column.
     Missing fields are filled with NaN to make model code stable.

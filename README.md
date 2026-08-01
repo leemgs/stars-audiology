@@ -1,4 +1,4 @@
-# HEAR-WORK AI: Occupational Stress, Tinnitus, and Hearing Outcomes
+# StressEar-AI: Occupational Stress, Tinnitus, and Hearing Outcomes
 
 **Version 0.7 — American Journal of Audiology (AJA)-targeted framework / pre-analysis protocol.**
 
@@ -49,7 +49,7 @@ prospective **Ajou University Hospital** clinical extension.
 
 ```bash
 cd paper
-bash build.sh   # produces HEAR-WORK_AI_AJA_public_dataset_manuscript_v0.7.pdf
+bash build.sh   # produces StressEar-AI_AJA_public_dataset_manuscript_v0.7.pdf
 ```
 
 ## Run the code starter
@@ -76,8 +76,8 @@ English and Korean decks share the same layout and design.
 ```bash
 cd ppt
 npm install pptxgenjs
-node create_deck.js      # English → HEAR-WORK_AI_AJA_public_dataset_presentation_v0.7.pptx
-node create_deck_ko.js   # Korean  → HEAR-WORK_AI_AJA_public_dataset_presentation_ko_v0.7.pptx
+node create_deck.js      # English → StressEar-AI_AJA_public_dataset_presentation_v0.7.pptx
+node create_deck_ko.js   # Korean  → StressEar-AI_AJA_public_dataset_presentation_ko_v0.7.pptx
 ```
 
 ## Ethics and safety

@@ -3,8 +3,8 @@ const pptxgen = require('pptxgenjs');
 const pptx = new pptxgen();
 pptx.layout = 'LAYOUT_WIDE';
 pptx.author = 'Geunsik Lim and Hyun Jo';
-pptx.subject = 'HEAR-WORK AI AJA study';
-pptx.title = 'HEAR-WORK AI';
+pptx.subject = 'StressEar-AI AJA study';
+pptx.title = 'StressEar-AI';
 pptx.company = 'Sungkyunkwan University / Ajou University';
 pptx.lang = 'en-US';
 pptx.theme = {
@@ -19,7 +19,7 @@ const C = {
 };
 
 function title(slide, t, st){ slide.addText(t,{x:0.65,y:0.35,w:12,h:0.5,fontSize:28,bold:true,color:C.dark,margin:0}); if(st) slide.addText(st,{x:0.68,y:0.87,w:11.8,h:0.3,fontSize:12,color:C.gray,margin:0}); }
-function footer(slide){ slide.addText('HEAR-WORK AI | AJA-targeted public-data manuscript', {x:0.65,y:7.12,w:7,h:0.18,fontSize:8,color:C.gray,margin:0}); }
+function footer(slide){ slide.addText('StressEar-AI | AJA-targeted public-data manuscript', {x:0.65,y:7.12,w:7,h:0.18,fontSize:8,color:C.gray,margin:0}); }
 function pill(slide, text, x,y,w,color){ slide.addShape(pptx.ShapeType.roundRect,{x,y,w,h:0.34,rectRadius:0.06,fill:{color},line:{color}}); slide.addText(text,{x:x+0.08,y:y+0.08,w:w-0.16,h:0.15,fontSize:8.5,color:C.white,bold:true,align:'center',margin:0}); }
 function check(slide){ /* layout self-check hook (no-op in standalone build) */ }
 
@@ -27,7 +27,7 @@ function check(slide){ /* layout self-check hook (no-op in standalone build) */ 
 {
 let s=pptx.addSlide();
 s.background = { color: C.light };
-s.addText('HEAR-WORK AI', {x:0.7,y:0.75,w:7,h:0.7,fontSize:44,bold:true,color:C.navy,margin:0});
+s.addText('StressEar-AI', {x:0.7,y:0.75,w:7,h:0.7,fontSize:44,bold:true,color:C.navy,margin:0});
 s.addText('Public-data development and external validation framework for occupational stress, tinnitus, and hearing outcomes', {x:0.75,y:1.62,w:7.2,h:0.95,fontSize:19,color:C.dark,bold:false,breakLine:false,margin:0.02});
 pill(s,'American Journal of Audiology target',0.75,2.9,2.25,C.blue);
 pill(s,'KNHANES + NHANES',3.15,2.9,1.85,C.teal);
@@ -166,11 +166,11 @@ check(s);
 //8
 {
 let s=pptx.addSlide(); s.background={color:C.navy};
-s.addText('HEAR-WORK AI', {x:0.85,y:0.9,w:6.5,h:0.55,fontSize:38,bold:true,color:C.white,margin:0});
+s.addText('StressEar-AI', {x:0.85,y:0.9,w:6.5,h:0.55,fontSize:38,bold:true,color:C.white,margin:0});
 s.addText('Open, reproducible audiology research for tinnitus, hearing loss, stress-related exposures, and safe AI-assisted clinical learning.', {x:0.9,y:1.75,w:10.8,h:0.9,fontSize:24,color:C.white,bold:false,margin:0.02});
 s.addText('Next step: finalize variable mapping and run KNHANES/NHANES baseline analysis.', {x:0.9,y:4.95,w:9.5,h:0.4,fontSize:19,bold:true,color:'DDEEFF',margin:0});
 s.addText('Geunsik Lim · leemgs@g.skku.edu\nHyun Jo · joehyun@ajou.ac.kr', {x:0.9,y:6.15,w:6,h:0.45,fontSize:13,color:'DDEEFF',margin:0});
 check(s);
 }
 
-pptx.writeFile({ fileName: 'HEAR-WORK_AI_AJA_public_dataset_presentation_v0.7.pptx' });
+pptx.writeFile({ fileName: 'StressEar-AI_AJA_public_dataset_presentation_v0.7.pptx' });

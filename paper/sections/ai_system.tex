@@ -1,7 +1,7 @@
 \section{Open AI System and Research Acceleration}
 \label{sec:ai}
 \subsection{Motivation}
-A major barrier to audiology AI is the scarcity of harmonized, reusable clinical features. HEAR-WORK AI addresses this by publishing a transparent feature schema, reproducible public-data code, and a clinician-verification protocol. This supports a broadly shared-benefit research model: investigators can reuse the pipeline, add local cohorts, and compare models without exposing identifiable patient data.
+A major barrier to audiology AI is the scarcity of harmonized, reusable clinical features. StressEar-AI addresses this by publishing a transparent feature schema, reproducible public-data code, and a clinician-verification protocol. This supports a broadly shared-benefit research model: investigators can reuse the pipeline, add local cohorts, and compare models without exposing identifiable patient data.
 
 \subsection{Model Roles and Prohibitions}
 The AI system has four restricted roles: (1) it harmonizes variable names and labels across public datasets; (2) it trains transparent baseline models for association and calibrated risk stratification; (3) in the clinical extension, an open medical language model (e.g., MedGemma) extracts structured fields from deidentified notes using a fixed JSON schema; and (4) it drafts explanations that cite only approved study documents or clinical guidelines. The system is explicitly prohibited from diagnosing an individual patient, assigning a definitive etiology, recommending or dosing steroids, or delaying urgent referral. These prohibitions are enforced in code and documented in a model card.
