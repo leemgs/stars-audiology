@@ -203,7 +203,10 @@ def _read_xpt(path: Path) -> pd.DataFrame:
     try:
         return pd.read_sas(path, format="xport")
     except Exception:
-        import pyreadstat  # more tolerant fallback
+        try:
+            import pyreadstat  # more tolerant fallback (optional)
+        except Exception:
+            raise
         df, _ = pyreadstat.read_xport(str(path))
         return df
 
@@ -217,25 +220,33 @@ _UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
        "(KHTML, like Gecko) Chrome/124.0 Safari/537.36 StressEar-AI-research")
 
 
-def _http_download(url: str, dest: Path) -> None:
-    """Download `url` to `dest`, sending a browser User-Agent and validating that
-    the payload is a real XPORT file (CDC returns an HTML page to the default
-    Python-urllib agent)."""
+def _candidate_urls(cycle: str, stem: str) -> List[str]:
+    """Candidate CDC URLs for a NHANES file, newest layout first.
+
+    The 2024 CDC site migration moved public NHANES files from
+    ``/Nchs/Nhanes/<cycle>/<FILE>.XPT`` (now 404) to
+    ``/Nchs/Data/Nhanes/Public/<beginYear>/DataFiles/<FILE>.xpt``. We try the new
+    layout first, then the legacy one, and both cases of the extension.
+    """
+    suf = CYCLE_SUFFIX[cycle]
+    f = f"{stem}_{suf}"
+    begin = cycle.split("-")[0]
+    new = f"https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/{begin}/DataFiles"
+    return [
+        f"{new}/{f}.xpt", f"{new}/{f}.XPT",
+        f"{CDC_BASE}/{cycle}/{f}.XPT", f"{CDC_BASE}/{cycle}/{f}.xpt",
+    ]
+
+
+def _try_fetch(url: str) -> Optional[bytes]:
+    """Return XPORT bytes if `url` serves a real XPORT file, else None."""
     req = urllib.request.Request(url, headers={"User-Agent": _UA, "Accept": "*/*"})
-    with urllib.request.urlopen(req, timeout=180) as resp:
-        data = resp.read()
-    if not data.lstrip()[:20].startswith(b"HEADER RECORD"):
-        ctype = ""
-        try:
-            ctype = resp.headers.get("Content-Type", "")
-        except Exception:
-            pass
-        snippet = data[:160].decode("latin-1", "replace")
-        raise ValueError(
-            f"Server did not return an XPORT file for {url} "
-            f"(Content-Type={ctype!r}; first bytes={snippet!r}). "
-            f"If this persists, download the file in a browser and place it at {dest}.")
-    dest.write_bytes(data)
+    try:
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            data = resp.read()
+    except Exception:
+        return None
+    return data if data.lstrip()[:20].startswith(b"HEADER RECORD") else None
 
 
 def _is_valid_xpt(path: Path) -> bool:
@@ -247,16 +258,28 @@ def _is_valid_xpt(path: Path) -> bool:
 
 
 def download_cycle(cycle: str, data_dir: Path) -> None:
-    suf = CYCLE_SUFFIX[cycle]
     (data_dir / cycle).mkdir(parents=True, exist_ok=True)
     for stem in REQUIRED_FILES:
-        url = f"{CDC_BASE}/{cycle}/{stem}_{suf}.XPT"
         dest = _cycle_path(data_dir, cycle, stem)
         # Re-download if missing, empty, or a previously-saved HTML/bad file.
         if dest.exists() and dest.stat().st_size > 0 and _is_valid_xpt(dest):
             continue
-        print(f"  downloading {url}")
-        _http_download(url, dest)
+        data, tried = None, []
+        for url in _candidate_urls(cycle, stem):
+            tried.append(url)
+            print(f"  trying {url}")
+            data = _try_fetch(url)
+            if data is not None:
+                print("    -> OK (valid XPORT)")
+                break
+        if data is None:
+            raise ValueError(
+                "None of the candidate CDC URLs returned a valid XPORT file for "
+                f"{stem}_{CYCLE_SUFFIX[cycle]} ({cycle}). Tried:\n  " +
+                "\n  ".join(tried) +
+                f"\nDownload it in a browser from the NHANES data page and place it "
+                f"at {dest}, then re-run without --download.")
+        dest.write_bytes(data)
 
 
 def load_cycle(cycle: str, data_dir: Path) -> pd.DataFrame:
@@ -264,9 +287,11 @@ def load_cycle(cycle: str, data_dir: Path) -> pd.DataFrame:
     for stem in REQUIRED_FILES:
         p = _cycle_path(data_dir, cycle, stem)
         if not p.exists():
+            begin = cycle.split("-")[0]
             raise FileNotFoundError(
-                f"Missing {p}. Download {stem}_{CYCLE_SUFFIX[cycle]}.XPT from "
-                f"{CDC_BASE}/{cycle}/ or pass --download.")
+                f"Missing {p}. Pass --download, or fetch {stem}_{CYCLE_SUFFIX[cycle]}.xpt "
+                f"from https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/{begin}/DataFiles/ "
+                f"and place it there.")
         frames[stem] = _read_xpt(p)
     df = frames["DEMO"]
     for stem in ["AUQ", "AUX", "DPQ"]:
