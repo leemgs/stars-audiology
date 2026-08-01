@@ -35,12 +35,32 @@ from nhanes_analysis import svy_mean, svy_logistic
 
 
 def _read_sas(path: Path) -> pd.DataFrame:
+    """Read a KNHANES .sas7bdat file robustly.
+
+    Real KNHANES files use Korean (CP949/EUC-KR) labels and sometimes SAS
+    compression that pandas cannot decode, so we try pyreadstat first (ReadStat C
+    library; auto-detects encoding and handles compression) and fall back to
+    pandas with a few encodings. Variable NAMES (BP1, HtE_1, O_R_500, ...) are
+    ASCII and analysis uses numeric codes, so label encoding does not affect
+    results.
+    """
     try:
-        return pd.read_sas(path, format="sas7bdat", encoding="latin-1")
-    except Exception:
         import pyreadstat
         df, _ = pyreadstat.read_sas7bdat(str(path))
         return df
+    except ImportError:
+        pass  # pyreadstat not installed; fall back to pandas
+    except Exception:
+        pass  # pyreadstat present but failed; try pandas
+    last = None
+    for enc in ("cp949", "euc-kr", "latin-1"):
+        try:
+            return pd.read_sas(path, format="sas7bdat", encoding=enc)
+        except Exception as e:
+            last = e
+    raise RuntimeError(
+        f"Could not read {path}. Install the robust reader with "
+        f"`pip install --break-system-packages pyreadstat`. Last pandas error: {last}")
 
 
 def load_cycle(cycle: str, data_dir: Path, mapping: dict) -> pd.DataFrame:
