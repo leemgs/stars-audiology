@@ -1,46 +1,62 @@
 # KNHANES variable mapping for STARS.
+# ---------------------------------------------------------------------------
+# KNHANES raw microdata require official KDCA approval and cannot be
+# redistributed. The otology/audiometry examination (ENT exam: pure-tone
+# audiometry + tinnitus/hearing questions) was fielded in KNHANES IV-2..V-3,
+# i.e., survey years 2008-2012; STARS uses 2010-2012 (KNHANES V-1, V-2, V-3).
 #
-# KNHANES raw microdata require official KDCA approval and cannot be redistributed.
-# After you obtain the SAS files (.sas7bdat) for the otology/audiometry cycles,
-# place each cycle's file under code/data/raw/knhanes/<cycle>/ and fill in the
-# EXACT variable codes below from the official codebook for THOSE cycles.
+# CONFIDENCE TAGS on each field:
+#   [CONFIRMED] widely-used KNHANES code, stable across these cycles.
+#   [LIKELY]    strong candidate from published KNHANES ENT studies -- confirm.
+#   [VERIFY]    plausible but cycle-dependent -- must confirm in the codebook.
+#   [FILL]      no reliable default -- you must set it from the codebook.
+# The loader skips any field left as <FILL> or naming a column not in the data,
+# and prints a "Derived-variable coverage" report so mismatches surface loudly.
 #
-# The values below are sensible defaults based on commonly used KNHANES codes,
-# but variable names differ across cycles --- VERIFY every one against the
-# codebook. Fields marked <FILL> have no reliable default and must be set.
-#
-# Unlike NHANES, KNHANES carries a general perceived-stress item, so STARS's
-# PRIMARY exposure (perceived stress) is available here.
+# Unlike NHANES, KNHANES carries a general perceived-stress item (BP1), so this
+# is where STARS's PRIMARY perceived-stress exposure is tested.
+# ---------------------------------------------------------------------------
 
 survey_design:
-  weight: wt_tot          # examination weight (verify; often wt_itvex / wt_tot)
-  strata: kstrata         # variance stratum
-  psu: psu                # primary sampling unit
+  # IMPORTANT: the ENT/otology exam was a SUB-sample, so use the otology-exam
+  # weight KDCA supplies for these cycles, NOT the general exam weight. The exact
+  # name is cycle-specific; when pooling 2010-2012, follow KDCA's integrated-
+  # weight guidance (typically divide the year weight by the number of years).
+  weight: wt_tot          # [VERIFY] otology-exam / integrated weight (e.g., wt_ent, wt_itvex, wt_tot)
+  strata: kstrata         # [CONFIRMED] variance estimation stratum
+  psu: psu                # [CONFIRMED] primary sampling unit
 
 common:
-  age: age
-  sex: sex                # 1 = male, 2 = female
-  education: edu          # education level
-  income: ho_incm         # household income quartile
-  occupation: occp        # occupation group
-  employment: EC_stt_1    # employment status (verify)
+  age: age                # [CONFIRMED] age in years
+  sex: sex                # [CONFIRMED] 1 = male, 2 = female
+  education: edu          # [CONFIRMED] education level (categorical)
+  income: ho_incm         # [CONFIRMED] household income quartile (ho_incm5 = quintile)
+  occupation: occp        # [CONFIRMED] occupation group (reclassified)
+  employment: EC_stt_1    # [LIKELY] economic-activity/employment status
 
 exposure:
-  perceived_stress: BP1           # stress perception, 1..4 (1=very high ... 4=rarely)
-  stress_high_values: [1, 2]      # dichotomize: "high stress" = these codes
+  perceived_stress: BP1           # [CONFIRMED] 평소 스트레스 인지: 1=대단히 많이,2=많이,3=조금,4=거의 안 느낌
+  stress_high_values: [1, 2]      # dichotomize "high perceived stress" = codes 1-2
 
 mediators:
-  # PHQ-9 items if present in the cycle (else leave empty and use depressed_2wk):
-  depression_phq9_items: []       # e.g., [mh_PHQ_01, ..., mh_PHQ_09]
-  depressed_2wk: BP5              # felt sad/hopeless >= 2 weeks (1=yes, 2=no)
-  sleep_hours: Total_slp_wd       # average sleep hours (verify)
+  # PHQ-9 exists only from 2014 onward (mh_PHQ_01..09 / mh_PHQ_S); for 2010-2012
+  # use the single 2-week depressed-mood item instead.
+  depression_phq9_items: []       # [n/a for 2010-2012] e.g., [mh_PHQ_01, ..., mh_PHQ_09]
+  depressed_2wk: BP5              # [CONFIRMED] 최근 1년 2주 이상 연속 우울감: 1=예, 2=아니오
+  sleep_hours: <FILL>            # [FILL] sleep-duration var not standardized in 2010-2012 (optional; mediator only)
 
 outcomes:
-  tinnitus_item: <FILL>           # tinnitus presence question (set from codebook)
+  # KNHANES ENT-exam tinnitus/noise items use the HtE_ prefix in these cycles.
+  # These are strong candidates from published KNHANES tinnitus studies, but
+  # CONFIRM the exact code and value coding in the codebook before analysis.
+  tinnitus_item: HtE_1            # [LIKELY] 최근 1년 이명 경험: 1=있음, 2=없음
   tinnitus_yes_values: [1]
-  occupational_noise: <FILL>      # workplace loud-noise exposure question
+  bothersome_item: HtE_3          # [VERIFY] 이명으로 인한 불편/생활 지장 (bothersome tinnitus)
+  bothersome_yes_values: [2, 3]   # [VERIFY] codes indicating bother (confirm scale direction)
+  occupational_noise: HtE_5       # [VERIFY] 직업적 소음 노출(작업장 소음): 1=예, 2=아니오
 
 # Pure-tone air-conduction thresholds (dB HL) per frequency: [right_var, left_var]
+# [LIKELY] KNHANES otology uses the O_R_### / O_L_### naming for thresholds.
 audiometry:
   "500":  [O_R_500,  O_L_500]
   "1000": [O_R_1000, O_L_1000]
@@ -49,9 +65,10 @@ audiometry:
   "4000": [O_R_4000, O_L_4000]
   "6000": [O_R_6000, O_L_6000]
 speech_freqs: ["500", "1000", "2000", "4000"]
-invalid_threshold_codes: [999, 666]   # non-response / could-not-test codes
+invalid_threshold_codes: [999, 666]   # [VERIFY] non-response / could-not-test codes
 
-# Raw files per cycle (KDCA-approved, placed locally; never committed).
+# Raw files per cycle (KDCA-approved, placed locally under data-dir; not committed).
+# [VERIFY] KDCA distributes yearly SAS files; confirm exact names/case.
 files:
   "2010": {exam: HN10_ALL.sas7bdat}
   "2011": {exam: HN11_ALL.sas7bdat}

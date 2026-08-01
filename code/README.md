@@ -95,6 +95,25 @@ unit-tested on a synthetic KNHANES-shaped frame:
 python src/test_knhanes_analysis.py
 ```
 
+**The mapping is pre-filled with best-known KNHANES codes; confirm these against
+the codebook for your exact cycles (2010–2012):**
+
+| Field | Pre-filled | Confidence / action |
+|-------|-----------|---------------------|
+| `perceived_stress` | `BP1` (1–2 = high) | CONFIRMED |
+| `depressed_2wk` | `BP5` | CONFIRMED |
+| `age`,`sex`,`edu`,`ho_incm`,`occp` | as named | CONFIRMED |
+| `employment` | `EC_stt_1` | LIKELY — confirm |
+| `tinnitus_item` | `HtE_1` (1 = yes) | LIKELY — confirm code + values |
+| `bothersome_item` | `HtE_3` | VERIFY scale direction |
+| `occupational_noise` | `HtE_5` | VERIFY |
+| audiometry | `O_R_###`/`O_L_###` | LIKELY — confirm names |
+| `weight` | `wt_tot` | VERIFY — use the **otology-exam** sub-sample weight |
+| `sleep_hours` | `<FILL>` | FILL (optional; mediator only) |
+
+When you run it, the `Derived-variable coverage` printout flags any variable that
+resolved to zero non-null values (i.e., a name mismatch) so you can correct it.
+
 ## Safety layer
 
 The red-flag layer is deterministic and independent of any probabilistic

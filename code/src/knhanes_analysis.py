@@ -100,6 +100,11 @@ def derive_variables(df: pd.DataFrame, mapping: dict) -> pd.DataFrame:
         yes = set(m["outcomes"]["tinnitus_yes_values"])
         out["tinnitus"] = tin.apply(
             lambda v: 1.0 if v in yes else (np.nan if pd.isna(v) else 0.0))
+    both = _get(df, m["outcomes"].get("bothersome_item"))
+    if both is not None:
+        byes = set(m["outcomes"].get("bothersome_yes_values", []))
+        out["bothersome_tinnitus"] = both.apply(
+            lambda v: 1.0 if v in byes else (np.nan if pd.isna(v) else 0.0))
     occ = _get(df, m["outcomes"]["occupational_noise"])
     if occ is not None:
         out["occ_noise"] = occ.map({1: 1.0, 2: 0.0})
@@ -136,7 +141,8 @@ def run_analysis(df: pd.DataFrame, mapping: dict) -> dict:
                 "ci": [e.ci_low, e.ci_high], "n": e.n}
 
     res["prevalence"] = {k: prev(k) for k in
-                         ["tinnitus", "hearing_loss", "perceived_stress", "depressed"]}
+                         ["tinnitus", "bothersome_tinnitus", "hearing_loss",
+                          "perceived_stress", "depressed"]}
 
     # PRIMARY association: perceived stress -> tinnitus / hearing loss,
     # minimal sufficient adjustment set (age, sex, occupational noise).
