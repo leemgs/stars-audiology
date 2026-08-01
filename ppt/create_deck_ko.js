@@ -3,8 +3,8 @@ const pptxgen = require('pptxgenjs');
 const pptx = new pptxgen();
 pptx.layout = 'LAYOUT_WIDE';
 pptx.author = 'Geunsik Lim and Hyun Jo';
-pptx.subject = 'StressEar-AI AJA study (Korean)';
-pptx.title = 'StressEar-AI (한글판)';
+pptx.subject = 'STARS AJA study (Korean)';
+pptx.title = 'STARS (한글판)';
 pptx.company = 'Sungkyunkwan University / Ajou University';
 pptx.lang = 'ko-KR';
 pptx.theme = {
@@ -29,7 +29,7 @@ const C = {
 };
 
 function title(slide, t, st){ slide.addText(t,{x:0.65,y:0.35,w:12,h:0.5,fontSize:28,bold:true,color:C.dark,margin:0}); if(st) slide.addText(st,{x:0.68,y:0.87,w:11.8,h:0.3,fontSize:12,color:C.gray,margin:0}); }
-function footer(slide){ slide.addText('StressEar-AI | AJA 목표 공개 데이터 논문', {x:0.65,y:7.12,w:7,h:0.18,fontSize:8,color:C.gray,margin:0}); }
+function footer(slide){ slide.addText('STARS | AJA 목표 공개 데이터 논문', {x:0.65,y:7.12,w:7,h:0.18,fontSize:8,color:C.gray,margin:0}); }
 function pill(slide, text, x,y,w,color){ slide.addShape(pptx.ShapeType.roundRect,{x,y,w,h:0.34,rectRadius:0.06,fill:{color},line:{color}}); slide.addText(text,{x:x+0.08,y:y+0.08,w:w-0.16,h:0.15,fontSize:8.5,color:C.white,bold:true,align:'center',margin:0}); }
 function check(slide){ /* layout self-check hook (no-op in standalone build) */ }
 
@@ -37,7 +37,7 @@ function check(slide){ /* layout self-check hook (no-op in standalone build) */ 
 {
 let s=pptx.addSlide();
 s.background = { color: C.light };
-s.addText('StressEar-AI', {x:0.7,y:0.75,w:7,h:0.7,fontSize:44,bold:true,color:C.navy,margin:0});
+s.addText('STARS', {x:0.7,y:0.75,w:7,h:0.7,fontSize:44,bold:true,color:C.navy,margin:0});
 s.addText('사전분석 연구 프로토콜: 인지된 스트레스·근로 요인, 이명, 청력 결과', {x:0.75,y:1.62,w:7.2,h:0.95,fontSize:19,color:C.dark,bold:false,breakLine:false,margin:0.02});
 pill(s,'AJA 연구 프로토콜',0.75,2.9,1.75,C.blue);
 pill(s,'KNHANES + NHANES',2.65,2.9,1.85,C.teal);
@@ -48,7 +48,7 @@ s.addShape(pptx.ShapeType.ellipse,{x:8.25,y:4.15,w:1.55,h:1.55,fill:{color:C.ora
 s.addText('청각학', {x:8.47,y:1.52,w:1.12,h:0.2,fontSize:12,bold:true,color:C.white,align:'center',margin:0});
 s.addText('오픈\n사이언스', {x:10.47,y:3.0,w:1.0,h:0.4,fontSize:11,bold:true,color:C.white,align:'center',margin:0});
 s.addText('임상\n안전성', {x:8.47,y:4.6,w:1.1,h:0.4,fontSize:11,bold:true,color:C.white,align:'center',margin:0});
-s.addText('Geunsik Lim · Hyun Jo\n초안 v0.8 · 2026년 8월 1일', {x:0.75,y:6.55,w:6,h:0.5,fontSize:12,color:C.gray,margin:0});
+s.addText('Geunsik Lim · Hyun Jo\n초안 v0.9 · 2026년 8월 1일', {x:0.75,y:6.55,w:6,h:0.5,fontSize:12,color:C.gray,margin:0});
 check(s);
 }
 
@@ -176,11 +176,11 @@ check(s);
 //8
 {
 let s=pptx.addSlide(); s.background={color:C.navy};
-s.addText('StressEar-AI', {x:0.85,y:0.9,w:6.5,h:0.55,fontSize:38,bold:true,color:C.white,margin:0});
+s.addText('STARS', {x:0.85,y:0.9,w:6.5,h:0.55,fontSize:38,bold:true,color:C.white,margin:0});
 s.addText('이명·난청·스트레스 관련 노출과 안전한 AI 보조 임상 학습을 위한 공개·재현 가능한 청각학 연구.', {x:0.9,y:1.75,w:10.8,h:0.9,fontSize:24,color:C.white,bold:false,margin:0.02});
 s.addText('다음 단계: 변수 매핑을 확정하고 KNHANES/NHANES 기준선 분석을 실행.', {x:0.9,y:4.95,w:10.5,h:0.4,fontSize:19,bold:true,color:'DDEEFF',margin:0});
 s.addText('Geunsik Lim · leemgs@g.skku.edu\nHyun Jo · joehyun@ajou.ac.kr', {x:0.9,y:6.15,w:6,h:0.45,fontSize:13,color:'DDEEFF',margin:0});
 check(s);
 }
 
-pptx.writeFile({ fileName: 'StressEar-AI_AJA_public_dataset_presentation_ko_v0.8.pptx' });
+pptx.writeFile({ fileName: 'STARS_AJA_public_dataset_presentation_ko_v0.9.pptx' });

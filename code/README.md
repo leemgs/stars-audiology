@@ -1,6 +1,6 @@
-# StressEar-AI code
+# STARS code
 
-This folder contains the reproducible scaffold for the StressEar-AI **pre-analysis
+This folder contains the reproducible scaffold for the STARS **pre-analysis
 study protocol**. It runs end-to-end on synthetic data (no restricted files) and
 encodes the protocol's prespecified design decisions in code so the plan is
 auditable, not just described in prose.
@@ -69,8 +69,31 @@ logistic) are unit-tested for correctness:
 python src/test_nhanes_analysis.py     # validates the survey math on structured data
 ```
 
-KNHANES requires official KDCA approval and cannot be auto-downloaded; the same
-pipeline structure applies once approved files are provided locally.
+## Real KNHANES results (primary development cohort)
+
+KNHANES is the **primary** cohort because it carries a general perceived-stress
+item (NHANES does not), so it is where STARS's primary perceived-stress exposure
+is tested. KNHANES microdata require official KDCA approval and cannot be
+auto-downloaded. The loader is **mapping-driven**: complete
+`config/knhanes_mapping.yaml` from the codebook for your cycles, place the
+approved `.sas7bdat` files under `data/raw/knhanes/<cycle>/`, then run:
+
+```bash
+python src/knhanes_analysis.py \
+    --mapping config/knhanes_mapping.yaml \
+    --data-dir data/raw/knhanes --cycles 2010 2011 2012 \
+    --out outputs/knhanes_results.json \
+    --latex ../paper/tables/table_results_knhanes.tex
+cd ../paper && bash build.sh     # the KNHANES results table then appears in the PDF
+```
+
+It reuses the same validated design-based estimators as the NHANES pipeline and
+derives `perceived_stress` as the primary exposure. Derivation logic is
+unit-tested on a synthetic KNHANES-shaped frame:
+
+```bash
+python src/test_knhanes_analysis.py
+```
 
 ## Safety layer
 

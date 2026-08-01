@@ -1,4 +1,4 @@
-"""Deterministic red-flag safety layer for StressEar-AI.
+"""Deterministic red-flag safety layer for STARS.
 
 This module implements the guideline-derived safety rules described in the
 manuscript (Section: Open AI System). It is intentionally *deterministic* and

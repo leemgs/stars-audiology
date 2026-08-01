@@ -1,4 +1,4 @@
-"""Real NHANES survey-weighted analysis for StressEar-AI.
+"""Real NHANES survey-weighted analysis for STARS.
 
 This module runs the prespecified public-data analysis on **real** NHANES
 public-use files. It is written against actual NHANES file names and variable
@@ -217,7 +217,7 @@ def _cycle_path(data_dir: Path, cycle: str, stem: str) -> Path:
 
 
 _UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36 StressEar-AI-research")
+       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36 STARS-research")
 
 
 def _candidate_urls(cycle: str, stem: str) -> List[str]:

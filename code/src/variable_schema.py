@@ -1,4 +1,4 @@
-"""Common StressEar-AI variable schema.
+"""Common STARS variable schema.
 
 This module encodes, in code, the prespecified design decisions from the
 protocol (Methods): the DAG roles of each variable, the minimal vs. extended
