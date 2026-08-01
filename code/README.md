@@ -1,4 +1,4 @@
-# HEAR-WORK AI code
+# StressEar-AI code
 
 This folder contains a reproducible starter pipeline for public dataset analysis and future clinical text extraction.
 

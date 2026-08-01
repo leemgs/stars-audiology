@@ -1,5 +1,5 @@
 study:
-  name: HEAR-WORK AI
+  name: StressEar-AI
   primary_dataset: KNHANES
   external_validation_dataset: NHANES
   target_journal: American Journal of Audiology

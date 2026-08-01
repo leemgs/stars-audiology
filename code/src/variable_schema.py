@@ -1,4 +1,4 @@
-"""Common HEAR-WORK AI variable schema."""
+"""Common StressEar-AI variable schema."""
 
 COMMON_SCHEMA = {
     "person_id": "unique deidentified participant identifier",

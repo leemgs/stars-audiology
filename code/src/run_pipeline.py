@@ -1,4 +1,4 @@
-"""HEAR-WORK AI public-data pipeline starter.
+"""StressEar-AI public-data pipeline starter.
 
 The script demonstrates the intended workflow without redistributing raw data.
 When official KNHANES/NHANES files and a mapping file are supplied, replace the
