@@ -15,6 +15,29 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
+def calibration_metrics(y_true: np.ndarray, prob: np.ndarray) -> dict:
+    """Calibration-in-the-large and calibration slope, reported separately.
+
+    - calibration_in_the_large: mean(predicted) - mean(observed); 0 is ideal.
+    - calibration_slope: slope of logit(observed) ~ logit(predicted); 1 is ideal.
+      Estimated by a 1-covariate logistic regression on the linear predictor.
+    These are the external-validation calibration targets in the protocol.
+    """
+    y = np.asarray(y_true, dtype=float)
+    p = np.clip(np.asarray(prob, dtype=float), 1e-6, 1 - 1e-6)
+    citl = float(p.mean() - y.mean())
+    slope = float("nan")
+    if len(np.unique(y)) > 1:
+        lp = np.log(p / (1 - p)).reshape(-1, 1)
+        try:
+            lr = LogisticRegression(fit_intercept=True, C=1e6, max_iter=1000)
+            lr.fit(lp, y.astype(int))
+            slope = float(lr.coef_[0][0])
+        except Exception:
+            slope = float("nan")
+    return {"calibration_in_the_large": citl, "calibration_slope": slope}
+
+
 def build_baseline_pipeline(numeric: List[str], categorical: List[str]) -> Pipeline:
     pre = ColumnTransformer(
         transformers=[
@@ -41,5 +64,6 @@ def train_and_evaluate(train: pd.DataFrame, test: pd.DataFrame, outcome: str, nu
         "pr_auc": float(average_precision_score(test2[outcome].astype(int), prob)) if test2[outcome].nunique() > 1 else None,
         "brier": float(brier_score_loss(test2[outcome].astype(int), prob)) if test2[outcome].nunique() > 1 else None,
     }
+    metrics.update(calibration_metrics(test2[outcome].astype(int), prob))
     (out_dir / f"metrics_{outcome}.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
     return metrics

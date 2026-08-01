@@ -4,5 +4,7 @@
   "outcome": "tinnitus_status",
   "roc_auc": 0.6423001445982235,
   "pr_auc": 0.4927045707301929,
-  "brier": 0.20300264314070432
+  "brier": 0.20300264314070432,
+  "calibration_in_the_large": 0.011926365086711854,
+  "calibration_slope": 1.5165922534013188
 }

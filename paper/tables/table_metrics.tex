@@ -1,19 +1,20 @@
 \begin{table}[htbp]
 \centering
-\caption{Prespecified evaluation metrics (frozen before external validation) and illustrative synthetic-data scaffold values. Synthetic values verify pipeline wiring only and carry no epidemiological meaning; real-data estimates replace them when KNHANES/NHANES files are supplied.}
+\caption{Prespecified evaluation metrics (frozen before external validation). The right column shows \emph{synthetic-scaffold} values that verify pipeline wiring only: they are computed on randomly generated data, carry \textbf{no} epidemiological meaning, and must not be read as results. Real-data estimates replace them when KNHANES/NHANES files are supplied.}
 \label{tab:metrics}
 \small
-\begin{tabular}{p{0.24\linewidth}p{0.40\linewidth}p{0.26\linewidth}}
+\begin{tabular}{p{0.24\linewidth}p{0.46\linewidth}p{0.20\linewidth}}
 \toprule
-Dimension & Metric(s) & Synthetic scaffold (illustrative) \\
+Dimension & Metric(s) & \textit{Synthetic scaffold (not a result)} \\
 \midrule
-Discrimination & AUROC, AUPRC & Tinnitus: 0.64 / 0.49 \\
-Calibration & Calibration slope \& intercept, Brier score, calibration plot & Tinnitus Brier: 0.20 \\
+Discrimination & AUROC, AUPRC (unweighted and survey-weighted) & Tinnitus: 0.64 / 0.49 \\
+Calibration & Calibration-in-the-large and calibration slope, reported separately, before and after recalibration; Brier score; plots & Tinnitus Brier: 0.20 \\
+Transportability & Common-support region; case-mix-standardized performance; reduced-common vs.\ country-specific model & Reported per target \\
 Clinical utility & Decision-curve net benefit & Reported per target \\
-Interpretability & SHAP predictor importance & Reported per target \\
-Fairness & Subgroup AUROC \& calibration (sex, age, employment, noise, asymmetry) & Reported per subgroup \\
-LLM extraction & Human-verified accuracy, unsupported-output rate, harmful-output review & Clinical extension \\
-Safety layer & Red-flag recall on curated vignette set & Target $\rightarrow$ 1.0 \\
+Interpretability & SHAP importance (descriptive; caveated for correlated predictors) & Reported per target \\
+Fairness & Subgroup AUROC \& calibration: sex, age, employment, noise, asymmetry, SES, race/ethnicity & Reported per subgroup \\
+LLM extraction & Exact match; precision/recall/F1; omission; span agreement; temporal/laterality/onset/duration accuracy; doc-level match; run consistency; clinically significant error rate & Clinical extension \\
+Safety layer & Sensitivity (95\% CI); specificity/over-referral; subgroup \& robustness (Table~\ref{tab:redflag}) & Target $\rightarrow$ 1.0 \\
 \bottomrule
 \end{tabular}
 \end{table}
