@@ -1,102 +1,114 @@
 # STARS code
 
-This folder contains the reproducible scaffold for the STARS **pre-analysis
-study protocol**. It runs end-to-end on synthetic data (no restricted files) and
-encodes the protocol's prespecified design decisions in code so the plan is
-auditable, not just described in prose.
+Reproducible scaffold for the STARS **pre-analysis study protocol**. It runs
+end-to-end on synthetic data (no restricted files) and encodes the protocol's
+prespecified design decisions in code so the plan is auditable, not just
+described in prose. This README documents how to **reproduce every analysis** —
+including how to obtain the two national surveys.
 
 ## What is implemented
 
 - **Variable schema with DAG roles** (`src/variable_schema.py`): exposure /
-  confounder / mediator labels, the minimal-sufficient vs. extended adjustment
-  sets, separated endpoints, and cross-national measurement-comparability ratings
-  (with a `transportable_predictors()` filter for the common model).
+  confounder / mediator labels, minimal-sufficient vs. extended adjustment sets,
+  separated endpoints, and cross-national measurement-comparability ratings.
 - **Fixed study config** (`config/study_config.yaml`): pinned survey cycles, age
-  window (40–69), audiometry frequencies, endpoints, hearing-loss cutoffs
-  (primary 25 dB HL), external-validation plan, and fairness subgroups.
-- Dataset harmonization helpers and PTA feature derivation.
-- **Survey-aware baseline models** (`src/modeling.py`) reporting discrimination,
-  Brier, and **calibration-in-the-large and calibration slope** (separately).
-- Synthetic smoke test proving the code runs without raw medical data.
-- MedGemma-style fixed-schema clinical-text extraction template (`src/llm_extract.py`).
-- **LLM extraction evaluation** (`src/llm_eval.py`): per-field exact match,
-  precision/recall/F1, omission, evidence-span agreement, document-level match,
-  run-to-run consistency, and a referral-critical (clinically significant) error rate.
-- **Deterministic red-flag safety layer** (`src/safety.py`) with an **evaluation
-  harness** (`src/test_safety.py`) reporting sensitivity (recall), specificity,
-  over-referral, subgroup performance, vignette composition, and the finite-set caveat.
+  window (40–69), audiometry frequencies, endpoints, hearing-loss cutoffs, the
+  external-validation plan, and fairness subgroups.
+- **Design-based survey estimators** (`src/nhanes_analysis.py`): Taylor-linearized
+  weighted prevalence and cluster-robust survey logistic — reused by both cohorts.
+- **NHANES pipeline** (`src/nhanes_analysis.py`) and **KNHANES pipeline**
+  (`src/knhanes_analysis.py`, mapping-driven) that emit a results JSON and a LaTeX
+  table the manuscript auto-includes.
+- **Baseline models** (`src/modeling.py`): discrimination, Brier, calibration-in-
+  the-large, and calibration slope.
+- **LLM extraction template + evaluation** (`src/llm_extract.py`, `src/llm_eval.py`).
+- **Deterministic red-flag safety layer** (`src/safety.py`) + evaluation harness
+  (`src/test_safety.py`).
 
-## What is not included
+---
 
-- Raw KNHANES files, because users should download them from KDCA under the official access procedure
-- Raw clinical records
-- Any diagnostic or treatment model
+## 0. Environment setup
 
-## Recommended analysis order
-
-1. Download KNHANES and NHANES files.
-2. Create dataset-specific mapping YAML files.
-3. Harmonize into the common schema.
-4. Run weighted association analyses.
-5. Train baseline models on KNHANES.
-6. Validate on NHANES.
-7. Only after IRB approval, test the LLM extraction module on deidentified hospital notes.
-
-## Real NHANES results (turnkey)
-
-`src/nhanes_analysis.py` runs the **real** survey-weighted NHANES analysis and
-writes both a results JSON and a LaTeX table that the manuscript auto-includes.
-NHANES public-use files are free from the U.S. CDC (no account needed). Because
-some sandboxes block outbound access to `wwwn.cdc.gov`, either download the files
-yourself into `data/raw/nhanes/<cycle>/` or pass `--download` where access is
-allowed.
+Python ≥ 3.10. Use a virtual environment (recommended) or `--break-system-packages`.
 
 ```bash
-# Files needed per cycle (e.g., 2017-2018 → suffix _J):
-#   DEMO_J.XPT  AUQ_J.XPT  AUX_J.XPT  DPQ_J.XPT   (place in data/raw/nhanes/2017-2018/)
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+# KNHANES SAS files additionally need a robust reader:
+pip install pyreadstat
+```
+
+Provenance: analyses are deterministic (fixed seeds); the exact cycles are pinned
+in `config/`. Raw survey files are **never** committed (see `.gitignore`); only
+derived results (JSON) and generated LaTeX tables are.
+
+---
+
+## 1. Reproduce the NHANES analysis (public; no account)
+
+NHANES public-use files are free from the U.S. CDC. Since 2024 they live at
+`https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/<year>/DataFiles/<FILE>.xpt`
+(the pipeline tries the current and legacy URL layouts automatically).
+
+```bash
+# Auto-download where outbound access to wwwn.cdc.gov is allowed:
 python src/nhanes_analysis.py \
     --cycles 2011-2012 2015-2016 2017-2018 \
-    --data-dir data/raw/nhanes \
+    --data-dir data/raw/nhanes --download \
     --out outputs/nhanes_results.json \
     --latex ../paper/tables/table_results.tex
-cd ../paper && bash build.sh     # the real results table now appears in the PDF
+cd ../paper && bash build.sh          # the real results table appears in the PDF
 ```
 
-The estimators (Taylor-linearized survey prevalence; design-based cluster-robust
-logistic) are unit-tested for correctness:
+If a network blocks the CDC host, download the four files per cycle in a browser
+(`DEMO`, `AUQ`, `AUX`, `DPQ`; suffix `_G`=2011-12, `_I`=2015-16, `_J`=2017-18)
+into `data/raw/nhanes/<cycle>/` and run **without** `--download`.
+
+Validate the survey math (no data needed):
 
 ```bash
-python src/test_nhanes_analysis.py     # validates the survey math on structured data
+python src/test_nhanes_analysis.py
 ```
 
-## Real KNHANES results (primary development cohort)
+---
 
-KNHANES is the **primary** cohort because it carries a general perceived-stress
-item (NHANES does not), so it is where STARS's primary perceived-stress exposure
-is tested. KNHANES microdata require official KDCA approval and cannot be
-auto-downloaded. The loader is **mapping-driven**: complete
-`config/knhanes_mapping.yaml` from the codebook for your cycles, place the
-approved `.sas7bdat` files under `data/raw/knhanes/<cycle>/`, then run:
+## 2. Reproduce the KNHANES analysis (primary cohort; KDCA approval)
+
+KNHANES is the **primary** development cohort: unlike NHANES it carries a general
+perceived-stress item (`BP1`), so it is where STARS's primary perceived-stress
+exposure is tested. The microdata require official KDCA approval and cannot be
+redistributed or auto-downloaded — follow these steps.
+
+### Step 1 — Obtain the raw data (KDCA)
+
+1. Go to the KNHANES raw-data portal: <https://knhanes.kdca.go.kr>
+2. **자료실 → 원시자료 다운로드**: create an account and submit the
+   **원시자료 이용 동의서** (data-use agreement). Approval can take time.
+3. Download the yearly **SAS** files for **2010, 2011, 2012** (KNHANES V-1/2/3).
+   ⚠️ The tinnitus and pure-tone-audiometry items are in the **otology / ENT
+   examination (이비인후과 검진)** module — confirm the download includes that
+   examination (it may be a combined yearly file or a separate ENT file).
+4. Also download the **codebook (이용지침서)** to confirm the exact variable
+   names for tinnitus (`HtE_1`), occupational noise (`HtE_5`), audiometry
+   (`O_R_500` …), and the otology-exam weight.
+
+### Step 2 — Place the files
 
 ```bash
-python src/knhanes_analysis.py \
-    --mapping config/knhanes_mapping.yaml \
-    --data-dir data/raw/knhanes --cycles 2010 2011 2012 \
-    --out outputs/knhanes_results.json \
-    --latex ../paper/tables/table_results_knhanes.tex
-cd ../paper && bash build.sh     # the KNHANES results table then appears in the PDF
+mkdir -p data/raw/knhanes/{2010,2011,2012}
+# copy the approved SAS files, e.g.:
+#   data/raw/knhanes/2010/HN10_ALL.sas7bdat
+#   data/raw/knhanes/2011/HN11_ALL.sas7bdat
+#   data/raw/knhanes/2012/HN12_ALL.sas7bdat
 ```
 
-It reuses the same validated design-based estimators as the NHANES pipeline and
-derives `perceived_stress` as the primary exposure. Derivation logic is
-unit-tested on a synthetic KNHANES-shaped frame:
+If your filenames differ (e.g., lowercase `hn10_all.sas7bdat`, or a separate ENT
+file), edit the `files:` block in `config/knhanes_mapping.yaml` to match.
 
-```bash
-python src/test_knhanes_analysis.py
-```
+### Step 3 — Confirm the variable mapping
 
-**The mapping is pre-filled with best-known KNHANES codes; confirm these against
-the codebook for your exact cycles (2010–2012):**
+`config/knhanes_mapping.yaml` is pre-filled with best-known KNHANES codes tagged
+by confidence. Confirm the **LIKELY/VERIFY** rows against your codebook:
 
 | Field | Pre-filled | Confidence / action |
 |-------|-----------|---------------------|
@@ -111,20 +123,56 @@ the codebook for your exact cycles (2010–2012):**
 | `weight` | `wt_tot` | VERIFY — use the **otology-exam** sub-sample weight |
 | `sleep_hours` | `<FILL>` | FILL (optional; mediator only) |
 
-When you run it, the `Derived-variable coverage` printout flags any variable that
-resolved to zero non-null values (i.e., a name mismatch) so you can correct it.
+### Step 4 — Run and inspect coverage
 
-## Safety layer
+```bash
+python src/knhanes_analysis.py \
+    --mapping config/knhanes_mapping.yaml \
+    --data-dir data/raw/knhanes --cycles 2010 2011 2012 \
+    --out outputs/knhanes_results.json \
+    --latex ../paper/tables/table_results_knhanes.tex
+cd ../paper && bash build.sh          # the KNHANES results table appears in the PDF
+```
 
-The red-flag layer is deterministic and independent of any probabilistic
-model. A low predicted risk must never suppress urgent referral. The harness
-reports sensitivity, specificity, over-referral, and subgroup recall, and prints
-the explicit caveat that finite-set sensitivity of 1.00 is a target, not a
-guarantee of zero deployment misses. Verify it with:
+The run prints a **`Derived-variable coverage (non-null counts)`** report. Use it
+to confirm the mapping resolved correctly:
+
+- A variable showing **0** (e.g., `tinnitus : 0`) means its code in the mapping
+  does not exist in your file → correct it from the codebook and re-run.
+- Non-zero counts in the thousands mean the mapping is good.
+
+Validate the derivation logic (no data needed):
+
+```bash
+python src/test_knhanes_analysis.py
+```
+
+### Troubleshooting
+
+| Symptom | Cause / fix |
+|---------|-------------|
+| `FileNotFoundError: Missing …/HN10_ALL.sas7bdat` | Raw file not in place; complete Step 1–2, or fix `files:` in the mapping. |
+| `Could not read … install pyreadstat` | `pip install pyreadstat` (robust for Korean-encoded/compressed SAS). |
+| `tinnitus`/`occ_noise` coverage = 0 | `HtE_*` code differs in your cycle → set the real name from the codebook. |
+| Prevalence looks off | Verify you used the **otology-exam** sub-sample weight, not the general exam weight. |
+
+---
+
+## 3. Safety layer and self-checks
+
+The red-flag layer is deterministic and independent of any model; a low predicted
+risk must never suppress urgent referral. The harness reports sensitivity,
+specificity, over-referral, and subgroup recall, and prints the caveat that
+finite-set sensitivity of 1.00 is a target, not a guarantee of zero deployment
+misses.
 
 ```bash
 python src/test_safety.py        # sensitivity/specificity/over-referral + caveat
 python src/llm_eval.py           # per-field extraction-metric self-check
-# or, if pytest is installed:
-python -m pytest src/test_safety.py
+python src/run_pipeline.py --config config/study_config.yaml   # synthetic smoke test
 ```
+
+## What is not included (by design)
+
+- Raw KNHANES/NHANES files (obtain per each provider's terms; never committed).
+- Raw clinical records; any diagnostic or treatment model.
