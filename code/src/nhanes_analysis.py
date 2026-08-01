@@ -187,12 +187,63 @@ def svy_logistic(df: pd.DataFrame, outcome: str, predictors: List[str],
 # Loading and variable derivation
 # --------------------------------------------------------------------------- #
 def _read_xpt(path: Path) -> pd.DataFrame:
-    return pd.read_sas(path, format="xport")
+    """Read a SAS XPORT file, validating the magic header first.
+
+    A common failure is a saved HTML page (e.g., a server block page) rather than
+    the binary XPORT file; valid XPORT files begin with 'HEADER RECORD'.
+    """
+    with open(path, "rb") as fh:
+        magic = fh.read(80)
+    if not magic.lstrip().startswith(b"HEADER RECORD"):
+        head = magic[:120].decode("latin-1", "replace")
+        raise ValueError(
+            f"{path} is not a valid XPORT file (starts with {head!r}). It is most "
+            f"likely an HTML page saved during download. Re-download with a browser "
+            f"User-Agent (this script now does), or fetch the file manually.")
+    try:
+        return pd.read_sas(path, format="xport")
+    except Exception:
+        import pyreadstat  # more tolerant fallback
+        df, _ = pyreadstat.read_xport(str(path))
+        return df
 
 
 def _cycle_path(data_dir: Path, cycle: str, stem: str) -> Path:
     suf = CYCLE_SUFFIX[cycle]
     return data_dir / cycle / f"{stem}_{suf}.XPT"
+
+
+_UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+       "(KHTML, like Gecko) Chrome/124.0 Safari/537.36 StressEar-AI-research")
+
+
+def _http_download(url: str, dest: Path) -> None:
+    """Download `url` to `dest`, sending a browser User-Agent and validating that
+    the payload is a real XPORT file (CDC returns an HTML page to the default
+    Python-urllib agent)."""
+    req = urllib.request.Request(url, headers={"User-Agent": _UA, "Accept": "*/*"})
+    with urllib.request.urlopen(req, timeout=180) as resp:
+        data = resp.read()
+    if not data.lstrip()[:20].startswith(b"HEADER RECORD"):
+        ctype = ""
+        try:
+            ctype = resp.headers.get("Content-Type", "")
+        except Exception:
+            pass
+        snippet = data[:160].decode("latin-1", "replace")
+        raise ValueError(
+            f"Server did not return an XPORT file for {url} "
+            f"(Content-Type={ctype!r}; first bytes={snippet!r}). "
+            f"If this persists, download the file in a browser and place it at {dest}.")
+    dest.write_bytes(data)
+
+
+def _is_valid_xpt(path: Path) -> bool:
+    try:
+        with open(path, "rb") as fh:
+            return fh.read(80).lstrip().startswith(b"HEADER RECORD")
+    except Exception:
+        return False
 
 
 def download_cycle(cycle: str, data_dir: Path) -> None:
@@ -201,10 +252,11 @@ def download_cycle(cycle: str, data_dir: Path) -> None:
     for stem in REQUIRED_FILES:
         url = f"{CDC_BASE}/{cycle}/{stem}_{suf}.XPT"
         dest = _cycle_path(data_dir, cycle, stem)
-        if dest.exists():
+        # Re-download if missing, empty, or a previously-saved HTML/bad file.
+        if dest.exists() and dest.stat().st_size > 0 and _is_valid_xpt(dest):
             continue
         print(f"  downloading {url}")
-        urllib.request.urlretrieve(url, dest)
+        _http_download(url, dest)
 
 
 def load_cycle(cycle: str, data_dir: Path) -> pd.DataFrame:
@@ -336,8 +388,19 @@ def main() -> None:
             download_cycle(cyc, data_dir)
         frames.append(derive_variables(load_cycle(cyc, data_dir)))
     df = pd.concat(frames, ignore_index=True)
+
+    # Diagnostic: report which derived variables were populated (helps catch
+    # cycle-specific variable-name differences instead of silently missing them).
+    print("Derived-variable coverage (non-null counts):")
+    for v in ["tinnitus", "hearing_loss", "better_ear_pta", "worse_ear_pta",
+              "depressed", "occ_noise", "age", "sex", "weight"]:
+        n = int(df[v].notna().sum()) if v in df else 0
+        flag = "" if (v in df and n > 0) else "   <-- MISSING/empty (check variable codes)"
+        print(f"  {v:16s}: {n}{flag}")
+
     res = run_analysis(df)
     res["cycles"] = args.cycles
+    res["n_total_rows"] = int(len(df))
 
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(res, indent=2), encoding="utf-8")
