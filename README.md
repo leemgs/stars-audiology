@@ -67,6 +67,8 @@ restricted medical data**.
 | `src/data_loaders.py` | Dataset harmonization helpers and pure-tone-average (PTA) feature derivation. |
 | `src/modeling.py` | Survey-aware baseline models; AUROC, AUPRC, Brier, and **calibration-in-the-large & calibration slope**. |
 | `src/run_pipeline.py` | Entry point; runs a synthetic smoke test of the full flow. |
+| `src/nhanes_analysis.py` | **Real NHANES** survey-weighted pipeline: reads CDC public-use `.XPT` files and emits a results JSON + a LaTeX table the manuscript auto-includes. |
+| `src/test_nhanes_analysis.py` | Correctness tests for the survey estimators (Taylor-linearized prevalence; design-based logistic). |
 | `src/llm_extract.py` | MedGemma-style fixed-schema clinical-text extraction template. |
 | `src/llm_eval.py` | **Extraction evaluation**: per-field exact match, P/R/F1, omission, span agreement, doc-level match, run consistency, referral-critical error rate. |
 | `src/safety.py` | **Deterministic red-flag safety layer** (SSNHL / neurologic signs) that overrides model output to force urgent referral. |
