@@ -38,17 +38,17 @@ function check(slide){ /* layout self-check hook (no-op in standalone build) */ 
 let s=pptx.addSlide();
 s.background = { color: C.light };
 s.addText('StressEar-AI', {x:0.7,y:0.75,w:7,h:0.7,fontSize:44,bold:true,color:C.navy,margin:0});
-s.addText('직장인 스트레스·이명·난청의 연관성을 위한 공개 데이터 기반 개발 및 외부검증 프레임워크', {x:0.75,y:1.62,w:7.2,h:0.95,fontSize:19,color:C.dark,bold:false,breakLine:false,margin:0.02});
-pill(s,'American Journal of Audiology 목표',0.75,2.9,2.35,C.blue);
-pill(s,'KNHANES + NHANES',3.25,2.9,1.85,C.teal);
-pill(s,'공개 의료 AI',5.25,2.9,1.5,C.orange);
+s.addText('사전분석 연구 프로토콜: 인지된 스트레스·근로 요인, 이명, 청력 결과', {x:0.75,y:1.62,w:7.2,h:0.95,fontSize:19,color:C.dark,bold:false,breakLine:false,margin:0.02});
+pill(s,'AJA 연구 프로토콜',0.75,2.9,1.75,C.blue);
+pill(s,'KNHANES + NHANES',2.65,2.9,1.85,C.teal);
+pill(s,'아직 결과 없음(프로토콜)',4.65,2.9,2.1,C.orange);
 s.addShape(pptx.ShapeType.ellipse,{x:8.25,y:0.95,w:1.55,h:1.55,fill:{color:C.blue,transparency:12},line:{color:C.blue}});
 s.addShape(pptx.ShapeType.ellipse,{x:10.2,y:2.55,w:1.55,h:1.55,fill:{color:C.teal,transparency:12},line:{color:C.teal}});
 s.addShape(pptx.ShapeType.ellipse,{x:8.25,y:4.15,w:1.55,h:1.55,fill:{color:C.orange,transparency:12},line:{color:C.orange}});
 s.addText('청각학', {x:8.47,y:1.52,w:1.12,h:0.2,fontSize:12,bold:true,color:C.white,align:'center',margin:0});
 s.addText('오픈\n사이언스', {x:10.47,y:3.0,w:1.0,h:0.4,fontSize:11,bold:true,color:C.white,align:'center',margin:0});
 s.addText('임상\n안전성', {x:8.47,y:4.6,w:1.1,h:0.4,fontSize:11,bold:true,color:C.white,align:'center',margin:0});
-s.addText('Geunsik Lim · Hyun Jo\n초안 v0.7 · 2026년 7월 31일', {x:0.75,y:6.55,w:6,h:0.5,fontSize:12,color:C.gray,margin:0});
+s.addText('Geunsik Lim · Hyun Jo\n초안 v0.8 · 2026년 8월 1일', {x:0.75,y:6.55,w:6,h:0.5,fontSize:12,color:C.gray,margin:0});
 check(s);
 }
 
@@ -113,7 +113,7 @@ check(s);
 //6
 {
 let s=pptx.addSlide(); title(s,'기대 기여','청각학계를 위한 신뢰성·강건성·유용성 향상'); footer(s);
-const cards=[['재현 가능한 공개 기준선','KNHANES + NHANES 매핑 및 코드'],['임상 청각학 초점','PTA, 비대칭, 이명 부담, 청력 곤란'],['안전한 AI 설계','진단 없음; 응급징후 규칙이 확률 추정을 우선 대체'],['공개 협업','논문·코드·슬라이드를 담은 GitHub 패키지']];
+const cards=[['1 · 연관성 프레임워크','스트레스–이명과 스트레스–역치를 구분; 인과 주장 없음'],['2 · 국가 간 검증','KNHANES→NHANES: 보정·재보정·공통지원·공정성'],['3 · 거버넌스 안전 AI','임상의 검증 추출 + 결정론적 응급징후 우선 대체'],['4 · 공개 재현 스캐폴드','매핑·코드·모델카드·안전테스트·합성데이터']];
 for(let i=0;i<cards.length;i++){
  const x=i%2===0?0.9:6.8; const y=i<2?1.35:4.0;
  s.addShape(pptx.ShapeType.roundRect,{x,y,w:5.1,h:1.65,rectRadius:0.07,fill:{color:'FFFFFF'},line:{color:'D1D5DB',pt:1}});
@@ -158,10 +158,10 @@ check(s);
 {
 let s=pptx.addSlide(); title(s,'엄밀성, 보고, 그리고 치료 골든타임','프레임워크를 신뢰할 수 있고 안전하게 만드는 요소'); footer(s);
 const cards=[
- ['보고 표준','STROBE(관찰연구) + TRIPOD+AI(예측); 목표·예측변수·지표를 사전 고정.'],
- ['AUROC를 넘어','보정 기울기/절편, Brier, 결정곡선 유용성, SHAP 해석가능성.'],
- ['공정성','성별·연령·고용·소음·비대칭 하위집단별 변별력과 보정도.'],
- ['골든타임 안전장치','결정론적 응급징후 계층이 돌발성 난청/신경징후에 대해 모형을 우선 대체 — 선별 사례에서 재현율 1.0 검증.']
+ ['사전지정 · DAG 기반','주기·연령·종말점·지표 고정; 최소충분 보정집합; 매개변수(기분/수면) 별도 모델링.'],
+ ['AUROC를 넘어','보정(전체·기울기, 재보정 전후), 공통지원, 결정곡선; SHAP 한계 명시.'],
+ ['연구용 한정 + 공정성','모델 사용목적 명시(선별·진단 아님); SES·인종 포함 하위집단.'],
+ ['골든타임 안전장치','결정론적 응급징후 우선 대체; 2인 전문가 비네트, 민감도 95% CI — 유한집합 1.0 ≠ 무누락 보장.']
 ];
 for(let i=0;i<cards.length;i++){
  const x=i%2===0?0.9:6.8; const y=i<2?1.35:4.0; const col=i===3?C.red:(i%2===0?C.blue:C.teal);
@@ -183,4 +183,4 @@ s.addText('Geunsik Lim · leemgs@g.skku.edu\nHyun Jo · joehyun@ajou.ac.kr', {x:
 check(s);
 }
 
-pptx.writeFile({ fileName: 'StressEar-AI_AJA_public_dataset_presentation_ko_v0.7.pptx' });
+pptx.writeFile({ fileName: 'StressEar-AI_AJA_public_dataset_presentation_ko_v0.8.pptx' });

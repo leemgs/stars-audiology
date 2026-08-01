@@ -38,3 +38,31 @@
 \caption{StressEar-AI conceptual framework. Public survey data (blue) feed a harmonized schema and calibrated, interpretable models (green); an open medical language model performs schema-constrained extraction in the clinical extension. A deterministic red-flag safety layer (red) can override probabilistic output to force urgent referral, so a low predicted risk never suppresses time-critical SSNHL care. Outputs (orange) are associations and guideline-linked explanations, not diagnoses.}
 \label{fig:framework}
 \end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  every node/.style={font=\small},
+  var/.style={rectangle, rounded corners, draw=black!70, thick, align=center,
+    inner sep=3pt, minimum height=8mm},
+  conf/.style={var, fill=blue!8},
+  expo/.style={var, fill=orange!12},
+  med/.style={var, fill=green!10},
+  outv/.style={var, fill=red!8},
+  a/.style={-{Latex[length=2mm]}, thick},
+  amed/.style={-{Latex[length=2mm]}, thick, densely dashed}
+]
+\node[expo] (stress) at (0,0) {Perceived stress /\\work-related factors};
+\node[outv] (outc) at (7.2,0) {Tinnitus \&\\hearing outcomes};
+\node[med] (dep) at (3.6,-1.9) {Depressed mood, sleep\\(\emph{mediators})};
+\node[conf] (conf) at (3.6,2.0) {Age, sex, education,\\occupation, noise\\(\emph{confounders})};
+
+\draw[a] (stress) -- node[above,font=\scriptsize]{primary (direct)} (outc);
+\draw[amed] (stress) -- (dep);
+\draw[amed] (dep) -- (outc);
+\draw[a] (conf) -- (stress);
+\draw[a] (conf) -- (outc);
+\end{tikzpicture}
+\caption{Assumed causal directed acyclic graph (DAG). The minimal sufficient adjustment set (blue confounders) is used in the \emph{primary} analysis. Depressed mood and sleep (green) are treated as \emph{mediators} of the stress$\rightarrow$outcome path (dashed); conditioning on them (extended model) is a mediator-adjusted, potentially overadjusted estimate reported separately. Restricting to employed adults can open a selection/collider path, so all-adult analysis is primary and employed-restricted analysis is secondary.}
+\label{fig:dag}
+\end{figure}

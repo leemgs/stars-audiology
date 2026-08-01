@@ -1,23 +1,27 @@
 \begin{table}[htbp]
 \centering
-\caption{Target harmonized variables and their availability in the primary public datasets. Availability is cycle-dependent; each derived variable records its source items and transformation in the version-controlled data dictionary.}
+\caption{Target harmonized variables, roles, and availability. Exposure and outcome roles follow the naming principle and the DAG (Figure~\ref{fig:dag}): perceived stress is the exposure; work-related factors and the minimal confounder set are covariates; depressed mood and sleep are treated as mediators in the primary analysis. Availability is cycle-dependent; see Table~\ref{tab:harmonization} for source items and comparability.}
 \label{tab:variables}
 \small
-\begin{tabular}{p{0.30\linewidth}p{0.14\linewidth}p{0.22\linewidth}p{0.22\linewidth}}
+\begin{tabular}{p{0.34\linewidth}p{0.20\linewidth}p{0.15\linewidth}p{0.15\linewidth}}
 \toprule
 Harmonized variable & Role & KNHANES & NHANES \\
 \midrule
-Pure-tone thresholds (per ear, per frequency) & Outcome & Selected cycles & Selected cycles \\
-Tinnitus status / bother & Outcome & Selected cycles & Selected cycles \\
+Tinnitus presence & Outcome & Sel.\ cycles & Sel.\ cycles \\
+Bothersome tinnitus & Outcome & Sel.\ cycles & Sel.\ cycles \\
+Better-ear PTA$_{0.5,1,2,4}$ & Outcome & Sel.\ cycles & Sel.\ cycles \\
+Worse-ear PTA \& per-ear thresholds & Outcome & Sel.\ cycles & Sel.\ cycles \\
+Asymmetric hearing loss & Outcome & Sel.\ cycles & Sel.\ cycles \\
 Self-reported hearing difficulty & Outcome (2\textsuperscript{nd}) & Yes & Yes \\
-Hearing-aid use & Outcome (2\textsuperscript{nd}) & Selected cycles & Selected cycles \\
-Perceived stress / depressed mood & Exposure & Yes & Yes \\
-Occupation / employment status & Modifier & Yes & Yes \\
-Occupational + recreational noise & Covariate & Selected cycles & Yes \\
-Sleep duration & Covariate & Selected cycles & Selected cycles \\
-Smoking, alcohol & Covariate & Yes & Yes \\
-Cardiometabolic disease & Covariate & Yes & Yes \\
-Age, sex, education & Covariate & Yes & Yes \\
+Hearing-aid use & Outcome (2\textsuperscript{nd}) & Sel.\ cycles & Sel.\ cycles \\
+Perceived stress & Exposure & Yes & Yes \\
+Work-related factors (occupation, employment, hours) & Covariate / modifier & Yes & Yes \\
+Occupational + recreational noise (duration/intensity) & Confounder & Sel.\ cycles & Yes \\
+Depressed mood & Mediator & Yes & Yes \\
+Sleep duration & Mediator & Sel.\ cycles & Sel.\ cycles \\
+Smoking, alcohol, cardiometabolic disease & Confounder & Yes & Yes \\
+Age, sex, education & Confounder & Yes & Yes \\
+Socioeconomic status; race/ethnicity & Fairness axis & Partial & Yes \\
 Survey weight, stratum, PSU & Design & Yes & Yes \\
 \bottomrule
 \end{tabular}

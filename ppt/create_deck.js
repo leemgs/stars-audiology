@@ -28,17 +28,17 @@ function check(slide){ /* layout self-check hook (no-op in standalone build) */ 
 let s=pptx.addSlide();
 s.background = { color: C.light };
 s.addText('StressEar-AI', {x:0.7,y:0.75,w:7,h:0.7,fontSize:44,bold:true,color:C.navy,margin:0});
-s.addText('Public-data development and external validation framework for occupational stress, tinnitus, and hearing outcomes', {x:0.75,y:1.62,w:7.2,h:0.95,fontSize:19,color:C.dark,bold:false,breakLine:false,margin:0.02});
-pill(s,'American Journal of Audiology target',0.75,2.9,2.25,C.blue);
-pill(s,'KNHANES + NHANES',3.15,2.9,1.85,C.teal);
-pill(s,'Open medical AI',5.15,2.9,1.72,C.orange);
+s.addText('A pre-analysis study protocol: perceived stress & work-related factors, tinnitus, and hearing outcomes', {x:0.75,y:1.62,w:7.2,h:0.95,fontSize:19,color:C.dark,bold:false,breakLine:false,margin:0.02});
+pill(s,'AJA study protocol',0.75,2.9,1.75,C.blue);
+pill(s,'KNHANES + NHANES',2.65,2.9,1.85,C.teal);
+pill(s,'No results yet (protocol)',4.65,2.9,2.0,C.orange);
 s.addShape(pptx.ShapeType.ellipse,{x:8.25,y:0.95,w:1.55,h:1.55,fill:{color:C.blue,transparency:12},line:{color:C.blue}});
 s.addShape(pptx.ShapeType.ellipse,{x:10.2,y:2.55,w:1.55,h:1.55,fill:{color:C.teal,transparency:12},line:{color:C.teal}});
 s.addShape(pptx.ShapeType.ellipse,{x:8.25,y:4.15,w:1.55,h:1.55,fill:{color:C.orange,transparency:12},line:{color:C.orange}});
 s.addText('Audiology', {x:8.47,y:1.52,w:1.12,h:0.2,fontSize:12,bold:true,color:C.white,align:'center',margin:0});
 s.addText('Open\nScience', {x:10.47,y:3.05,w:1.0,h:0.3,fontSize:11,bold:true,color:C.white,align:'center',margin:0});
 s.addText('Clinical\nSafety', {x:8.47,y:4.65,w:1.1,h:0.3,fontSize:11,bold:true,color:C.white,align:'center',margin:0});
-s.addText('Geunsik Lim · Hyun Jo\nDraft v0.7 · July 31, 2026', {x:0.75,y:6.55,w:6,h:0.5,fontSize:12,color:C.gray,margin:0});
+s.addText('Geunsik Lim · Hyun Jo\nDraft v0.8 · August 1, 2026', {x:0.75,y:6.55,w:6,h:0.5,fontSize:12,color:C.gray,margin:0});
 check(s);
 }
 
@@ -103,7 +103,7 @@ check(s);
 //6
 {
 let s=pptx.addSlide(); title(s,'Expected contributions','Higher credibility, robustness, and usefulness for the audiology community'); footer(s);
-const cards=[['Reproducible public baseline','KNHANES + NHANES mapping and code'],['Clinical audiology focus','PTA, asymmetry, tinnitus burden, hearing difficulty'],['Safe AI design','No diagnosis; red-flag rules override probabilistic estimates'],['Open collaboration','GitHub-ready package with paper, code, and slides']];
+const cards=[['1 · Association framework','Separate stress–tinnitus from stress–threshold; no causal claim'],['2 · Cross-national validation','KNHANES→NHANES: calibration, recalibration, common support, fairness'],['3 · Governed, safe AI','Clinician-verified extraction + deterministic red-flag override'],['4 · Open reproducible scaffold','Mappings, code, model cards, safety tests, synthetic-data path']];
 for(let i=0;i<cards.length;i++){
  const x=i%2===0?0.9:6.8; const y=i<2?1.35:4.0;
  s.addShape(pptx.ShapeType.roundRect,{x,y,w:5.1,h:1.65,rectRadius:0.07,fill:{color:'FFFFFF'},line:{color:'D1D5DB',pt:1}});
@@ -148,10 +148,10 @@ check(s);
 {
 let s=pptx.addSlide(); title(s,'Rigor, reporting, and the treatment window','What makes the framework credible and safe'); footer(s);
 const cards=[
- ['Reporting standards','STROBE (observational) + TRIPOD+AI (prediction); frozen targets, predictors, and metrics.'],
- ['Beyond AUROC','Calibration slope/intercept, Brier, decision-curve utility, SHAP interpretability.'],
- ['Fairness','Subgroup discrimination and calibration by sex, age, employment, noise, asymmetry.'],
- ['Golden-window safety','Deterministic red-flag layer overrides the model for SSNHL / neuro signs — validated at recall = 1.0 on curated vignettes.']
+ ['Prespecified & DAG-based','Fixed cycles, ages, endpoints, metrics; minimal sufficient adjustment set; mediators (mood/sleep) modeled separately.'],
+ ['Beyond AUROC','Calibration-in-the-large & slope (pre/post recalibration), common support, decision curves; SHAP caveated.'],
+ ['Research-use only + fairness','Declared model intended use (not screening/diagnosis); subgroups incl. SES & race/ethnicity.'],
+ ['Golden-window safety','Deterministic red-flag override; dual-expert vignettes, sensitivity with 95% CI — finite-set 1.0 ≠ zero-miss guarantee.']
 ];
 for(let i=0;i<cards.length;i++){
  const x=i%2===0?0.9:6.8; const y=i<2?1.35:4.0; const col=i===3?C.red:(i%2===0?C.blue:C.teal);
@@ -173,4 +173,4 @@ s.addText('Geunsik Lim · leemgs@g.skku.edu\nHyun Jo · joehyun@ajou.ac.kr', {x:
 check(s);
 }
 
-pptx.writeFile({ fileName: 'StressEar-AI_AJA_public_dataset_presentation_v0.7.pptx' });
+pptx.writeFile({ fileName: 'StressEar-AI_AJA_public_dataset_presentation_v0.8.pptx' });

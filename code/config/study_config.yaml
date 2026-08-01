@@ -1,5 +1,6 @@
 study:
   name: StressEar-AI
+  type: pre-analysis study protocol (no empirical results)
   primary_dataset: KNHANES
   external_validation_dataset: NHANES
   target_journal: American Journal of Audiology
@@ -8,16 +9,70 @@ paths:
   raw_nhanes: data/raw/nhanes
   processed: data/processed
   outputs: outputs
-analysis:
+
+# Fixed survey windows (prespecified; do NOT select cycles after seeing results).
+datasets:
+  knhanes:
+    development_cycles: ["2009", "2010", "2011", "2012"]   # KNHANES IV-V otologic exam
+    audiometry: true
+  nhanes:
+    validation_cycles: ["2011-2012", "2015-2016", "2017-2020"]
+    audiometry: true
+
+eligibility:
   age_min: 40
-  age_max: 60
-  outcome_tinnitus: tinnitus_status
-  outcome_hearing: hearing_loss_pta
-  stress_variable: perceived_stress
+  age_max: 69
+  audiometry_frequencies_khz: [0.5, 1, 2, 3, 4, 6, 8]
+  exclude_conductive_when_tympanometry: true
+
+exposure:
+  primary: perceived_stress          # labeled perceived stress, NOT occupational stress
+  work_related_factors: [occupation_group, employment_status, working_hours, shift_work]
+
+# Separated endpoints (see variable_schema.ENDPOINTS).
+endpoints:
+  tinnitus_presence: tinnitus_presence
+  bothersome_tinnitus: bothersome_tinnitus
+  hearing_loss_primary: better_ear_pta      # binarized at 25 dB HL
+  hearing_loss_worse_ear: worse_ear_pta
+  asymmetric_loss: asymmetric_loss
+hearing_loss_cutoffs_db:
+  primary: 25          # WHO grade-1 cutoff (primary)
+  sensitivity: [20]    # sensitivity definition
+
+# Adjustment strategy (DAG-based). Primary uses the minimal sufficient set only;
+# extended (mediator-adjusted) is secondary. See variable_schema.ADJUSTMENT_SETS.
+adjustment:
+  primary_set: minimal_sufficient
+  secondary_set: extended_mediator_adjusted
+  mediators: [depression_symptoms, sleep_hours]
+  population_primary: all_adults           # avoids healthy-worker/collider bias
+  population_secondary: employed_restricted
+
+external_validation:
+  report_unweighted_and_weighted: true
+  calibration: [calibration_in_the_large, calibration_slope]
+  recalibration: [intercept_only, intercept_and_slope]
+  common_support: true
+  case_mix_standardization: true
+  models: [reduced_common, country_specific_extended]
+
+fairness_subgroups: [sex, age_band, employment_status, occupational_noise,
+                     asymmetric_loss, education, income, race_ethnicity]
+
+survey_design:
   survey_weight: survey_weight
   strata: strata
   cluster: psu
+
+safety:
+  vignette_min: 200
+  vignette_mix: {real: 0.40, expert_authored: 0.30, synthetic: 0.30}
+  min_expert_labelers: 2
+  primary_metric: sensitivity_with_ci
+
 ai:
   model_name: google/medgemma-27b-it
   use_llm: false
   max_new_tokens: 512
+  confidence_flag: rule_based_span_agreement   # NOT the model's token probability

@@ -1,0 +1,23 @@
+\begin{table}[htbp]
+\centering
+\caption{Cross-national harmonization and measurement-comparability plan (excerpt). Exact cycle-specific variable codes and response categories are pinned in the repository data dictionary. Comparability governs use: \emph{low}-comparability variables are excluded from the common transportable model and entered only in country-specific extended models. ``Sel.\ cycles'' = present in selected cycles only.}
+\label{tab:harmonization}
+\scriptsize
+\begin{tabular}{p{0.155\linewidth}p{0.145\linewidth}p{0.145\linewidth}p{0.175\linewidth}p{0.135\linewidth}p{0.085\linewidth}}
+\toprule
+Harmonized variable & KNHANES (source/cycle) & NHANES (source/cycle) & Original item (abridged) & Transformation rule & Compar. \\
+\midrule
+Tinnitus presence & Otologic Q, 2009--2012 & Audiometry Q (AUQ), sel.\ cycles & ``Ringing/noise in ears past 12 mo?'' & Any vs.\ none (binary) & High \\
+Bothersome tinnitus & Otologic Q, 2009--2012 & AUQ bother item, sel.\ cycles & Annoyance / sleep / concentration & Bothersome vs.\ not & Medium \\
+Pure-tone thresholds & Audiometry exam, 2010--2012 & Audiometry exam, sel.\ cycles & Air-conduction dB HL per freq. & Better/worse-ear PTA; per-ear & High \\
+Perceived stress & Health Q (stress item) & DPQ / stress-related item & ``How much stress in daily life?'' & Collapse to high vs.\ low & \textbf{Low} \\
+Depressed mood & PHQ-9 / mood item & PHQ-9 (DPQ) & Standardized depression items & Screen-positive vs.\ negative & Medium \\
+Occupation / employment & Socioecon.\ Q & Occupation (OCQ) & Job category, employed y/n & Common category crosswalk & Medium \\
+Occupational noise & Sel.\ cycles & Noise exposure (AUQ) & Loud-noise exposure, duration & Duration/intensity + binary & Medium \\
+Sleep duration & Health Q & Sleep (SLQ) & Average hours of sleep & Continuous hours & Medium \\
+Smoking / alcohol & Health Q & SMQ / ALQ & Current status, quantity & Standard categories & High \\
+Age, sex, education & Demographics & Demographics (DEMO) & --- & Direct / crosswalk & High \\
+Survey weight, stratum, PSU & Design vars & Design vars & --- & Kept for design-consistent SEs & High \\
+\bottomrule
+\end{tabular}
+\end{table}
