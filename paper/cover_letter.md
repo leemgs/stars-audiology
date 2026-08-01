@@ -30,7 +30,7 @@ We are pleased to submit our manuscript, **STARS** (**S**tress, **T**innitus, an
 3. A clinically governed AI architecture in which schema-constrained language-model extraction is clinician-verified and a deterministic red-flag layer overrides probabilistic predictions for time-critical hearing symptoms.
 4. An open, reproducible scaffold—harmonized variable mappings, executable code, model cards, safety tests, and a synthetic-data pathway—so others can reproduce and extend the analyses.
 
-**Rigor and reporting.** The observational analyses follow STROBE and the prediction models follow TRIPOD+AI; the planned clinical extension will follow SPIRIT. All code, configuration, tables, and a synthetic-data path are openly available at <https://github.com/leemgs/stress-ear-ai>.
+**Rigor and reporting.** The observational analyses follow STROBE and the prediction models follow TRIPOD+AI; the planned clinical extension will follow SPIRIT. All code, configuration, tables, and a synthetic-data path are openly available at <https://github.com/leemgs/stars-audiology>.
 
 **Responsible-AI statement.** Any prediction model in STARS is a research risk-stratification tool with a declared intended use—never a screening, diagnostic, or triage device—and open medical language models are confined to clinician-verified research extraction. Generative AI tools assisted in drafting; the authors reviewed and take full responsibility for all content.
 
