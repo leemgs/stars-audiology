@@ -8,7 +8,7 @@ factors, tinnitus, and hearing outcomes, using public survey data and a
 clinician-governed, safety-gated AI component. Perceived stress is treated as
 *associated* with — not a proven cause of — tinnitus/hearing outcomes.
 
-Repository: <https://github.com/leemgs/stress-ear-ai>
+Repository: <https://github.com/leemgs/stars-audiology>
 
 | Folder | What it contains |
 |--------|------------------|
