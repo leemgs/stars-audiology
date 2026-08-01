@@ -1,29 +1,59 @@
-\section{Planned Analyses and Reproducible Scaffold}
-\subsection{Planned primary analyses (no results reported)}
-No epidemiological findings are reported in this protocol. Per the prespecified aims, the planned analyses will report: (i) weighted prevalence of tinnitus presence, bothersome tinnitus, and hearing impairment in KNHANES with 95\% CIs; (ii) primary (minimal-adjustment-set) associations between perceived stress and each endpoint, with the extended mediator-adjusted model reported separately; (iii) associations with better- and worse-ear and per-ear audiometric thresholds, expected to attenuate after adjusting for age and noise (H1); (iv) all-adult and, secondarily, employed-restricted analyses (healthy-worker check); (v) NHANES external validation reporting unweighted and weighted performance, calibration-in-the-large and slope before/after recalibration, common support, and case-mix-standardized performance (H2); and (vi) subgroup fairness including SES and race/ethnicity. Every table will separate public-data analyses from any future clinical-extension analyses.
+\section{Results}
+This section reports \emph{preliminary real-data results} from NHANES (a
+demonstration of the framework on genuine public-use data), followed by the
+analyses that remain planned for the primary KNHANES development cohort. The
+NHANES analysis is illustrative rather than the primary test of the aims: NHANES
+2011--2018 lacks a validated perceived-stress instrument, so the available
+psychological-distress proxy is the PHQ-9 depression screen, which the study DAG
+treats as a \emph{mediator}. The primary perceived-stress exposure analysis is
+therefore reserved for KNHANES, which carries a general stress item.
+
+\subsection{Planned primary analyses (KNHANES; not yet reported)}
+Per the prespecified aims, the KNHANES analyses will report: (i) weighted
+prevalence of tinnitus presence, bothersome tinnitus, and hearing impairment with
+95\% CIs; (ii) primary (minimal-adjustment-set) associations between perceived
+stress and each endpoint, with the extended mediator-adjusted model separate;
+(iii) associations with better-, worse-ear, and per-ear thresholds, expected to
+attenuate after adjusting for age and noise (H1); (iv) all-adult and, secondarily,
+employed-restricted analyses (healthy-worker check); (v) KNHANES$\rightarrow$NHANES
+external validation with unweighted/weighted performance, calibration-in-the-large
+and slope before/after recalibration, common support, and case-mix standardization
+(H2); and (vi) subgroup fairness including SES and race/ethnicity.
 
 \subsection{Reproducible scaffold demonstration (synthetic; not a result)}
 To show that the pipeline runs end-to-end and produces correctly structured, TRIPOD+AI-aligned outputs, the repository ships a synthetic-data demonstration. \textbf{These numbers are artifacts of randomly generated data and carry no epidemiological meaning}; they exist only to verify wiring, metric computation, and reporting format, and are deliberately kept out of the abstract and any headline. On the synthetic sample the tinnitus target yields AUROC~$\approx$~0.64, AUPRC~$\approx$~0.49, Brier~$\approx$~0.20, and the hearing-loss target yields an analogous record (Table~\ref{tab:metrics}). Substituting real KNHANES/NHANES files following the documented layout routes the identical code path to the design-consistent estimates specified above.
 
-\subsection{Real-data results (NHANES public-use)}
-The analysis code includes a complete, tested, design-based NHANES pipeline
-(\texttt{code/src/nhanes\_analysis.py}) that computes survey-weighted prevalence
-(Taylor-linearized 95\% CIs) and design-based logistic associations from the real
-CDC public-use files, and emits the table below. The estimators are unit-tested
-for correctness (\texttt{code/src/test\_nhanes\_analysis.py}); associations are
-odds ratios and are not causal.
-\IfFileExists{tables/table_results.tex}{%
-Table~\ref{tab:results} reports these estimates for adults aged 40--69 across the
-prespecified NHANES cycles.
-\input{tables/table_results}%
-}{%
-\emph{[The real NHANES results table auto-populates here once the CDC public-use
-files are placed under \texttt{code/data/raw/nhanes/} and
-\texttt{code/src/nhanes\_analysis.py} is run with \texttt{-{}-latex
-../paper/tables/table\_results.tex}. To preserve scientific integrity, no
-numbers are shown until they are produced from real data. The KNHANES analysis
-mirrors this pipeline and runs once KDCA-approved files are supplied.]}%
-}
+\subsection{Preliminary real-data results (NHANES public-use)}
+Using the tested, design-based pipeline (\texttt{code/src/nhanes\_analysis.py};
+estimators unit-tested in \texttt{code/src/test\_nhanes\_analysis.py}), we
+analyzed real NHANES public-use files for U.S. adults aged 40--69, pooling the
+2011--2012, 2015--2016, and 2017--2018 cycles (Table~\ref{tab:results}).
+\IfFileExists{tables/table_results.tex}{\input{tables/table_results}}{}
+
+\paragraph{Prevalence.} Survey-weighted prevalence was 28.5\% (95\% CI 26.5--30.4;
+$n=5{,}354$) for any tinnitus in the past 12 months, 12.0\% (10.4--13.6;
+$n=4{,}808$) for better-ear speech-frequency hearing loss ($>$25 dB HL), and 8.4\%
+(7.5--9.4; $n=7{,}293$) for a positive PHQ-9 depression screen.
+
+\paragraph{Associations.} In mutually adjusted design-based logistic models
+(adjusting for occupational noise, depressed mood, age, and sex), \emph{tinnitus}
+was associated with occupational-noise exposure (OR 1.59, 1.32--1.92), depressed
+mood (OR 1.61, 1.23--2.11), and female sex (OR 1.61, 1.35--1.91), but not with age
+(OR 1.00, 0.98--1.01). \emph{Hearing loss} was associated with age (OR 1.11 per
+year, 1.09--1.13) and depressed mood (OR 2.29, 1.56--3.35), inversely with female
+sex (OR 0.42, 0.29--0.61), and only weakly and non-significantly with occupational
+noise (OR 1.22, 0.94--1.58). These are associations, not causal effects.
+
+\paragraph{Interpretation (a priori pattern).} The pattern is coherent with the
+framework's hypotheses. The psychological-distress proxy is associated with both
+outcomes, but more than doubles the odds of \emph{audiometric} hearing loss while
+showing a smaller association with \emph{tinnitus}; age dominates hearing loss but
+is unrelated to tinnitus in this band; and the sex pattern (higher tinnitus,
+lower hearing loss in women) matches known epidemiology. Because the proxy is a
+mediator in the DAG, these are mediator-level associations, and NHANES lacks the
+perceived-stress exposure; they therefore motivate---but do not substitute
+for---the primary KNHANES stress analysis. All values are reproduced by the
+committed results file and can be regenerated end-to-end from the CDC files.
 
 \subsection{Planned AI-component reporting}
 LLM-extracted fields will be reported with the per-field metric suite of Section~\ref{sec:ai} (exact match; precision/recall/F1; omission; span agreement; temporal/laterality/onset/duration accuracy; document-level match; run consistency; clinically significant error rate), plus clinician correction time and per-version performance. The red-flag layer will be reported per Table~\ref{tab:redflag} (dual-expert-labeled vignettes; sensitivity with 95\% CI; specificity/over-referral; subgroup and robustness), with any missed red flag audited as a critical failure and with the explicit caveat that finite-set perfection does not guarantee zero deployment misses. Model cards accompany each released model, documenting intended use (Table~\ref{tab:intended}), data provenance, subgroup metrics, and prohibitions.
