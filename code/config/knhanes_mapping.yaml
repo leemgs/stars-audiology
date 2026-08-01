@@ -1,0 +1,63 @@
+# KNHANES variable mapping for STARS.
+#
+# KNHANES raw microdata require official KDCA approval and cannot be redistributed.
+# After you obtain the SAS files (.sas7bdat) for the otology/audiometry cycles,
+# place each cycle's file under code/data/raw/knhanes/<cycle>/ and fill in the
+# EXACT variable codes below from the official codebook for THOSE cycles.
+#
+# The values below are sensible defaults based on commonly used KNHANES codes,
+# but variable names differ across cycles --- VERIFY every one against the
+# codebook. Fields marked <FILL> have no reliable default and must be set.
+#
+# Unlike NHANES, KNHANES carries a general perceived-stress item, so STARS's
+# PRIMARY exposure (perceived stress) is available here.
+
+survey_design:
+  weight: wt_tot          # examination weight (verify; often wt_itvex / wt_tot)
+  strata: kstrata         # variance stratum
+  psu: psu                # primary sampling unit
+
+common:
+  age: age
+  sex: sex                # 1 = male, 2 = female
+  education: edu          # education level
+  income: ho_incm         # household income quartile
+  occupation: occp        # occupation group
+  employment: EC_stt_1    # employment status (verify)
+
+exposure:
+  perceived_stress: BP1           # stress perception, 1..4 (1=very high ... 4=rarely)
+  stress_high_values: [1, 2]      # dichotomize: "high stress" = these codes
+
+mediators:
+  # PHQ-9 items if present in the cycle (else leave empty and use depressed_2wk):
+  depression_phq9_items: []       # e.g., [mh_PHQ_01, ..., mh_PHQ_09]
+  depressed_2wk: BP5              # felt sad/hopeless >= 2 weeks (1=yes, 2=no)
+  sleep_hours: Total_slp_wd       # average sleep hours (verify)
+
+outcomes:
+  tinnitus_item: <FILL>           # tinnitus presence question (set from codebook)
+  tinnitus_yes_values: [1]
+  occupational_noise: <FILL>      # workplace loud-noise exposure question
+
+# Pure-tone air-conduction thresholds (dB HL) per frequency: [right_var, left_var]
+audiometry:
+  "500":  [O_R_500,  O_L_500]
+  "1000": [O_R_1000, O_L_1000]
+  "2000": [O_R_2000, O_L_2000]
+  "3000": [O_R_3000, O_L_3000]
+  "4000": [O_R_4000, O_L_4000]
+  "6000": [O_R_6000, O_L_6000]
+speech_freqs: ["500", "1000", "2000", "4000"]
+invalid_threshold_codes: [999, 666]   # non-response / could-not-test codes
+
+# Raw files per cycle (KDCA-approved, placed locally; never committed).
+files:
+  "2010": {exam: HN10_ALL.sas7bdat}
+  "2011": {exam: HN11_ALL.sas7bdat}
+  "2012": {exam: HN12_ALL.sas7bdat}
+
+analysis:
+  age_min: 40
+  age_max: 69
+  hearing_loss_cutoff_db: 25

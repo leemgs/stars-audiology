@@ -1,5 +1,5 @@
 study:
-  name: StressEar-AI
+  name: STARS
   type: pre-analysis study protocol (no empirical results)
   primary_dataset: KNHANES
   external_validation_dataset: NHANES
