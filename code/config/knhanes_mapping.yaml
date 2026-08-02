@@ -48,39 +48,38 @@ mediators:
   sleep_hours: <FILL>            # [FILL] sleep-duration var not standardized in 2010-2012 (optional; mediator only)
 
 outcomes:
-  # ** VERIFIED ABSENT from the HN{yy}_ALL "기본DB" files. ** Inspection of the
-  # real 2010-2012 ALL files found NO tinnitus/noise/audiometry variables (the
-  # "HtE_"/"O_R_###" guesses below do not exist there -- "O_*" columns are the
-  # ORAL/dental exam). The ENT exam (순음청력 + 이명 + 소음), fielded on adults
-  # >=40, is a SEPARATE file that must be downloaded and merged on `id`.
-  # The names below are UNCONFIRMED placeholders pending that ENT file's codebook.
-  tinnitus_item: <FILL>           # [PENDING ENT FILE] 최근 1년 이명 경험 item
-  tinnitus_yes_values: [1]
-  bothersome_item: <FILL>         # [PENDING ENT FILE] bothersome-tinnitus item
-  bothersome_yes_values: [2, 3]
-  occupational_noise: <FILL>      # [PENDING ENT FILE] 직업적/작업장 소음 노출 item
+  # ** CONFIRMED against the real 2010-2012 이비인후검사 (ENT) files. ** These live
+  # in the HN{yy}_ENT file (merged into the 기본DB on the person id by the loader),
+  # NOT in the ALL file. KNHANES binary items code 1=예, 2=아니오, 8=비해당,
+  # 9=무응답 -> only 1/2 are used; 8/9 (and anything else) are treated as missing.
+  tinnitus_item: T_Q_VN           # [CONFIRMED] 설문5: 이명여부
+  tinnitus_yes_values: [1]        # 1 = 있음
+  tinnitus_no_values: [2]         # 2 = 없음 (8/9 -> missing)
+  bothersome_item: T_Q_VN1        # [CONFIRMED name] 설문5-1: 이명에 따른 생활불편
+  bothersome_yes_values: [2, 3]   # [VERIFY scale] answered only by tinnitus-positive
+  occupational_noise: T_NQ_OCP    # [CONFIRMED] 소음2: 기계음 3개월 이상 (1=예,2=아니오)
 
 # Pure-tone air-conduction thresholds (dB HL) per frequency: [right_var, left_var]
-# ** PENDING ENT FILE. ** The O_R_###/O_L_### names below are NOT in the ALL file
-# (O_* there is dental). Set these from the ENT/audiometry file's codebook.
+# [CONFIRMED] KNHANES ENT audiometry uses T_HR<freq>_rt / _lt; values are real dB
+# (approx -10..110) with NaN for not-tested, so no sentinel codes are needed.
 audiometry:
-  "500":  [<FILL>, <FILL>]
-  "1000": [<FILL>, <FILL>]
-  "2000": [<FILL>, <FILL>]
-  "3000": [<FILL>, <FILL>]
-  "4000": [<FILL>, <FILL>]
-  "6000": [<FILL>, <FILL>]
+  "500":  [T_HR500_rt,  T_HR500_lt]
+  "1000": [T_HR1000_rt, T_HR1000_lt]
+  "2000": [T_HR2000_rt, T_HR2000_lt]
+  "3000": [T_HR3000_rt, T_HR3000_lt]
+  "4000": [T_HR4000_rt, T_HR4000_lt]
+  "6000": [T_HR6000_rt, T_HR6000_lt]
 speech_freqs: ["500", "1000", "2000", "4000"]
-invalid_threshold_codes: [99999, 66666]   # [PENDING ENT FILE] non-response codes -- confirm
+invalid_threshold_codes: []            # [CONFIRMED] thresholds are clean dB; NaN = not tested
 
 # Raw files per cycle (KDCA files, placed locally under data-dir; not committed).
-# `exam` = the "기본DB" HN{yy}_ALL file (VERIFIED present: stress BP1 + covariates,
-#          but NO hearing outcomes). `ent` = the separate ENT/audiometry file
-#          (still to be downloaded); the loader merges `ent` into `exam` on `id`.
+# `exam` = the "기본DB" HN{yy}_ALL file (stress BP1 + covariates + weights).
+# `ent`  = the "이비인후검사" HN{yy}_ENT file (audiometry + tinnitus + noise).
+# The loader merges `ent` into `exam` on the person id (case varies: id/ID).
 files:
-  "2010": {exam: hn10_all.sas7bdat, ent: <FILL_ENT_2010>}
-  "2011": {exam: hn11_all.sas7bdat, ent: <FILL_ENT_2011>}
-  "2012": {exam: hn12_all.sas7bdat, ent: <FILL_ENT_2012>}
+  "2010": {exam: hn10_all.sas7bdat, ent: hn10_ent.sas7bdat}
+  "2011": {exam: hn11_all.sas7bdat, ent: hn11_ent.sas7bdat}
+  "2012": {exam: hn12_all.sas7bdat, ent: hn12_ent.sas7bdat}
 
 analysis:
   age_min: 40

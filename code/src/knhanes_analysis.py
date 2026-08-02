@@ -63,6 +63,21 @@ def _read_sas(path: Path) -> pd.DataFrame:
         f"`pip install --break-system-packages pyreadstat`. Last pandas error: {last}")
 
 
+def _find_id_col(df: pd.DataFrame) -> str:
+    """Return the person-id column, tolerating case.
+
+    KNHANES varies the person-id case across files/years: the 2010 기본DB uses
+    ``ID`` while 2011-2012 use ``id``, and the ENT files use ``ID``.
+    """
+    for cand in ("id", "ID"):
+        if cand in df.columns:
+            return cand
+    low = {c.lower(): c for c in df.columns}
+    if "id" in low:
+        return low["id"]
+    raise KeyError("No person-id column (id/ID) found for the KNHANES merge.")
+
+
 def load_cycle(cycle: str, data_dir: Path, mapping: dict) -> pd.DataFrame:
     finfo = mapping["files"].get(cycle)
     if not finfo:
@@ -70,9 +85,31 @@ def load_cycle(cycle: str, data_dir: Path, mapping: dict) -> pd.DataFrame:
     path = data_dir / cycle / finfo["exam"]
     if not path.exists():
         raise FileNotFoundError(
-            f"Missing {path}. KNHANES files require KDCA approval; place the "
-            f"approved .sas7bdat there and complete config/knhanes_mapping.yaml.")
+            f"Missing {path}. Place the KNHANES 기본DB (HN{cycle[2:]}_ALL) file there "
+            f"and complete config/knhanes_mapping.yaml.")
     df = _read_sas(path)
+
+    # The hearing outcomes (audiometry + tinnitus + noise) live in the SEPARATE
+    # 이비인후검사 (ENT) file, keyed by the same person id. Merge it in here so the
+    # rest of the pipeline sees one frame per cycle.
+    ent_name = finfo.get("ent")
+    if ent_name and not str(ent_name).startswith("<"):
+        ent_path = data_dir / cycle / ent_name
+        if not ent_path.exists():
+            raise FileNotFoundError(
+                f"Missing ENT/audiometry file {ent_path}. It carries the hearing "
+                f"outcomes; download the '이비인후검사' (HN{cycle[2:]}_ENT) file.")
+        ent = _read_sas(ent_path)
+        df = df.rename(columns={_find_id_col(df): "id"})
+        k_ent = _find_id_col(ent)
+        ent = ent.drop_duplicates(subset=[k_ent])
+        keep = [k_ent] + [c for c in ent.columns if c not in df.columns and c != k_ent]
+        ent = ent[keep].rename(columns={k_ent: "id"})
+        n0 = len(df)
+        df = df.merge(ent, on="id", how="left")
+        if len(df) != n0:
+            raise RuntimeError(f"ENT merge changed row count {n0}->{len(df)} for {cycle}.")
+
     df["cycle"] = cycle
     return df
 
@@ -118,8 +155,13 @@ def derive_variables(df: pd.DataFrame, mapping: dict) -> pd.DataFrame:
     tin = _get(df, m["outcomes"]["tinnitus_item"])
     if tin is not None:
         yes = set(m["outcomes"]["tinnitus_yes_values"])
-        out["tinnitus"] = tin.apply(
-            lambda v: 1.0 if v in yes else (np.nan if pd.isna(v) else 0.0))
+        no = set(m["outcomes"].get("tinnitus_no_values", []))
+        if no:  # explicit yes/no; anything else (8=비해당, 9=무응답, ...) is missing
+            out["tinnitus"] = tin.apply(
+                lambda v: 1.0 if v in yes else (0.0 if v in no else np.nan))
+        else:
+            out["tinnitus"] = tin.apply(
+                lambda v: 1.0 if v in yes else (np.nan if pd.isna(v) else 0.0))
     both = _get(df, m["outcomes"].get("bothersome_item"))
     if both is not None:
         byes = set(m["outcomes"].get("bothersome_yes_values", []))
@@ -230,6 +272,13 @@ def main() -> None:
     frames = [derive_variables(load_cycle(c, data_dir, mapping), mapping)
               for c in args.cycles]
     df = pd.concat(frames, ignore_index=True)
+
+    # KDCA pooling rule: when combining K survey years, divide the integrated
+    # weight by K so the pooled weights sum to a single-year population.
+    n_cyc = len(args.cycles)
+    if n_cyc > 1 and "weight" in df:
+        df["weight"] = df["weight"] / n_cyc
+        print(f"Pooled {n_cyc} cycles: divided survey weight by {n_cyc}.")
 
     print("Derived-variable coverage (non-null counts):")
     for v in ["perceived_stress", "tinnitus", "hearing_loss", "better_ear_pta",
