@@ -43,13 +43,18 @@ For each year, the **공통 / 기본DB** row (제목: "검진조사, 건강설�
 carry `BP1` (stress) + all covariates.
 
 **(b) The ENT / audiometry (outcomes) — still needed ⬅️**
-In the same 2010–2012 results, look under **검진조사** for a **separate row whose
-제목 mentions 이비인후 / 청력 (ear exam / hearing / audiometry)** — analogous to
-how nutrition has its own "식품섭취조사" row. Download **SAS ⬇** for each year.
-- **If you're not sure which row it is:** screenshot the full 2010–2012 results
-  list and send it to me — I'll point to the exact row.
-- This ENT file carries the pure-tone thresholds, the tinnitus item, and the
-  occupational-noise item, plus the otology-exam subsample weight.
+Isolate the examination-survey files so the hearing file stands out:
+1. **조사영역: uncheck 공통, 건강설문조사, 영양조사 — check ONLY 검진조사.**
+2. **조사연도: 2010 ~ 2012.**
+3. **자료조회.**
+4. In the results, find the row whose **제목 mentions 이비인후 / 청력 / 순음**
+   (it may sit next to other special exams like 안검사 / 폐기능). For each of
+   2010, 2011, 2012 → **SAS ⬇**.
+- **If no such row appears, or you're unsure which it is:** screenshot the whole
+  2010–2012 결과 목록 and send it — I'll point to the exact row (or confirm the
+  access path). Last resort: KDCA 건강영양조사분석과 ☎ 043-719-7508.
+- This ENT file carries the pure-tone thresholds, the tinnitus item, the
+  occupational-noise item, and the otology-exam subsample weight.
 
 Also grab the **codebook**: top of the page → **이용지침서 바로가기** → download
 the 이용지침서 / 코드북 (변수설명서), **especially the 이비인후검사 section**, so the
