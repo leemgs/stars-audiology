@@ -91,7 +91,7 @@ drives the word limits, abstract format, and structure below.
 |------|--------|-------|
 | NHANES results in abstract = results = table = JSON | ✅ | All prevalence/OR/CI values match `code/outputs/nhanes_results.json` exactly. |
 | **NHANES cycle window stated consistently** | ✅ | **Reconciled to 2017–2018** in `methods.tex` and `study_config.yaml` to match the committed results. See `REVIEW_NOTES.md §3.1`. |
-| **KNHANES cycle window stated consistently** | ⚠️ | Protocol says **2009–2012**; the mapping/CLI use only **2010–2012** (no 2009). Reconcile. See `REVIEW_NOTES.md §3`. |
+| **KNHANES cycle window stated consistently** | ✅ | **Narrowed to 2010–2012 (KNHANES V)** across protocol text, config, and tables to match the mapping/CLI. See `REVIEW_NOTES.md §3.2`. |
 
 ---
 
@@ -100,7 +100,7 @@ drives the word limits, abstract format, and structure below.
 1. **Confirm the AJA article category** with the editorial office (drives everything else).
 2. Produce the **masked manuscript + separate title page**; strip identifying content and identity-revealing self-citations from the review copy.
 3. ~~Convert references to APA 7~~ (**done**) — now expand the six "et al." entries to full author lists and complete the three incomplete entries.
-4. NHANES window ~~reconciliation~~ (**done: 2017–2018**) — decide the remaining **KNHANES 2009 vs 2010** window and align the mapping/CLI.
+4. Cycle windows ~~reconciliation~~ (**done**: NHANES 2017–2018; KNHANES narrowed to 2010–2012 / KNHANES V).
 5. Trim the **abstract** to the AJA limit; trim keywords if needed.
 6. Commit/upload the **filled STROBE + TRIPOD+AI checklists** as supplements.
 7. Fill cover-letter placeholders (**date, editor, ORCIDs**) and add ORCIDs in the portal.

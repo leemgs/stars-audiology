@@ -118,17 +118,18 @@ All NHANES-window statements now agree with `code/outputs/nhanes_results.json`
 the 2017–2020 pre-pandemic file instead, re-run `nhanes_analysis.py` on it and
 refresh the results/table + these strings.
 
-### 3.2 ⚠️ KNHANES cycle window — 2009 present in protocol, absent in implementation
+### 3.2 🔧 KNHANES cycle window — narrowed to 2010–2012 (KNHANES V)
 
-| Location | Says |
-|----------|------|
-| `sections/methods.tex`, `code/config/study_config.yaml` | KNHANES **2009–2012** |
-| `code/config/knhanes_mapping.yaml` (`files`), `knhanes_analysis.py` default `--cycles` | **2010–2012** only (no 2009) |
+**Resolved** by narrowing the protocol to match the implementation
+(`knhanes_mapping.yaml` `files` and the `knhanes_analysis.py` default `--cycles`
+already covered 2010–2012 only). Updated:
+- `code/config/study_config.yaml`: `development_cycles` → **`["2010","2011","2012"]`** ("KNHANES V").
+- `sections/methods.tex`: "KNHANES IV–V, 2009–2012" → **"KNHANES V, 2010–2012"**.
+- `sections/public_data.tex`: audiometry-cycle phrase → **"2010–2012"**.
+- `tables/table_harmonization.tex`: KNHANES source column → **"Otologic Q, 2010–2012"** (both tinnitus rows).
 
-Either add a `2009` file entry (`HN09_ALL.sas7bdat`) to the mapping and include
-`2009` in `--cycles`, or narrow the protocol text to 2010–2012. See
-`code/config/KNHANES_MAPPING_VERIFICATION.md`.
-*Not auto-fixed — analytic-scope decision.*
+Note: the `park2014tinnitus` reference title legitimately contains "…Surveys
+2009–2011" (the real published title) and was **left unchanged**.
 
 ---
 
@@ -155,8 +156,11 @@ Either add a `2009` file entry (`HN09_ALL.sas7bdat`) to the mapping and include
 - Converted the reference list to **APA 7** style (§1.4); mirrored the PLOS ONE
   DOI into `references.bib`.
 
-**Left for the authors (scope / data decisions, documented above):**
-- KNHANES 2009 inclusion (§3.2) — analytic-scope decision.
+- Narrowed the KNHANES window to **2010–2012 (KNHANES V)** across
+  `study_config.yaml`, `methods.tex`, `public_data.tex`, and
+  `table_harmonization.tex` (§3.2).
+
+**Left for the authors (needs source data / build choice):**
 - Full author-list expansion for the six "et al." references and completion of
   the three incomplete entries (§1.4) — needs source data, not invented.
 - Wiring `references.bib` into the build vs. keeping the manual list (§1.1).

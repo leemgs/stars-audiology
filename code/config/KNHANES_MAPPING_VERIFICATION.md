@@ -79,7 +79,7 @@ a one-line fix in the loader once the cycle count is fixed.
 | Field | Default | Confidence | Note |
 |-------|---------|-----------|------|
 | `files.2010/2011/2012` | `HN10_ALL.sas7bdat`, `HN11_ALL.sas7bdat`, `HN12_ALL.sas7bdat` | ✅ High | Matches the standard KNHANES SAS release naming (`HN<yy>_ALL.sas7bdat`). |
-| **2009 cycle** | *(absent)* | ⚠️ Medium | The study protocol (`study_config.yaml`, methods) specifies **2009–2012**, but the mapping and the `knhanes_analysis.py` CLI default only cover **2010–2012**. If you want 2009, add `"2009": {exam: HN09_ALL.sas7bdat}` and include `2009` in `--cycles`. Otherwise reconcile the protocol text to 2010–2012. |
+| **2009 cycle** | *(intentionally absent)* | ✅ High | Resolved: the study window is **2010–2012 (KNHANES V)**. The protocol text (`study_config.yaml`, `methods.tex`, `public_data.tex`, `table_harmonization.tex`) was narrowed to match the mapping/CLI, so no 2009 file is needed. |
 | `age_min/max` | `40 / 69` | ✅ High | Matches the manuscript and `study_config.yaml`. |
 | `hearing_loss_cutoff_db` | `25` | ✅ High | WHO grade-1 cutoff; matches the manuscript primary definition. |
 
