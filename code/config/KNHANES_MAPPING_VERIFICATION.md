@@ -58,13 +58,18 @@ a one-line fix in the loader once the cycle count is fixed.
 | `depressed_2wk` | `BP5` | ✅ High | **Correct.** `BP5` is the "felt sad/hopeless ≥ 2 weeks in the past year" item (1 = yes, 2 = no). The loader maps `1→1.0, 2→0.0` correctly. |
 | `sleep_hours` | `Total_slp_wd` | ⚠️ Medium | `Total_slp_wd` (weekday mean sleep hours) exists from the **2016** sleep-module expansion onward. For **2009–2012** it likely does **not** exist; earlier waves used different sleep items. Verify per cycle; leave unmapped if absent (the loader tolerates a missing sleep variable). |
 
-## Outcomes (**the two `<FILL>` fields — read from the codebook**)
+## Outcomes (**two prefilled best-guess fields — verify against the codebook**)
+
+The mapping now ships **best-guess** codes for these (`HtE_1`, `HtE_5`) instead of
+`<FILL>`. They are *unverified guesses at the otology-module variable names* and
+**must still be confirmed against the codebook** before the results are trusted —
+a wrong name here silently drops the tinnitus/noise variables.
 
 | Field | Default | Confidence | Note |
 |-------|---------|-----------|------|
-| `tinnitus_item` | `<FILL>` | ❓ Unknown | **Must** be read from the otology-module codebook. This is the "ringing in the ears in the past year" question used to define tinnitus (the same construct Park et al., 2014 used on KNHANES 2009–2011). I cannot assert the exact variable name from public sources — do not guess; take it from the codebook. |
+| `tinnitus_item` | `HtE_1` | ⚠️ Verify (best-guess) | Prefilled best-guess for the "ringing in the ears in the past year" question (the construct Park et al., 2014 used). The exact variable name cannot be confirmed from public sources — **confirm `HtE_1` against the otology-module codebook**; do not trust it blind. |
 | `tinnitus_yes_values` | `[1]` | ⚠️ Medium | Plausible (1 = yes) but confirm the yes-code against the codebook. |
-| `occupational_noise` | `<FILL>` | ❓ Unknown | Workplace loud-noise exposure question (the otology/occupational module). Read the exact code from the codebook; the loader maps `1→exposed, 2→not`. |
+| `occupational_noise` | `HtE_5` | ⚠️ Verify (best-guess) | Prefilled best-guess for the workplace loud-noise exposure question. **Confirm `HtE_5` against the codebook**; the loader maps `1→exposed, 2→not`. |
 
 ## Audiometry (pure-tone thresholds)
 
@@ -90,8 +95,8 @@ a one-line fix in the loader once the cycle count is fixed.
 Everything else has a trustworthy default. From the **codebook that ships with
 the approved data**, confirm/fill just these:
 
-1. `tinnitus_item` — the tinnitus question variable (❓ required).
-2. `occupational_noise` — the workplace-noise question variable (❓ required).
+1. `tinnitus_item` — confirm the best-guess `HtE_1` against the codebook (⚠️ required).
+2. `occupational_noise` — confirm the best-guess `HtE_5` against the codebook (⚠️ required).
 3. The **12 audiometry threshold** variable names `O_R_/O_L_<freq>` (❓ verify).
 4. `invalid_threshold_codes` — the real non-response sentinels (⚠️ matters).
 5. `weight` — confirm `wt_itvex` vs `wt_tot`, and apply the `/n_years` pooling divisor (⚠️).

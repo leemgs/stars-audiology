@@ -31,8 +31,9 @@ STARS uses. Decide 2009–2012 vs 2010–2012 first (see the open question in
 - `HN12_ALL.sas7bdat` (2012)
 
 Also download the matching **코드북 (codebook) PDF** for each cycle — it carries
-the exact variable names for the two `<FILL>` items and the audiometry
-thresholds (see `KNHANES_MAPPING_VERIFICATION.md`).
+the exact variable names to confirm the two prefilled best-guess items
+(`HtE_1`, `HtE_5`) and the audiometry thresholds (see
+`KNHANES_MAPPING_VERIFICATION.md`).
 
 ## Step 3 — Research-purpose text (paste this)
 
@@ -76,12 +77,13 @@ code/data/raw/knhanes/2012/HN12_ALL.sas7bdat
 # (+ 2009/HN09_ALL.sas7bdat if in scope)
 ```
 
-Then tell me it's placed (and share the codebook for the two `<FILL>` variable
-names). From there **I do the rest without you touching anything else:**
+Then tell me it's placed (and share the codebook so I can confirm the two
+best-guess variable names). From there **I do the rest without you touching
+anything else:**
 
-1. Read the codebook and fill `tinnitus_item`, `occupational_noise`, verify the
-   12 audiometry variable names, the sentinels, and `wt_itvex` in
-   `knhanes_mapping.yaml`.
+1. Read the codebook and confirm/fix `tinnitus_item` (`HtE_1`?),
+   `occupational_noise` (`HtE_5`?), verify the 12 audiometry variable names, the
+   sentinels, and the weight variable in `knhanes_mapping.yaml`.
 2. Apply the pooling weight divisor in the loader.
 3. Run:
    ```bash
