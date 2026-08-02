@@ -22,32 +22,38 @@ download page. This guide was corrected after seeing the real portal.
 
 ## Step 2 — Set the query (on the 다운로드 screen you're looking at)
 
-1. **조사영역:** keep **공통**, **검진조사**, **건강설문조사** checked.
-   - **검진조사** = the examination module — carries **순음청력검사 (audiometry)**
-     and the **이명 (tinnitus)** items → the STARS *outcomes*.
+1. **조사영역:** keep **공통** and **건강설문조사** checked (검진조사 too).
    - **건강설문조사** = the health interview — carries the **스트레스 인지 (`BP1`)**
-     item → the STARS *primary exposure*.
+     item → the STARS *primary exposure*. ✅ This IS in the 기본DB.
    - **영양조사** (nutrition) is not needed; leaving it checked is harmless.
-2. **조사연도:** set to **2010 ~ 2012**.
-   - KNHANES ran the ENT/hearing exam only in **2008–2012**, so 2010–2012 is the
-     window that has both audiometry and the tinnitus item. (This is the STARS
-     development window; see `KNHANES_MAPPING_VERIFICATION.md`.)
+2. **조사연도:** set to **2010 ~ 2012** (the STARS development window).
 3. Click **자료조회**.
 
-## Step 3 — Download the files (SAS, per year)
+## Step 3 — Download TWO kinds of file per year
 
-In the results table, for **each** year (2010, 2011, 2012):
+> ⚠️ **Correction (verified against the real files):** the 공통 "기본DB"
+> (`HN{yy}_ALL`) does **NOT** contain the hearing exam. It has the stress
+> exposure + covariates but **no audiometry, tinnitus, or noise variables**. In
+> KNHANES 2010–2012 the **이비인후검사 (ENT exam: 순음청력 + 이명), fielded on
+> adults ≥40, is a SEPARATE examination file.** You need **both** files per year.
 
-1. Find the **공통 / 기본DB** row — its 제목 reads "검진조사, 건강설문조사, 영양조사".
-   This one integrated file per year contains audiometry + tinnitus + stress
-   together (it is the `HN10_ALL` / `HN11_ALL` / `HN12_ALL` file the pipeline
-   expects).
-2. Click **SAS ⬇** (not SPSS — the loader reads `.sas7bdat`).
+**(a) The 기본DB (exposure) — you already downloaded these ✅**
+For each year, the **공통 / 기본DB** row (제목: "검진조사, 건강설문조사, 영양조사")
+→ **SAS ⬇**. These are `hn10_all` / `hn11_all` / `hn12_all` and are confirmed to
+carry `BP1` (stress) + all covariates.
+
+**(b) The ENT / audiometry (outcomes) — still needed ⬅️**
+In the same 2010–2012 results, look under **검진조사** for a **separate row whose
+제목 mentions 이비인후 / 청력 (ear exam / hearing / audiometry)** — analogous to
+how nutrition has its own "식품섭취조사" row. Download **SAS ⬇** for each year.
+- **If you're not sure which row it is:** screenshot the full 2010–2012 results
+  list and send it to me — I'll point to the exact row.
+- This ENT file carries the pure-tone thresholds, the tinnitus item, and the
+  occupational-noise item, plus the otology-exam subsample weight.
 
 Also grab the **codebook**: top of the page → **이용지침서 바로가기** → download
-the 이용지침서 / 코드북 (변수설명서) for these years. That is where the exact
-variable names are confirmed (`tinnitus_item`, currently the best-guess `HtE_1`;
-the occupational-noise item; the 12 audiometry variables; the weight variable).
+the 이용지침서 / 코드북 (변수설명서), **especially the 이비인후검사 section**, so the
+ENT variable names can be confirmed.
 
 ## Step 4 — (Only if a form asks 이용목적) paste this
 
@@ -63,25 +69,25 @@ registration/pledge form asks for a research purpose (이용목적), you can pas
 ## Step 5 — Place the files where the loader expects them
 
 ```
-code/data/raw/knhanes/2010/   ← the 2010 SAS file (e.g., HN10_ALL.sas7bdat)
-code/data/raw/knhanes/2011/   ← the 2011 SAS file
-code/data/raw/knhanes/2012/   ← the 2012 SAS file
+code/data/raw/knhanes/2010/   ← hn10_all.sas7bdat (done) + the 2010 ENT file
+code/data/raw/knhanes/2011/   ← hn11_all.sas7bdat (done) + the 2011 ENT file
+code/data/raw/knhanes/2012/   ← hn12_all.sas7bdat (done) + the 2012 ENT file
 ```
 
-If a downloaded file unzips to a different name, either rename it to
-`HN<yy>_ALL.sas7bdat` or tell me the actual name and I will point the mapping at
-it (`config/knhanes_mapping.yaml` → `files:`). `code/data/` is git-ignored, so
-these restricted files are never committed (`.gitignore`).
+Just drop the ENT `.sas7bdat` files next to the `hn{yy}_all` ones (any name is
+fine — tell me the names and I'll point `config/knhanes_mapping.yaml → files:
+ent:` at them). `code/data/` is git-ignored, so these restricted files are never
+committed (`.gitignore`).
 
 ## Step 6 — Hand it to me → I finish the rest
 
-Tell me the files are placed (and share the codebook so I can confirm the
-best-guess variable names). From there **I do the rest without you touching
-anything else:**
+Tell me the ENT files are placed (and share the codebook's 이비인후검사 section).
+From there **I do the rest without you touching anything else:**
 
-1. Read the codebook and confirm/fix `tinnitus_item` (`HtE_1`?),
-   `occupational_noise` (`HtE_5`?), the 12 audiometry variable names, the
-   sentinels, and the weight variable in `knhanes_mapping.yaml`.
+1. Wire the loader to merge each year's ENT file into the `hn{yy}_all` file on
+   `id`, and fill the ENT variable names in `knhanes_mapping.yaml`
+   (`tinnitus_item`, `occupational_noise`, the audiometry thresholds, the
+   otology-exam weight) from the codebook.
 2. Apply the pooling weight divisor in the loader.
 3. Run:
    ```bash

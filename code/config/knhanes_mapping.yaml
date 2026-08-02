@@ -18,11 +18,13 @@
 # ---------------------------------------------------------------------------
 
 survey_design:
-  # IMPORTANT: the ENT/otology exam was a SUB-sample, so use the otology-exam
-  # weight KDCA supplies for these cycles, NOT the general exam weight. The exact
-  # name is cycle-specific; when pooling 2010-2012, follow KDCA's integrated-
-  # weight guidance (typically divide the year weight by the number of years).
-  weight: wt_tot          # [VERIFY] otology-exam / integrated weight (e.g., wt_ent, wt_itvex, wt_tot)
+  # VERIFIED against the real HN10/11/12_ALL files: wt_itvex (설문,검진 통합
+  # 가중치) is present and correct for the interview+exam analysis; pool 2010-2012
+  # by dividing it by the number of years (wt_itvex/3) per KDCA guidance.
+  # NOTE: the ENT/otology exam is a ">=40 subsample"; the audiometry-specific
+  # subsample weight is expected to live IN THE SEPARATE ENT FILE (not the ALL
+  # file). Switch `weight` to that ENT weight once the ENT file is supplied.
+  weight: wt_itvex        # [CONFIRMED in ALL file] 설문,검진 통합가중치 (pool: /n_years)
   strata: kstrata         # [CONFIRMED] variance estimation stratum
   psu: psu                # [CONFIRMED] primary sampling unit
 
@@ -46,33 +48,39 @@ mediators:
   sleep_hours: <FILL>            # [FILL] sleep-duration var not standardized in 2010-2012 (optional; mediator only)
 
 outcomes:
-  # KNHANES ENT-exam tinnitus/noise items use the HtE_ prefix in these cycles.
-  # These are strong candidates from published KNHANES tinnitus studies, but
-  # CONFIRM the exact code and value coding in the codebook before analysis.
-  tinnitus_item: HtE_1            # [LIKELY] 최근 1년 이명 경험: 1=있음, 2=없음
+  # ** VERIFIED ABSENT from the HN{yy}_ALL "기본DB" files. ** Inspection of the
+  # real 2010-2012 ALL files found NO tinnitus/noise/audiometry variables (the
+  # "HtE_"/"O_R_###" guesses below do not exist there -- "O_*" columns are the
+  # ORAL/dental exam). The ENT exam (순음청력 + 이명 + 소음), fielded on adults
+  # >=40, is a SEPARATE file that must be downloaded and merged on `id`.
+  # The names below are UNCONFIRMED placeholders pending that ENT file's codebook.
+  tinnitus_item: <FILL>           # [PENDING ENT FILE] 최근 1년 이명 경험 item
   tinnitus_yes_values: [1]
-  bothersome_item: HtE_3          # [VERIFY] 이명으로 인한 불편/생활 지장 (bothersome tinnitus)
-  bothersome_yes_values: [2, 3]   # [VERIFY] codes indicating bother (confirm scale direction)
-  occupational_noise: HtE_5       # [VERIFY] 직업적 소음 노출(작업장 소음): 1=예, 2=아니오
+  bothersome_item: <FILL>         # [PENDING ENT FILE] bothersome-tinnitus item
+  bothersome_yes_values: [2, 3]
+  occupational_noise: <FILL>      # [PENDING ENT FILE] 직업적/작업장 소음 노출 item
 
 # Pure-tone air-conduction thresholds (dB HL) per frequency: [right_var, left_var]
-# [LIKELY] KNHANES otology uses the O_R_### / O_L_### naming for thresholds.
+# ** PENDING ENT FILE. ** The O_R_###/O_L_### names below are NOT in the ALL file
+# (O_* there is dental). Set these from the ENT/audiometry file's codebook.
 audiometry:
-  "500":  [O_R_500,  O_L_500]
-  "1000": [O_R_1000, O_L_1000]
-  "2000": [O_R_2000, O_L_2000]
-  "3000": [O_R_3000, O_L_3000]
-  "4000": [O_R_4000, O_L_4000]
-  "6000": [O_R_6000, O_L_6000]
+  "500":  [<FILL>, <FILL>]
+  "1000": [<FILL>, <FILL>]
+  "2000": [<FILL>, <FILL>]
+  "3000": [<FILL>, <FILL>]
+  "4000": [<FILL>, <FILL>]
+  "6000": [<FILL>, <FILL>]
 speech_freqs: ["500", "1000", "2000", "4000"]
-invalid_threshold_codes: [999, 666]   # [VERIFY] non-response / could-not-test codes
+invalid_threshold_codes: [99999, 66666]   # [PENDING ENT FILE] non-response codes -- confirm
 
-# Raw files per cycle (KDCA-approved, placed locally under data-dir; not committed).
-# [VERIFY] KDCA distributes yearly SAS files; confirm exact names/case.
+# Raw files per cycle (KDCA files, placed locally under data-dir; not committed).
+# `exam` = the "기본DB" HN{yy}_ALL file (VERIFIED present: stress BP1 + covariates,
+#          but NO hearing outcomes). `ent` = the separate ENT/audiometry file
+#          (still to be downloaded); the loader merges `ent` into `exam` on `id`.
 files:
-  "2010": {exam: HN10_ALL.sas7bdat}
-  "2011": {exam: HN11_ALL.sas7bdat}
-  "2012": {exam: HN12_ALL.sas7bdat}
+  "2010": {exam: hn10_all.sas7bdat, ent: <FILL_ENT_2010>}
+  "2011": {exam: hn11_all.sas7bdat, ent: <FILL_ENT_2011>}
+  "2012": {exam: hn12_all.sas7bdat, ent: <FILL_ENT_2012>}
 
 analysis:
   age_min: 40
