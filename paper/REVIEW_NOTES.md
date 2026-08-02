@@ -30,7 +30,7 @@ Status legend: ✅ verified OK · ⚠️ needs attention · ❌ defect · 🔧 f
   three (cited / manual list / `.bib`):
 
   `baigi2011tinnitus, chakrabarty2024depression, chandrasekhar2019ssnhl,
-  collins2024tripodai, ha2022localization, hoffman2020noise, joo2015hrqol,
+  collins2024tripodai, ha2022localization, hoffman2017declining, joo2015hrqol,
   kim2021ct, kim2022bppv, mahboubi2013noise, mccormack2016review,
   medgemma2025blog, medgemma2026docs, park2014tinnitus, tunkel2014cpg,
   vonelm2007strobe, who2021world`
@@ -70,18 +70,20 @@ Bibliographic details verified as correct for the well-known sources:
   - `park2014tinnitus` — all 12 authors; "Surveys" → "Survey" per the real title;
     doi:10.2188/jea.JE20140024 added.
   - `tunkel2014cpg` — 23 authors → APA 21+ rule (first 19, ellipsis, Whamond).
-- ⚠️ **`hoffman2020noise` — cannot verify a matching publication.** No 2020 report
-  titled "Noise exposure and hearing loss: Data from U.S. health surveys" by
-  Hoffman et al. could be found. It reads as a **placeholder** (still `Hoffman,
-  H. J., et al. (2020)`). It is cited once in `related_work.tex` for "NHANES
-  studies of audiometry, occupational noise, tinnitus, and mental health." The
-  most likely intended real source is **Hoffman, H. J., Dobie, R. A., Losonczy,
-  K. G., Themann, C. L., & Flamme, G. A. (2017). Declining prevalence of hearing
-  loss in US adults aged 20 to 69 years. *JAMA Otolaryngology–Head & Neck
-  Surgery, 143*(3), 274–285. doi:10.1001/jamaoto.2016.3527** — but this is a
-  different title/year, so it was **not** swapped in automatically. Author to
-  confirm the intended source. (No names invented.)
-- ⚠️ **`mahboubi2013noise`** — issue number/DOI still needed (fields genuinely unknown).
+- 🔧 **`hoffman2020noise` placeholder → replaced with the verified real source.**
+  No 2020 report titled "Noise exposure and hearing loss: Data from U.S. health
+  surveys" exists; the entry was a placeholder. Cross-checked against JAMA
+  Network + PubMed + Wikidata and replaced with the Hoffman-first-author NHANES
+  paper it was standing in for: **Hoffman, H. J., Dobie, R. A., Losonczy, K. G.,
+  Themann, C. L., & Flamme, G. A. (2017). Declining prevalence of hearing loss
+  in US adults aged 20 to 69 years. *JAMA Otolaryngology–Head & Neck Surgery,
+  143*(3), 274–285. https://doi.org/10.1001/jamaoto.2016.3527**. The BibTeX/
+  bibitem **key was renamed `hoffman2020noise` → `hoffman2017declining`** and the
+  single `\citep` in `related_work.tex` updated to match. Entry type changed
+  `@techreport` → `@article`.
+- 🔧 **`mahboubi2013noise` completed.** Added issue and DOI (cross-checked via
+  Springer + Wikidata): *European Archives of Oto-Rhino-Laryngology, 270*(**2**),
+  461–467, **https://doi.org/10.1007/s00405-012-1979-6**.
 
 ---
 
@@ -172,13 +174,20 @@ Note: the `park2014tinnitus` reference title legitimately contains "…Surveys
 - Filled **full author lists** for five previously-"et al." entries from the
   source publications (§1.4), with corrected titles/DOIs, mirrored into
   `references.bib`.
+- Replaced the unverifiable `hoffman2020noise` placeholder with the verified
+  **Hoffman et al. (2017)** JAMA Otolaryngol paper (key renamed to
+  `hoffman2017declining`, `\citep` updated) and **completed `mahboubi2013noise`**
+  (issue + DOI) — both cross-checked online (§1.4).
 
 - Narrowed the KNHANES window to **2010–2012 (KNHANES V)** across
   `study_config.yaml`, `methods.tex`, `public_data.tex`, and
   `table_harmonization.tex` (§3.2).
 
-**Left for the authors (needs a decision / unverifiable source):**
-- Confirm the intended source for `hoffman2020noise` (placeholder; likely the
-  2017 JAMA Otolaryngol Hoffman paper) and complete `mahboubi2013noise`'s
-  issue/DOI (§1.4) — not invented.
+- Replaced the `hoffman2020noise` placeholder with the verified Hoffman et al.
+  (2017) source (key → `hoffman2017declining`) and completed `mahboubi2013noise`
+  (issue + DOI), both cross-checked online (§1.4).
+
+**Left for the authors (build choice only):**
 - Wiring `references.bib` into the build vs. keeping the manual list (§1.1).
+
+All reference entries now carry complete, verified bibliographic data.
