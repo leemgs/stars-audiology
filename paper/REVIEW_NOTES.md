@@ -59,15 +59,29 @@ Bibliographic details verified as correct for the well-known sources:
   parentheses, en-dash page ranges, and DOIs as `https://doi.org/...` links. The
   `mahboubi` title drift was harmonized to the full title, and the derivable
   PLOS ONE DOI was added for `joo2015hrqol` (mirrored in `references.bib`).
-- ⚠️ **Author lists still using "et al."** need full expansion for strict APA 7
-  (APA lists all authors up to 20; "et al." is only for 21+). No names were
-  invented during conversion, so these still read "et al." until full lists are
-  supplied: `chandrasekhar2019ssnhl`, `collins2024tripodai`, `tunkel2014cpg`,
-  `park2014tinnitus`, `chakrabarty2024depression`, `hoffman2020noise`.
-- ⚠️ **Still-incomplete entries** (fields genuinely unknown; not invented):
-  - `chakrabarty2024depression` — no volume/issue/pages/DOI (marked "Advance online publication").
-  - `hoffman2020noise` — report number/URL still needed.
-  - `mahboubi2013noise` — issue number/DOI still needed.
+- 🔧 **Full author lists filled from the source publications** (verified via web
+  search of the journals/PubMed, mirrored into `references.bib`):
+  - `chakrabarty2024depression` — Chakrabarty, S., Mudar, R., Chen, Y., & Husain,
+    F. T. (2024). *Ear and Hearing, 45*(3), 775–786.
+    doi:10.1097/AUD.0000000000001467. Title corrected "population data" →
+    "population study"; volume/issue/pages/DOI added.
+  - `chandrasekhar2019ssnhl` — all 17 authors listed.
+  - `collins2024tripodai` — 34 authors → APA 21+ rule (first 19, ellipsis, Logullo).
+  - `park2014tinnitus` — all 12 authors; "Surveys" → "Survey" per the real title;
+    doi:10.2188/jea.JE20140024 added.
+  - `tunkel2014cpg` — 23 authors → APA 21+ rule (first 19, ellipsis, Whamond).
+- ⚠️ **`hoffman2020noise` — cannot verify a matching publication.** No 2020 report
+  titled "Noise exposure and hearing loss: Data from U.S. health surveys" by
+  Hoffman et al. could be found. It reads as a **placeholder** (still `Hoffman,
+  H. J., et al. (2020)`). It is cited once in `related_work.tex` for "NHANES
+  studies of audiometry, occupational noise, tinnitus, and mental health." The
+  most likely intended real source is **Hoffman, H. J., Dobie, R. A., Losonczy,
+  K. G., Themann, C. L., & Flamme, G. A. (2017). Declining prevalence of hearing
+  loss in US adults aged 20 to 69 years. *JAMA Otolaryngology–Head & Neck
+  Surgery, 143*(3), 274–285. doi:10.1001/jamaoto.2016.3527** — but this is a
+  different title/year, so it was **not** swapped in automatically. Author to
+  confirm the intended source. (No names invented.)
+- ⚠️ **`mahboubi2013noise`** — issue number/DOI still needed (fields genuinely unknown).
 
 ---
 
@@ -155,12 +169,16 @@ Note: the `park2014tinnitus` reference title legitimately contains "…Surveys
   `study_config.yaml` (§3.1).
 - Converted the reference list to **APA 7** style (§1.4); mirrored the PLOS ONE
   DOI into `references.bib`.
+- Filled **full author lists** for five previously-"et al." entries from the
+  source publications (§1.4), with corrected titles/DOIs, mirrored into
+  `references.bib`.
 
 - Narrowed the KNHANES window to **2010–2012 (KNHANES V)** across
   `study_config.yaml`, `methods.tex`, `public_data.tex`, and
   `table_harmonization.tex` (§3.2).
 
-**Left for the authors (needs source data / build choice):**
-- Full author-list expansion for the six "et al." references and completion of
-  the three incomplete entries (§1.4) — needs source data, not invented.
+**Left for the authors (needs a decision / unverifiable source):**
+- Confirm the intended source for `hoffman2020noise` (placeholder; likely the
+  2017 JAMA Otolaryngol Hoffman paper) and complete `mahboubi2013noise`'s
+  issue/DOI (§1.4) — not invented.
 - Wiring `references.bib` into the build vs. keeping the manual list (§1.1).

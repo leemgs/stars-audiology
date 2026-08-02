@@ -49,10 +49,10 @@ drives the word limits, abstract format, and structure below.
 
 | Item | Status | Notes |
 |------|--------|-------|
-| **APA 7 reference style** | ⚠️ | **Converted** `sections/references_manual.tex` to APA 7 (alphabetical, `&`, italic journal+volume, DOIs as https links). Remaining: expand the six "et al." entries to full author lists (no names invented) and complete three entries missing fields — see `REVIEW_NOTES.md §1.4`. |
+| **APA 7 reference style** | ⚠️ | **Converted** to APA 7 (alphabetical, `&`, italic journal+volume, DOIs as https links) and **filled full author lists for 5 of 6 "et al." entries** from the sources. Remaining: confirm the `hoffman2020noise` placeholder source and complete `mahboubi2013noise`'s issue/DOI — see `REVIEW_NOTES.md §1.4`. |
 | In-text citations resolve | ✅ | All 17 `\citep` keys have matching entries; no orphan citations, no uncited entries (audited in `REVIEW_NOTES.md`). |
 | Every reference cited & every citation referenced | ✅ | 17 cited ↔ 17 listed, verified. |
-| Complete bibliographic data (vol/issue/pages/DOI) | ⚠️ | A few entries are incomplete: `chakrabarty2024depression` (no volume/pages), `hoffman2020noise` (vague "CDC/NIOSH report"), `mahboubi2013noise` (no issue/DOI). Complete before submission. See `REVIEW_NOTES.md §1`. |
+| Complete bibliographic data (vol/issue/pages/DOI) | ⚠️ | `chakrabarty2024depression` **completed** (vol/issue/pages/DOI). Remaining: `hoffman2020noise` (unverifiable placeholder — confirm source) and `mahboubi2013noise` (issue/DOI). See `REVIEW_NOTES.md §1`. |
 
 ## 4. Tables & figures
 
@@ -99,7 +99,7 @@ drives the word limits, abstract format, and structure below.
 
 1. **Confirm the AJA article category** with the editorial office (drives everything else).
 2. Produce the **masked manuscript + separate title page**; strip identifying content and identity-revealing self-citations from the review copy.
-3. ~~Convert references to APA 7~~ (**done**) — now expand the six "et al." entries to full author lists and complete the three incomplete entries.
+3. ~~Convert references to APA 7~~ (**done**) — ~~expand "et al." entries~~ (**5 of 6 done**); confirm the `hoffman2020noise` placeholder source and complete `mahboubi2013noise`'s issue/DOI.
 4. Cycle windows ~~reconciliation~~ (**done**: NHANES 2017–2018; KNHANES narrowed to 2010–2012 / KNHANES V).
 5. Trim the **abstract** to the AJA limit; trim keywords if needed.
 6. Commit/upload the **filled STROBE + TRIPOD+AI checklists** as supplements.
