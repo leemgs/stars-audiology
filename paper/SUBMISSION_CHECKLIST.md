@@ -49,7 +49,7 @@ drives the word limits, abstract format, and structure below.
 
 | Item | Status | Notes |
 |------|--------|-------|
-| **APA 7 reference style** | ❌ | Entries are in a mixed Vancouver/author-year style (`doi:` prefixes, journal abbreviations, "et al." inside the list). AJA requires **APA 7**: `Author, A. A., & Author, B. B. (Year). Title. *Journal, Vol*(Issue), pages. https://doi.org/...`. Convert `sections/references_manual.tex` (or switch to BibTeX + an APA style — see `README.md`). |
+| **APA 7 reference style** | ⚠️ | **Converted** `sections/references_manual.tex` to APA 7 (alphabetical, `&`, italic journal+volume, DOIs as https links). Remaining: expand the six "et al." entries to full author lists (no names invented) and complete three entries missing fields — see `REVIEW_NOTES.md §1.4`. |
 | In-text citations resolve | ✅ | All 17 `\citep` keys have matching entries; no orphan citations, no uncited entries (audited in `REVIEW_NOTES.md`). |
 | Every reference cited & every citation referenced | ✅ | 17 cited ↔ 17 listed, verified. |
 | Complete bibliographic data (vol/issue/pages/DOI) | ⚠️ | A few entries are incomplete: `chakrabarty2024depression` (no volume/pages), `hoffman2020noise` (vague "CDC/NIOSH report"), `mahboubi2013noise` (no issue/DOI). Complete before submission. See `REVIEW_NOTES.md §1`. |
@@ -90,7 +90,7 @@ drives the word limits, abstract format, and structure below.
 | Item | Status | Notes |
 |------|--------|-------|
 | NHANES results in abstract = results = table = JSON | ✅ | All prevalence/OR/CI values match `code/outputs/nhanes_results.json` exactly. |
-| **NHANES cycle window stated consistently** | ⚠️ | Protocol/config say **2017–2020** (2017–March 2020); the actual run and results say **2017–2018**; the cover letter says "2011–2018". Reconcile to one window. See `REVIEW_NOTES.md §3`. |
+| **NHANES cycle window stated consistently** | ✅ | **Reconciled to 2017–2018** in `methods.tex` and `study_config.yaml` to match the committed results. See `REVIEW_NOTES.md §3.1`. |
 | **KNHANES cycle window stated consistently** | ⚠️ | Protocol says **2009–2012**; the mapping/CLI use only **2010–2012** (no 2009). Reconcile. See `REVIEW_NOTES.md §3`. |
 
 ---
@@ -99,8 +99,8 @@ drives the word limits, abstract format, and structure below.
 
 1. **Confirm the AJA article category** with the editorial office (drives everything else).
 2. Produce the **masked manuscript + separate title page**; strip identifying content and identity-revealing self-citations from the review copy.
-3. **Convert references to APA 7** and complete the three incomplete entries.
-4. **Reconcile the NHANES (2017–2018 vs 2017–2020) and KNHANES (2009 vs 2010) cycle windows** across prose, config, and outputs.
+3. ~~Convert references to APA 7~~ (**done**) — now expand the six "et al." entries to full author lists and complete the three incomplete entries.
+4. NHANES window ~~reconciliation~~ (**done: 2017–2018**) — decide the remaining **KNHANES 2009 vs 2010** window and align the mapping/CLI.
 5. Trim the **abstract** to the AJA limit; trim keywords if needed.
 6. Commit/upload the **filled STROBE + TRIPOD+AI checklists** as supplements.
 7. Fill cover-letter placeholders (**date, editor, ORCIDs**) and add ORCIDs in the portal.

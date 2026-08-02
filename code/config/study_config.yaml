@@ -16,7 +16,7 @@ datasets:
     development_cycles: ["2009", "2010", "2011", "2012"]   # KNHANES IV-V otologic exam
     audiometry: true
   nhanes:
-    validation_cycles: ["2011-2012", "2015-2016", "2017-2020"]
+    validation_cycles: ["2011-2012", "2015-2016", "2017-2018"]
     audiometry: true
 
 eligibility:

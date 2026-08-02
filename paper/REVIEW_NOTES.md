@@ -51,20 +51,23 @@ Bibliographic details verified as correct for the well-known sources:
 | `joo2015hrqol` | *PLoS ONE* 2015;10(6):e0131247 | ✅ |
 | `who2021world` | WHO, *World Report on Hearing*, 2021 | ✅ |
 
-### 1.4 Issues to fix
+### 1.4 Issues — style converted, author lists still to complete
 
-- ⚠️ **Incomplete entries** (add missing fields before submission):
-  - `chakrabarty2024depression` — no volume/issue/pages/DOI; author list is "et al." only.
-  - `hoffman2020noise` — vague "CDC/NIOSH report"; needs a proper report number/URL or reclassification.
-  - `mahboubi2013noise` — has volume 270 but no issue/pages-within-issue/DOI.
-- ⚠️ **Minor drift** between the two sources: in `references.bib` the
-  `mahboubi2013noise` title ends "…hearing loss: National Health and Nutrition
-  Examination Surveys", but the manual `\bibitem` truncates it at "…hearing
-  loss." Harmonize.
-- ❌ **Style is not APA 7** (AJA requirement). The list uses a Vancouver/author-year
-  hybrid (`doi:` prefixes, abbreviated journal handling, in-list "et al."). Convert
-  to APA 7 (`Author, A. A., & Author, B. B. (Year). Title. *Journal, Vol*(Issue),
-  pp. https://doi.org/...`). See `SUBMISSION_CHECKLIST.md §3`.
+- 🔧 **APA 7 conversion done.** `sections/references_manual.tex` was rewritten in
+  APA 7 style: alphabetical order, `&` before the final author, year in
+  parentheses after the authors, italicized journal + volume, issue in
+  parentheses, en-dash page ranges, and DOIs as `https://doi.org/...` links. The
+  `mahboubi` title drift was harmonized to the full title, and the derivable
+  PLOS ONE DOI was added for `joo2015hrqol` (mirrored in `references.bib`).
+- ⚠️ **Author lists still using "et al."** need full expansion for strict APA 7
+  (APA lists all authors up to 20; "et al." is only for 21+). No names were
+  invented during conversion, so these still read "et al." until full lists are
+  supplied: `chandrasekhar2019ssnhl`, `collins2024tripodai`, `tunkel2014cpg`,
+  `park2014tinnitus`, `chakrabarty2024depression`, `hoffman2020noise`.
+- ⚠️ **Still-incomplete entries** (fields genuinely unknown; not invented):
+  - `chakrabarty2024depression` — no volume/issue/pages/DOI (marked "Advance online publication").
+  - `hoffman2020noise` — report number/URL still needed.
+  - `mahboubi2013noise` — issue number/DOI still needed.
 
 ---
 
@@ -101,24 +104,19 @@ Two survey-window descriptions are internally inconsistent. Neither is a number
 error, but both will draw a reviewer's eye and should be reconciled to a single
 statement across prose, config, and outputs.
 
-### 3.1 ⚠️ NHANES cycle window — three different statements
+### 3.1 🔧 NHANES cycle window — reconciled to 2017–2018
 
-| Location | Says |
-|----------|------|
-| `sections/methods.tex` | "2011–2012, 2015–2016, and **2017–March 2020**" |
-| `code/config/study_config.yaml` (`validation_cycles`) | `2011-2012, 2015-2016, **2017-2020**` |
-| `sections/results.tex`, `sections/abstract.tex`, `tables/table_results.tex`, `code/outputs/nhanes_results.json` | "2011–2012, 2015–2016, **2017–2018**" |
-| `cover_letter.md` | "pooled **2011–2018**" |
+**Resolved** by matching the prose/config to the window the committed results
+were actually computed on (2017–2018, three two-year cycles):
+- `sections/methods.tex`: "2017–March 2020" → **"2017–2018"**.
+- `code/config/study_config.yaml` (`validation_cycles`): "2017-2020" → **"2017-2018"**.
+- `cover_letter.md`'s "pooled 2011–2018" is consistent with this endpoint and
+  was left as a shorthand range.
 
-The **actual analysis that produced the committed results used 2017–2018**
-(three two-year cycles). The protocol text/config describe **2017–2020** (the
-pre-pandemic combined file). **Pick one:**
-- (a) If the demo really used 2017–2018, change `study_config.yaml` and
-  `methods.tex` to say 2017–2018 (and fix the cover letter's loose "2011–2018").
-- (b) If 2017–2020 is intended, re-run `nhanes_analysis.py` over the 2017–2020
-  pre-pandemic file and refresh the results/table.
-
-*Not auto-fixed here — this is an analytic-scope decision for the authors.*
+All NHANES-window statements now agree with `code/outputs/nhanes_results.json`
+(`cycles: 2011-2012, 2015-2016, 2017-2018`). If you later decide to *extend* to
+the 2017–2020 pre-pandemic file instead, re-run `nhanes_analysis.py` on it and
+refresh the results/table + these strings.
 
 ### 3.2 ⚠️ KNHANES cycle window — 2009 present in protocol, absent in implementation
 
@@ -152,9 +150,13 @@ Either add a `2009` file entry (`HN09_ALL.sas7bdat`) to the mapping and include
 
 **Fixed in this revision (safe, unambiguous):**
 - Added the two missing in-text float cross-references (`tab:ai`, `fig:framework`).
+- Reconciled the NHANES cycle window to **2017–2018** across `methods.tex` and
+  `study_config.yaml` (§3.1).
+- Converted the reference list to **APA 7** style (§1.4); mirrored the PLOS ONE
+  DOI into `references.bib`.
 
-**Left for the authors (scope / style decisions, documented above):**
-- NHANES 2017–2018 vs 2017–2020 reconciliation (§3.1).
-- KNHANES 2009 inclusion (§3.2).
-- APA-7 reference-style conversion + three incomplete entries (§1.4).
+**Left for the authors (scope / data decisions, documented above):**
+- KNHANES 2009 inclusion (§3.2) — analytic-scope decision.
+- Full author-list expansion for the six "et al." references and completion of
+  the three incomplete entries (§1.4) — needs source data, not invented.
 - Wiring `references.bib` into the build vs. keeping the manual list (§1.1).
