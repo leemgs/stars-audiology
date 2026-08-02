@@ -1,0 +1,53 @@
+% Non-anonymized TITLE PAGE for masked (double-anonymized) submission.
+% Upload this separately from the blinded manuscript (see paper/README.md,
+% "Masked-review build"). Compile standalone:  pdflatex title_page.tex
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{authblk}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\pagestyle{empty}
+\renewcommand\Affilfont{\small}
+
+\title{STARS: A Pre-Analysis Protocol for Public-Data Studies of Perceived Stress, Work-Related Factors, Tinnitus, and Hearing Outcomes\\[2pt]\large With a Cross-National External-Validation Plan and a Deterministic Referral-Safety Layer}
+\author[1]{Geunsik Lim}
+\author[2]{Hyun Jo}
+\affil[1]{Sungkyunkwan University, Republic of Korea}
+\affil[2]{Ajou University School of Medicine, Republic of Korea}
+\date{Draft version 0.9: August 1, 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\vspace{1em}
+\noindent\textbf{Running head:} Perceived Stress, Tinnitus, and Hearing (Protocol)
+
+\section*{Corresponding Author}
+Geunsik Lim, Sungkyunkwan University, Republic of Korea.\\
+Email: \texttt{leemgs@g.skku.edu} \quad ORCID: \textbf{[to be added]}
+
+\section*{Co-Author}
+Hyun Jo, Ajou University School of Medicine, Republic of Korea.\\
+Email: \texttt{joehyun@ajou.ac.kr} \quad ORCID: \textbf{[to be added]}
+
+\section*{Author Contributions (CRediT)}
+\emph{Geunsik Lim}---Conceptualization, Methodology, Software, Formal analysis, Data curation, Writing (original draft), Visualization. \emph{Hyun Jo}---Clinical methodology (audiology/otolaryngology), Validation, Supervision of the planned clinical extension, Writing (review \& editing). Both authors read and approved the manuscript.
+
+\section*{Funding}
+No external funding was received for this pre-analysis framework. Any funding for the prospective clinical extension will be disclosed at that stage.
+
+\section*{Conflicts of Interest}
+The authors declare no competing interests.
+
+\section*{AI-Use Disclosure}
+Generative AI tools assisted in drafting and structuring the manuscript and the code scaffold; the authors reviewed and are responsible for all content. In the proposed study, open medical language models will be used only for research feature extraction and guideline-linked explanation from deidentified text, always with clinician verification before analysis and never for autonomous clinical decisions.
+
+\section*{Data and Code Availability}
+Analysis code, configuration, variable-mapping templates, model cards, reporting checklists, and a synthetic-data generator are openly available at \url{https://github.com/leemgs/stress-ear-ai}. KNHANES data are available from the Korea Disease Control and Prevention Agency subject to official access procedures; NHANES public-use files are available from the U.S.\ CDC. Restricted raw data are not redistributed.
+
+\end{document}

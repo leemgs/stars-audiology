@@ -85,6 +85,41 @@ cd paper
 docker run --rm -v "$PWD":/work -w /work texlive/texlive:latest ./build.sh
 ```
 
+### Masked-review build (ASHA double-anonymized submission)
+
+AJA uses masked peer review, so you submit **two** things: a non-anonymized
+**title page** and an **anonymized manuscript**.
+
+- **Title page** — compile the standalone `title_page.tex` (authors,
+  affiliations, corresponding author, CRediT, ORCID slots, funding, conflicts,
+  AI-use disclosure):
+  ```bash
+  pdflatex title_page.tex
+  ```
+- **Anonymized manuscript** — build `main.tex` with the blinding toggle on. It
+  suppresses the author block, the corresponding-author/CRediT identities, and
+  the repository URLs:
+  ```bash
+  pdflatex -interaction=nonstopmode "\def\BLIND{}\input{main.tex}"
+  bibtex   main
+  pdflatex -interaction=nonstopmode "\def\BLIND{}\input{main.tex}"
+  pdflatex -interaction=nonstopmode "\def\BLIND{}\input{main.tex}"
+  ```
+  The normal `./build.sh` (no `\def\BLIND{}`) still produces the full,
+  non-anonymized PDF — the toggle defaults to off.
+
+  **Not auto-masked** (would damage the text if stripped programmatically), so
+  handle manually before submitting the anonymized copy: identity-revealing
+  self-citations (`ha2022localization`, `kim2022bppv`, `kim2021ct`) and in-text
+  institution mentions (e.g., "Ajou University Hospital" in Methods, Figure~1,
+  and Declarations). Soften these to neutral phrasing in a review copy.
+
+### Reporting checklists
+
+Filled STROBE and TRIPOD+AI checklists live in `checklists/` and map each item
+to the manuscript section that addresses it. Upload them as supplemental files
+(the Declarations section refers to them).
+
 ## A note on the bibliography
 
 The manuscript currently renders its reference list from a **manual**
@@ -113,12 +148,14 @@ then keep the `bibtex` pass in the build. Until that switch is made, edit
 
 ```
 paper/
-├── main.tex                 # root document (edit \input order here)
+├── main.tex                 # root document (edit \input order here; \ifblind toggle)
+├── title_page.tex           # standalone non-anonymized title page (masked submission)
 ├── build.sh                 # 4-pass build + copy to versioned PDF
 ├── references.bib           # BibTeX source (not currently wired in; see above)
 ├── sections/                # abstract, introduction, methods, results, ...
 │   └── references_manual.tex# the reference list actually rendered
 ├── tables/                  # table_*.tex (all \input from main.tex)
+├── checklists/              # filled STROBE + TRIPOD+AI reporting checklists
 ├── SUBMISSION_CHECKLIST.md  # AJA submission readiness checklist
 └── REVIEW_NOTES.md          # bibliography + manuscript/code consistency audit
 ```

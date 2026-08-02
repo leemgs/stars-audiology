@@ -33,11 +33,27 @@
 \cfoot{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 
+% ---- Masked-review toggle -------------------------------------------------
+% Normal build (default): full author / affiliation / repository details.
+% Blinded build for ASHA masked peer review, run from the paper/ directory:
+%   pdflatex -interaction=nonstopmode "\def\BLIND{}\input{main.tex}"
+%   bibtex main ; then repeat the pdflatex line twice more.
+% Upload paper/title_page.tex separately as the non-anonymized title page.
+% NOTE: identity-revealing self-citations and in-text institution mentions are
+% NOT auto-masked (removing them would damage the text) — see paper/README.md.
+\newif\ifblind
+\ifdefined\BLIND\blindtrue\else\blindfalse\fi
+% ---------------------------------------------------------------------------
+
 \title{STARS: A Pre-Analysis Protocol for Public-Data Studies of Perceived Stress, Work-Related Factors, Tinnitus, and Hearing Outcomes\\[2pt]\large With a Cross-National External-Validation Plan and a Deterministic Referral-Safety Layer}
+\ifblind
+\author{\normalsize\textit{[Author names and affiliations withheld for masked review]}}
+\else
 \author[1]{Geunsik Lim}
 \author[2]{Hyun Jo}
 \affil[1]{Sungkyunkwan University, Republic of Korea; \texttt{leemgs@g.skku.edu}}
 \affil[2]{Ajou University School of Medicine, Republic of Korea; \texttt{joehyun@ajou.ac.kr}}
+\fi
 \date{Draft version 0.9: August 1, 2026}
 
 \begin{document}
@@ -55,7 +71,7 @@
 \textbf{Abstract:} & Structured, $\sim$320 words \\
 \textbf{Body word count (target):} & $\sim$7{,}500 (excludes abstract, references, tables) \\
 \textbf{Tables:} & 6 \qquad \textbf{Figures:} 2 \\
-\textbf{Open repository:} & \url{https://github.com/leemgs/stars-audiology} \\
+\ifblind\textbf{Open repository:} & [URL withheld for masked review] \\\else\textbf{Open repository:} & \url{https://github.com/leemgs/stars-audiology} \\\fi
 \end{tabular}
 \end{center}
 

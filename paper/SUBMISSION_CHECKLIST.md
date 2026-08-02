@@ -31,7 +31,7 @@ drives the word limits, abstract format, and structure below.
 | Item | Status | Notes |
 |------|--------|-------|
 | Title page with full title, running head, all authors + affiliations | ✅ | In `main.tex`; running head "STARS / Stress, Tinnitus, and Hearing Outcomes". |
-| **Masked ("blinded") manuscript** for review | ❌ | Current `main.tex` embeds author names, affiliations, emails, ORCID slots, and the identifiable GitHub URL (`github.com/leemgs/...`) throughout. ASHA uses anonymized review — prepare a **separate title page** and a **de-identified main document** (strip authors, affiliations, emails, the repo URL, and self-citations that reveal identity: `ha2022localization`, `kim2022bppv`, `kim2021ct`). |
+| **Masked ("blinded") manuscript** for review | ◑ | **Mechanism added:** a standalone `title_page.tex` (non-anonymized) plus a `\ifblind` toggle in `main.tex` that suppresses the author block, corresponding-author/CRediT identities, and repository URLs (`pdflatex "\def\BLIND{}\input{main.tex}"` — see `README.md`). **Still manual before submitting the anonymized copy:** soften identity-revealing self-citations (`ha2022localization`, `kim2022bppv`, `kim2021ct`) and in-text institution mentions ("Ajou University Hospital"). |
 | Double-spaced, 12 pt | ✅ | `\doublespacing`, `12pt` class option. |
 | Continuous line numbers | ✅ | `lineno` package active. |
 | Page numbers | ✅ | `fancyhdr` centered footer. |
@@ -73,7 +73,7 @@ drives the word limits, abstract format, and structure below.
 | Data availability | ✅ | KNHANES (KDCA access), NHANES (CDC), code repo. |
 | Code availability | ✅ | GitHub repo stated. |
 | **AI-use disclosure** | ✅ | Generative-AI drafting disclosed; model roles constrained. ASHA requires AI-use disclosure — good that it is explicit. |
-| Reporting-guideline checklists (STROBE / TRIPOD+AI / SPIRIT) | ⚠️ | Manuscript *says* a completed checklist "accompanies the repository" — **ensure the filled STROBE and TRIPOD+AI checklists are actually committed and uploaded** as supplemental files. |
+| Reporting-guideline checklists (STROBE / TRIPOD+AI / SPIRIT) | ✅ | Filled **STROBE** and **TRIPOD+AI** checklists created in `paper/checklists/`, each item mapped to the manuscript section addressing it. Upload as supplements. SPIRIT applies only to the future Stage-3 clinical trial. |
 | ORCID for each author | ⚠️ | Placeholders `[to be added]` in the cover letter; add real ORCIDs in the portal. |
 
 ## 6. Cover letter
@@ -97,12 +97,12 @@ drives the word limits, abstract format, and structure below.
 
 ## Pre-submission action list (ordered)
 
-1. **Confirm the AJA article category** with the editorial office (drives everything else).
-2. Produce the **masked manuscript + separate title page**; strip identifying content and identity-revealing self-citations from the review copy.
+1. **Confirm the AJA article category** with the editorial office (drives everything else). *(author — editorial office)*
+2. Masked-review **mechanism done** (`title_page.tex` + `\ifblind` build). Remaining manual pass: soften identity-revealing self-citations and in-text institution mentions in the anonymized copy.
 3. ~~Convert references to APA 7~~ (**done**) — ~~expand "et al." entries; complete/verify all sources~~ (**done**: all author lists filled, `hoffman` placeholder replaced with the verified 2017 source, `mahboubi` issue/DOI added).
 4. Cycle windows ~~reconciliation~~ (**done**: NHANES 2017–2018; KNHANES narrowed to 2010–2012 / KNHANES V).
-5. Trim the **abstract** to the AJA limit; trim keywords if needed.
-6. Commit/upload the **filled STROBE + TRIPOD+AI checklists** as supplements.
-7. Fill cover-letter placeholders (**date, editor, ORCIDs**) and add ORCIDs in the portal.
-8. Enter **financial/nonfinancial disclosures** in the ASHA portal fields.
+5. Trim the **abstract** to the AJA limit; trim keywords if needed. *(author — needs the confirmed AJA word limit; ~320 words now)*
+6. ~~Create the filled STROBE + TRIPOD+AI checklists~~ (**done**, `paper/checklists/`) — upload as supplements at submission.
+7. Fill cover-letter placeholders (**date, editor, ORCIDs**) and add ORCIDs in the portal. *(author — real values)*
+8. Enter **financial/nonfinancial disclosures** in the ASHA portal fields. *(author — portal)*
 9. Re-build the PDF (`./build.sh`) and confirm no `??`/`[?]` cross-references remain.
