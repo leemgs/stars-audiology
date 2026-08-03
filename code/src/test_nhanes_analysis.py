@@ -10,7 +10,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from nhanes_analysis import svy_mean, svy_logistic, derive_variables, run_analysis
+from nhanes_analysis import (svy_mean, svy_logistic, derive_variables,
+                             run_analysis, _linearized_var)
 
 
 def test_svy_mean_point_estimate_matches_hajek():
@@ -85,11 +86,55 @@ def test_derive_and_run_on_synthetic_nhanes_frame():
     assert 0 <= res["prevalence"]["tinnitus"]["ci"][0] <= 1
 
 
+def test_domain_estimation_matches_subset_point_estimate():
+    """M6: domain (subpopulation) estimation must reproduce the naive-subset
+    point estimate exactly, while retaining the full design for variance."""
+    rng = np.random.default_rng(3)
+    n = 3000
+    age = rng.integers(20, 80, n)
+    y = rng.binomial(1, 0.3, n).astype(float)
+    w = rng.uniform(1, 5, n)
+    strata = rng.integers(0, 12, n)
+    psu = rng.integers(0, 2, n)
+    dom = (age >= 40) & (age <= 69)
+    e = svy_mean(y, w, strata, psu, domain=dom)
+    m = dom & np.isfinite(y)
+    hajek = (w[m] * y[m]).sum() / w[m].sum()
+    assert abs(e.estimate - hajek) < 1e-12, "domain mean != subset Hajek"
+    assert e.n == int(m.sum())
+
+    df = pd.DataFrame({"y": y, "x": rng.binomial(1, 0.5, n).astype(float),
+                       "age": age.astype(float), "weight": w,
+                       "strata": strata, "psu": psu})
+    out_dom = svy_logistic(df, "y", ["x", "age"], "weight", "strata", "psu",
+                           domain=dom)
+    out_sub = svy_logistic(df[dom].copy(), "y", ["x", "age"],
+                           "weight", "strata", "psu")
+    assert abs(out_dom["x"]["odds_ratio"] - out_sub["x"]["odds_ratio"]) < 1e-9
+    assert out_dom["_n"] == int(dom.sum())
+
+
+def test_single_psu_centering_not_anticonservative():
+    """M6: dropping single-PSU strata under-estimates variance; the default
+    centering option must give a variance at least as large (strictly larger
+    when lonely strata are present)."""
+    rng = np.random.default_rng(5)
+    n = 3000
+    u = rng.normal(0, 1, n)
+    strata = np.arange(n) // 30                 # 100 strata
+    psu = np.where(strata % 2 == 0, 0, rng.integers(0, 2, n))  # even -> lonely
+    v_center = float(_linearized_var(u, strata, psu, "center"))
+    v_drop = float(_linearized_var(u, strata, psu, "drop"))
+    assert v_center > v_drop, "centering must not under-estimate vs dropping"
+
+
 def _run_all():
     for fn in [test_svy_mean_point_estimate_matches_hajek,
                test_svy_mean_zero_variance_when_constant,
                test_svy_logistic_recovers_planted_effect,
-               test_derive_and_run_on_synthetic_nhanes_frame]:
+               test_derive_and_run_on_synthetic_nhanes_frame,
+               test_domain_estimation_matches_subset_point_estimate,
+               test_single_psu_centering_not_anticonservative]:
         fn()
         print(f"  [PASS] {fn.__name__}")
     print("All NHANES estimator tests passed. Supply real .XPT files to get real "

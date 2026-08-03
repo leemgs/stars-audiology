@@ -1,6 +1,6 @@
 study:
   name: STARS
-  type: pre-analysis study protocol (no empirical results)
+  type: survey-weighted research study (primary KNHANES result) with a prespecified plan for prospective components
   primary_dataset: KNHANES
   external_validation_dataset: NHANES
   target_journal: American Journal of Audiology

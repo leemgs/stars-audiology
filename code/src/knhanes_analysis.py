@@ -14,7 +14,8 @@ identically. Provide files under ``code/data/raw/knhanes/<cycle>/`` and complete
     python src/knhanes_analysis.py --mapping config/knhanes_mapping.yaml \
         --data-dir data/raw/knhanes --cycles 2010 2011 2012 \
         --out outputs/knhanes_results.json \
-        --latex ../paper/tables/table_results_knhanes.tex
+        --latex ../paper/tables/table_results_knhanes.tex \
+        --latex-extended ../paper/tables/table_extended_knhanes.tex
 
 Estimates are survey-weighted with Taylor-linearized 95% CIs; associations are
 design-based odds ratios and are not causal.
@@ -172,6 +173,19 @@ def derive_variables(df: pd.DataFrame, mapping: dict) -> pd.DataFrame:
         else:
             out["bothersome_tinnitus"] = both.apply(
                 lambda v: 1.0 if v in byes else (np.nan if pd.isna(v) else 0.0))
+        # NON-BOTHERSOME tinnitus vs no tinnitus (M1 reverse-causation
+        # sensitivity): bothersome tinnitus is itself a stressor and drives the
+        # strongest feedback loop, so restricting cases to NON-bothersome tinnitus
+        # (tinnitus present but not annoying) weakens the reverse-causation
+        # pathway. If the stress association persists here, it partially blunts
+        # the reverse-causation critique. Controls = no tinnitus; bothersome
+        # cases are excluded (set missing).
+        if "tinnitus" in out:
+            tin01 = out["tinnitus"]
+            both01 = out["bothersome_tinnitus"]
+            out["nonbothersome_tinnitus"] = np.where(
+                tin01 == 0, 0.0,
+                np.where((tin01 == 1) & (both01 == 0), 1.0, np.nan))
     occ = _get(df, m["outcomes"]["occupational_noise"])
     if occ is not None:
         out["occ_noise"] = occ.map({1: 1.0, 2: 0.0})
@@ -181,45 +195,104 @@ def derive_variables(df: pd.DataFrame, mapping: dict) -> pd.DataFrame:
     freqs = m["speech_freqs"]
     rvars = [m["audiometry"][f][0] for f in freqs]
     lvars = [m["audiometry"][f][1] for f in freqs]
+    cut = m["analysis"]["hearing_loss_cutoff_db"]
     if all(v in df.columns for v in rvars + lvars):
         rr = df[rvars].replace({c: np.nan for c in inval}).mean(axis=1)
         ll = df[lvars].replace({c: np.nan for c in inval}).mean(axis=1)
         out["better_ear_pta"] = np.minimum(rr, ll)
         out["worse_ear_pta"] = np.maximum(rr, ll)
-        cut = m["analysis"]["hearing_loss_cutoff_db"]
         out["hearing_loss"] = np.where(
             out["better_ear_pta"].notna(),
             (out["better_ear_pta"] > cut).astype(float), np.nan)
+        # Worse-ear speech-frequency hearing loss (unilateral/asymmetric-sensitive,
+        # relevant to the SSNHL motivation, per Mo1). Defined on the worse ear.
+        out["worse_ear_hearing_loss"] = np.where(
+            out["worse_ear_pta"].notna(),
+            (out["worse_ear_pta"] > cut).astype(float), np.nan)
+
+    # High-frequency PTA (3/4/6 kHz) where noise damage shows first (Mo1). Better-
+    # ear high-frequency hearing loss is a prespecified sensitivity definition.
+    hf = m.get("high_freqs", [])
+    hfr = [m["audiometry"][f][0] for f in hf if f in m.get("audiometry", {})]
+    hfl = [m["audiometry"][f][1] for f in hf if f in m.get("audiometry", {})]
+    if hfr and hfl and all(v in df.columns for v in hfr + hfl):
+        rr_hf = df[hfr].replace({c: np.nan for c in inval}).mean(axis=1)
+        ll_hf = df[hfl].replace({c: np.nan for c in inval}).mean(axis=1)
+        out["better_ear_hf_pta"] = np.minimum(rr_hf, ll_hf)
+        out["hf_hearing_loss"] = np.where(
+            out["better_ear_hf_pta"].notna(),
+            (out["better_ear_hf_pta"] > cut).astype(float), np.nan)
     return out
 
 
 def run_analysis(df: pd.DataFrame, mapping: dict) -> dict:
     a = mapping["analysis"]
-    d = df[(df["age"] >= a["age_min"]) & (df["age"] <= a["age_max"])].copy()
-    res: Dict[str, object] = {"n_analytic": int(len(d)),
+    # Domain (subpopulation) estimation: retain the FULL design and treat the
+    # 40--69 band as the analytic domain, instead of subsetting before variance
+    # estimation (which distorts the stratum/PSU structure and the SEs). Single-
+    # PSU strata use the conservative centering option inside the estimators.
+    dom = ((df["age"] >= a["age_min"]) & (df["age"] <= a["age_max"])).to_numpy()
+    res: Dict[str, object] = {"n_analytic": int(dom.sum()),
                               "age_range": [a["age_min"], a["age_max"]]}
 
     def prev(col):
-        if col not in d:
+        if col not in df:
             return None
-        e = svy_mean(d[col].values, d["weight"].values,
-                     d["strata"].values, d["psu"].values)
+        e = svy_mean(df[col].to_numpy(), df["weight"].to_numpy(),
+                     df["strata"].to_numpy(), df["psu"].to_numpy(), domain=dom)
         return {"prevalence": e.estimate, "se": e.se,
                 "ci": [e.ci_low, e.ci_high], "n": e.n}
 
     res["prevalence"] = {k: prev(k) for k in
                          ["tinnitus", "bothersome_tinnitus", "hearing_loss",
+                          "worse_ear_hearing_loss", "hf_hearing_loss",
                           "perceived_stress", "depressed"]}
 
     # PRIMARY association: perceived stress -> tinnitus / hearing loss,
     # minimal sufficient adjustment set (age, sex, occupational noise).
-    base = [p for p in ["perceived_stress", "occ_noise", "age", "sex"] if p in d]
-    if "tinnitus" in d and {"perceived_stress", "age", "sex"}.issubset(d.columns):
-        res["assoc_tinnitus"] = svy_logistic(d, "tinnitus", base,
-                                              "weight", "strata", "psu")
-    if "hearing_loss" in d and {"perceived_stress", "age", "sex"}.issubset(d.columns):
-        res["assoc_hearing_loss"] = svy_logistic(d, "hearing_loss", base,
-                                                  "weight", "strata", "psu")
+    base = [p for p in ["perceived_stress", "occ_noise", "age", "sex"] if p in df]
+    have_core = {"perceived_stress", "age", "sex"}.issubset(df.columns)
+
+    def logit(outcome, preds):
+        return svy_logistic(df, outcome, preds, "weight", "strata", "psu", domain=dom)
+
+    if "tinnitus" in df and have_core:
+        res["assoc_tinnitus"] = logit("tinnitus", base)
+    if "hearing_loss" in df and have_core:
+        res["assoc_hearing_loss"] = logit("hearing_loss", base)
+
+    # --- Prespecified secondary/sensitivity models brought INTO the analysis ---
+    # (M2, Mo1): report these in the manuscript, not "only in the repository".
+
+    # (a) EXTENDED (mediator-adjusted) tinnitus model: base + depressed mood.
+    #     Interpreted as a mediator-adjusted (NOT confounder-adjusted) estimate.
+    if "tinnitus" in df and have_core and "depressed" in df:
+        res["assoc_tinnitus_extended"] = logit("tinnitus", base + ["depressed"])
+
+    # (b) HEARING-LOSS-ADJUSTED tinnitus model: does stress->tinnitus survive
+    #     adjustment for audiometric hearing loss (a strong tinnitus correlate)?
+    if "tinnitus" in df and have_core and "hearing_loss" in df:
+        res["assoc_tinnitus_hearing_adj"] = logit("tinnitus", base + ["hearing_loss"])
+
+    # (c) EXTENDED (mediator-adjusted) hearing-loss model: base + depressed mood.
+    if "hearing_loss" in df and have_core and "depressed" in df:
+        res["assoc_hearing_loss_extended"] = logit("hearing_loss", base + ["depressed"])
+
+    # (d) WORSE-EAR hearing loss (unilateral/asymmetric-sensitive; Mo1).
+    if "worse_ear_hearing_loss" in df and have_core:
+        res["assoc_hearing_loss_worse"] = logit("worse_ear_hearing_loss", base)
+
+    # (e) HIGH-FREQUENCY (3/4/6 kHz) hearing loss (noise-damage-sensitive; Mo1).
+    if "hf_hearing_loss" in df and have_core:
+        res["assoc_hearing_loss_hf"] = logit("hf_hearing_loss", base)
+
+    # (f) BOTHERSOME tinnitus (a distinct endpoint) and (g) NON-BOTHERSOME
+    #     tinnitus vs no tinnitus (M1 reverse-causation sensitivity).
+    if "bothersome_tinnitus" in df and have_core:
+        res["assoc_bothersome_tinnitus"] = logit("bothersome_tinnitus", base)
+    if "nonbothersome_tinnitus" in df and have_core:
+        res["assoc_nonbothersome_tinnitus"] = logit("nonbothersome_tinnitus", base)
+
     return res
 
 
@@ -263,6 +336,60 @@ def to_latex(res: dict) -> str:
     return "\n".join(lines)
 
 
+def to_latex_extended(res: dict) -> str:
+    """Extended / sensitivity table isolating the perceived-stress OR across
+    model specifications (mediator-adjusted, hearing-loss-adjusted, worse-ear,
+    high-frequency). Brings the prespecified secondary analyses INTO the paper."""
+    def stars(p):
+        return "" if p is None else (
+            "***" if p < 0.001 else "**" if p < 0.01 else "*" if p < 0.05 else "")
+
+    def cell(key, param="perceived_stress"):
+        a = res.get(key)
+        if not a or param not in a:
+            return "--"
+        o = a[param]
+        return (f"{o['odds_ratio']:.2f} ({o['ci_low']:.2f}--{o['ci_high']:.2f})"
+                f"{stars(o.get('p_value'))}")
+
+    def nof(key):
+        a = res.get(key)
+        return str(a.get("_n", "--")) if a else "--"
+
+    rows = [
+        ("Tinnitus --- minimal-sufficient (primary)", "assoc_tinnitus"),
+        ("\\quad + depressed mood (mediator-adjusted)", "assoc_tinnitus_extended"),
+        ("\\quad + audiometric hearing loss", "assoc_tinnitus_hearing_adj"),
+        ("Hearing loss, better ear --- minimal-sufficient", "assoc_hearing_loss"),
+        ("\\quad + depressed mood (mediator-adjusted)", "assoc_hearing_loss_extended"),
+        ("Hearing loss, worse ear --- minimal-sufficient", "assoc_hearing_loss_worse"),
+        ("Hearing loss, high-freq (3/4/6\\,kHz) --- minimal-sufficient",
+         "assoc_hearing_loss_hf"),
+        ("Bothersome tinnitus --- minimal-sufficient", "assoc_bothersome_tinnitus"),
+        ("Non-bothersome tinnitus vs none (reverse-causation sensitivity)",
+         "assoc_nonbothersome_tinnitus"),
+    ]
+    body = "\n".join(
+        f"{label} & {cell(key)} & {nof(key)} \\\\" for label, key in rows)
+    return "\n".join([
+        "\\begin{table}[htbp]", "\\centering",
+        "\\caption{\\textbf{Extended and sensitivity models (KNHANES, adults "
+        "40--69).} Perceived-stress odds ratio (95\\% CI) across prespecified "
+        "specifications, isolating the robustness of the primary exposure. Rows "
+        "add the mediator (depressed mood) or audiometric hearing loss to the "
+        "minimal-sufficient set (perceived stress, occupational noise, age, sex), "
+        "and vary the hearing-loss outcome definition (better-ear, worse-ear, "
+        "high-frequency). All are design-based associations, not causal effects; "
+        "mediator-adjusted rows are interpreted as mediator- (not confounder-) "
+        "adjusted. Generated by \\texttt{code/src/knhanes\\_analysis.py}. "
+        "$^{*}p<0.05$, $^{**}p<0.01$, $^{***}p<0.001$.}",
+        "\\label{tab:results_knhanes_extended}", "\\small",
+        "\\begin{tabular}{lcc}", "\\toprule",
+        "Model specification & Perceived stress, OR (95\\% CI) & $N$ \\\\",
+        "\\midrule", body, "\\bottomrule", "\\end{tabular}", "\\end{table}", "",
+    ])
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--mapping", default="config/knhanes_mapping.yaml")
@@ -270,6 +397,12 @@ def main() -> None:
     ap.add_argument("--cycles", nargs="+", default=["2010", "2011", "2012"])
     ap.add_argument("--out", default="outputs/knhanes_results.json")
     ap.add_argument("--latex", default=None)
+    ap.add_argument("--latex-extended", default=None,
+                    help="path to write the extended/sensitivity model table")
+    ap.add_argument("--dump-analytic", default=None,
+                    help="write the derived analytic frame to CSV for independent "
+                         "SE reproduction (e.g. R survey / samplics; see "
+                         "src/reproduce_survey.R)")
     args = ap.parse_args()
     mapping = yaml.safe_load(Path(args.mapping).read_text(encoding="utf-8"))
     data_dir = Path(args.data_dir)
@@ -292,6 +425,11 @@ def main() -> None:
         flag = "" if (v in df and n > 0) else "   <-- MISSING (fill mapping / check codebook)"
         print(f"  {v:16s}: {n}{flag}")
 
+    if args.dump_analytic:
+        Path(args.dump_analytic).parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(args.dump_analytic, index=False)
+        print(f"Wrote analytic frame for SE reproduction -> {args.dump_analytic}")
+
     res = run_analysis(df, mapping)
     res["cycles"] = args.cycles
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
@@ -300,6 +438,9 @@ def main() -> None:
     if args.latex:
         Path(args.latex).write_text(to_latex(res), encoding="utf-8")
         print(f"Wrote {args.latex}")
+    if args.latex_extended:
+        Path(args.latex_extended).write_text(to_latex_extended(res), encoding="utf-8")
+        print(f"Wrote {args.latex_extended}")
     print(json.dumps(res.get("prevalence", {}), indent=2))
 
 

@@ -2,11 +2,16 @@
 
 **STARS** = **S**tress, **T**innitus, and **A**udiometric **R**esearch **S**tudy.
 
-An *American Journal of Audiology*–targeted **study protocol** (with a preliminary
-NHANES demonstration) on the associations among perceived stress / work-related
-factors, tinnitus, and hearing outcomes, using public survey data and a
-clinician-governed, safety-gated AI component. Perceived stress is treated as
-*associated* with — not a proven cause of — tinnitus/hearing outcomes.
+An *American Journal of Audiology*–targeted **survey-weighted research study** on
+the associations among perceived stress / work-related factors, tinnitus, and
+hearing outcomes, using public survey data. Its primary finding (real KNHANES,
+adults 40–69): perceived stress tracks the tinnitus *symptom* (OR 1.42) but not
+the audiometric *threshold* (OR 1.18, ns) once occupational noise and age are
+accounted for, with NHANES as directional support. A prespecified plan for
+prospective components — cross-national validation and a clinician-governed,
+safety-gated AI/referral component — is specified but carries no results.
+Perceived stress is treated as *associated* with — not a proven cause of —
+tinnitus/hearing outcomes.
 
 Repository: <https://github.com/leemgs/stars-audiology>
 

@@ -14,15 +14,15 @@ online submission system, use **APA 7th-edition** style, and undergo
 
 ## 0. Article type — decide first (⚠️ highest-priority item)
 
-The manuscript is framed as a **"Study Protocol / Pre-Analysis Plan with a
-preliminary NHANES demonstration."** AJA does **not** advertise a standing
-Registered Report / Protocol track the way some journals do. Before formatting
-anything else, confirm with the editorial office **which AJA article category
-this fits** (e.g., Research Article, Review Article, Clinical Focus, Tutorial).
-The cover letter already asks the editor for guidance on category — good — but
-be prepared to reframe as a **Research Article** (preliminary empirical results +
-prespecified plan) if a protocol category is unavailable. This single decision
-drives the word limits, abstract format, and structure below.
+The manuscript is now framed as a **Research Article (survey-weighted public-data
+analysis) reported against a prespecified analysis plan**, leading with the
+primary KNHANES symptom-versus-threshold finding; the cross-national validation
+and AI/safety components are clearly demoted to a **prospective companion**
+(design only, no results). Before formatting anything else, confirm with the
+editorial office **which AJA article category this fits** (e.g., Research Article,
+Clinical Focus). The cover letter asks the editor for guidance on category —
+good. This single decision drives the word limits, abstract format, and structure
+below.
 
 ---
 

@@ -1,10 +1,58 @@
 \section{Discussion}
-As a protocol, STARS makes three focused commitments along the axes defined in the Introduction. First, it selects KNHANES for development and NHANES for cross-national external validation, and prespecifies---rather than post-hoc selects---cycles, variables, adjustment sets, and metrics. Second, it reframes AI as a reproducible research accelerator bounded by a deterministic safety layer, not a diagnostic authority. Third, it operationalizes reproducibility through open code, a data dictionary, model cards, safety tests, and a synthetic-data path.
+STARS reports one empirical finding and builds a prespecified companion program around it. The finding is a symptom-versus-threshold dissociation: in representative Korean adults, perceived stress is associated with the tinnitus symptom but not, after adjustment for occupational noise and age, with the audiometric threshold. The surrounding commitments are methodological rather than empirical: KNHANES is the development cohort and NHANES a directionally consistent support; AI is framed as a reproducible research accelerator bounded by a deterministic safety layer, not a diagnostic authority; and reproducibility is operationalized through open code, a data dictionary, model cards, safety tests, and a synthetic-data path.
 
-\subsection{Anticipated interpretation (a priori)}
-The expected scientific contribution is \emph{not} a claim that workplace stress damages hearing. Rather, the planned analyses ask whether \emph{perceived stress} is consistently associated with tinnitus and audiometric outcomes after the minimal sufficient adjustment. We hypothesize a stress--tinnitus association that is more robust than the stress--threshold association, the latter expected to attenuate after adjusting for age and noise (H1). If confirmed, this asymmetry has a clear reading: perceived stress may relate to tinnitus perception and burden---a partly central, attention-modulated phenomenon---more than to cochlear thresholds. Because depressed mood and sleep are modeled as mediators, the primary estimate avoids overadjusting away a genuine indirect pathway; the mediation analysis quantifies it explicitly.
+\subsection{Interpretation of the primary finding}
+The scientific claim is \emph{not} that workplace stress damages hearing. Rather, the primary KNHANES analysis shows that \emph{perceived stress} is associated with tinnitus but not, after the minimal sufficient adjustment, with the audiometric threshold: the stress--tinnitus association (OR 1.42) is robust to adjustment for occupational noise and age, whereas the stress--threshold association attenuates to non-significance (OR 1.18, $p=0.07$) as noise and age dominate. This asymmetry, prespecified as H1, has a clear reading: perceived stress relates to tinnitus perception and burden---a partly central, attention-modulated phenomenon---more than to cochlear thresholds. Because depressed mood and sleep are modeled as mediators, the primary estimate avoids overadjusting away a genuine indirect pathway; the prespecified extended (mediator-adjusted) model quantifies how much of the association is independent of mood and sleep (Section~\ref{sec:results}). On magnitude, an odds ratio of 1.42 is a modest but population-relevant increase in the odds of tinnitus at a stress prevalence of roughly one in four adults; we interpret it as a meaningful association rather than a large effect. We deliberately avoid dichotomizing the threshold result around $p=0.05$: OR 1.18 with a 95\% CI of 0.99--1.41 ($p=0.07$) is best read as a \emph{weak, attenuated} association whose confidence interval barely includes the null, not as evidence of ``no association''; the contrast with the tinnitus estimate is one of degree and precision, not a categorical significant-versus-null split.
 
-\subsection{Preliminary NHANES findings}
+\subsection{Directionality and reverse causation}
+The single most important threat to interpreting the stress--tinnitus association
+is \emph{reverse causation}, and it deserves first-class treatment rather than a
+line in a limitations list. A cross-sectional odds ratio cannot distinguish
+``perceived stress is associated with having tinnitus'' from ``having tinnitus
+generates perceived stress.'' The second direction is at least as plausible:
+bothersome tinnitus is itself a well-documented stressor that disrupts sleep,
+concentration, and mood, so a positive cross-sectional association is expected
+under a purely tinnitus$\rightarrow$stress mechanism. Our design cannot resolve
+this, and we therefore make no claim that stress temporally precedes or produces
+tinnitus. Two considerations bound---without eliminating---the concern. First, we
+report a prespecified \emph{sensitivity analysis restricted to non-bothersome
+tinnitus} versus no tinnitus (Table~\ref{tab:results_knhanes_extended}): because
+non-bothersome tinnitus exerts a weaker feedback pressure on distress, a
+persisting stress association there is harder to explain by reverse causation
+alone, whereas an association confined to bothersome tinnitus would point toward
+it. Second, the symptom-versus-threshold dissociation itself is more consistent
+with a central/attentional link than with stress-induced cochlear injury, but it
+too is direction-agnostic. Resolving temporality requires the prospective cohort
+(Stage~3), not these data.
+
+\subsection{Measurement validity of the exposure and outcome}
+Both the exposure and the primary outcome are \emph{single self-report items},
+and this bounds every estimate above. Perceived stress is one general item
+(\texttt{BP1}), not a validated instrument such as the PSS-10, the Job Content
+Questionnaire, or the Effort--Reward Imbalance scale; it captures a global sense
+of stress, not measured occupational stress, and we name it accordingly
+throughout. Tinnitus is likewise one item (past-12-month tinnitus, with a
+3-level annoyance follow-up for the bothersome definition), with no validated
+tinnitus measure (THI/TFI) and no audiometric tinnitus confirmation. Crucially,
+if this measurement error is \emph{non-differential} (independent of the other
+variable)---the usual expectation for general survey items---it biases the
+observed association \emph{toward the null}, so the true stress--tinnitus
+association may be \emph{larger} than the observed OR 1.42, and the attenuated
+stress--threshold association may be an under- rather than over-statement. We
+therefore interpret magnitudes cautiously and treat the single-item exposure as a
+floor on, not a ceiling of, the underlying relationship.
+
+\subsection{NHANES: directional consistency, not external validation}
+NHANES here provides \emph{directional consistency}, not external validation of
+the stress exposure. NHANES carries no perceived-stress item; its available
+distress measure is a PHQ-9 depression screen, which the study DAG treats as a
+\emph{mediator}---a related but distinct construct. Consequently, the NHANES
+results show that the symptom-versus-threshold \emph{pattern} recurs under a
+related distress construct in a different population; they do not, and cannot,
+validate the magnitude or existence of the perceived-stress effect estimated in
+KNHANES. We therefore frame NHANES as supporting evidence for the pattern, and
+reserve genuine cross-national external validation of a fitted model for the
+prospective plan (H2). With that framing:
 The real-data demonstration is encouraging and internally coherent. The
 psychological-distress proxy (a positive PHQ-9 screen) was associated with both
 tinnitus (OR 1.61) and, more strongly, audiometric hearing loss (OR 2.29), while
@@ -22,14 +70,39 @@ disease, so the planned worse-ear and per-ear analyses may differ. They
 nonetheless show the pipeline yields sensible, reproducible estimates on genuine
 public data and motivate the primary KNHANES stress analysis.
 
-\subsection{Clinical contribution and the treatment window}
-The most consequential stance is procedural rather than statistical: because SSNHL is a time-critical emergency \citep{chandrasekhar2019ssnhl}, the system is engineered so a low predicted risk can never suppress urgent referral. The motivating vignette---resolved unilateral stress-associated tinnitus, then a delayed-care sudden loss in the other ear---is exactly the failure mode the red-flag layer exists to prevent. Public data identify population patterns; the Ajou University Hospital extension can later test treatment timing, SSNHL recovery, speech-in-noise outcomes, rehabilitation, and tinnitus burden longitudinally.
+\subsection{Clinical implications}
+What should an audiologist take from a cross-sectional stress--tinnitus
+association? The defensible reading is modest and specific. First, in adults
+presenting with \emph{non-urgent, stable} tinnitus, perceived stress is a common
+co-travelling factor, which supports incorporating stress and its sequelae
+(sleep, mood, concentration) into tinnitus counseling and cognitive-behavioral or
+sound-therapy approaches \citep{tunkel2014cpg}---consistent with the finding that
+stress tracks the tinnitus \emph{symptom} more than the measurable
+\emph{threshold}. Second, and equally important as a negative implication, the
+data do \emph{not} license attributing acute, sudden, or asymmetric hearing loss
+to ``stress'': the stress association is with the symptom, not with cochlear
+thresholds, and acute asymmetric presentations warrant prompt audiological and
+otolaryngological assessment regardless of psychosocial context. Mislabeling such
+a presentation as stress-related is precisely the hazard the motivating vignette
+illustrates.
+
+\subsection{The referral-safety layer is a separate, prospective contribution}
+The deterministic red-flag layer is \emph{not} a conclusion of these data; it is a
+prospective safety-engineering component motivated by, but not tested in, this
+analysis. Because SSNHL is a time-critical emergency \citep{chandrasekhar2019ssnhl},
+it is designed so a low predicted risk can never suppress urgent referral---the
+failure mode in the motivating vignette (resolved unilateral stress-associated
+tinnitus, then a delayed-care sudden loss in the other ear). Its evaluation is
+specified in advance (Section~\ref{sec:ai}) and awaits the prospective cohort;
+population data identify patterns, whereas the Ajou University Hospital extension
+can later test treatment timing, SSNHL recovery, speech-in-noise outcomes,
+rehabilitation, and tinnitus burden longitudinally.
 
 \subsection{Comparison with prior work}
 Unlike single-country prevalence studies \citep{park2014tinnitus,joo2015hrqol}, STARS prespecifies cross-national transportability testing with calibration, recalibration, common support, and case-mix standardization---not discrimination alone. Unlike opaque clinical-AI demonstrations, it locks feature/outcome definitions before validation, declares model intended use (Table~\ref{tab:intended}), publishes model cards, and treats subgroup fairness and safety evaluation as first-class results.
 
 \subsection{Limitations}
-The primary hypothesis test---the KNHANES perceived-stress analysis---is now reported and supports H1, with NHANES as consistent supporting evidence; the external-validation, AI-extraction, and clinical components remain prospective, so much of the framework's value still rests on the rigor of the prespecified plan. Several limitations bound the primary result: the KNHANES analysis is cross-sectional; the audiometry outcomes come from the $\geq$40 ENT sub-sample analyzed with the distributed interview-plus-examination weight (\texttt{wt\_itvex}), as no ENT-specific weight is released; and the perceived-stress item is a single general question rather than a validated job-strain instrument. Substantively: (1) the surveys lack validated job-strain instruments, so the exposure is perceived stress with work-related factors as covariates, and low measurement-comparability variables are excluded from cross-national pooling (Table~\ref{tab:harmonization}); (2) cross-sectional audiometry cannot establish temporal order, so no causal claim is made despite the DAG-guided adjustment; (3) treating depressed mood/sleep as mediators rests on assumptions that may be violated, hence the separate confounder-treatment sensitivity analysis; (4) restricting to employed adults risks a healthy-worker/selection-collider effect, hence all-adult primary analysis; (5) survey-design and case-mix differences complicate transportability, addressed by the weighted/unweighted, common-support, and standardization analyses; (6) SHAP importance is descriptive and can be unstable under correlated predictors; (7) finite-set red-flag sensitivity of 1.0 does not guarantee zero deployment misses; and (8) open medical language models require local validation, privacy review, and governance before any use, and are confined here to clinician-verified research extraction.
+The primary hypothesis test---the KNHANES perceived-stress analysis---is now reported and supports H1, with NHANES as consistent supporting evidence; the external-validation, AI-extraction, and clinical components remain prospective, so much of the framework's value still rests on the rigor of the prespecified plan. Several limitations bound the primary result: the KNHANES analysis is cross-sectional; the audiometry outcomes come from the $\geq$40 ENT sub-sample analyzed with the distributed interview-plus-examination weight (\texttt{wt\_itvex}), as no ENT-specific weight is released; and the perceived-stress item is a single general question rather than a validated job-strain instrument. Substantively: (1) \textbf{measurement}---the exposure and outcome are single self-report items (no PSS-10/JCQ, no THI/TFI), so the exposure is perceived stress with work-related factors as covariates, and non-differential misclassification biases associations toward the null (detailed above); low measurement-comparability variables are excluded from cross-national pooling (Table~\ref{tab:harmonization}); (2) \textbf{directionality}---the cross-sectional design cannot establish temporal order or exclude reverse causation (tinnitus$\rightarrow$stress), as discussed at length above; no causal claim is made despite the DAG-guided adjustment; (3) \textbf{audiometric protocol}---the KNHANES ENT exam provides pure-tone air-conduction thresholds, and where tympanometry/bone-conduction data are unavailable to exclude conductive patterns, conductive contamination may misclassify the hearing-loss outcome; better-ear PTA further understates unilateral/asymmetric disease, motivating the reported worse-ear and high-frequency sensitivity analyses; (4) treating depressed mood/sleep as mediators rests on assumptions that may be violated, hence the separate confounder-treatment sensitivity analysis; (5) restricting to employed adults risks a healthy-worker/selection-collider effect, hence the all-adult primary analysis; (6) capping the analytic band at 69 excludes the $\geq$70 group with the highest tinnitus/hearing burden, limiting generalizability to older adults; (7) survey-design and case-mix differences complicate transportability, addressed by the weighted/unweighted, common-support, and standardization analyses; (8) SHAP importance is descriptive and can be unstable under correlated predictors; (9) finite-set red-flag sensitivity of 1.0 does not guarantee zero deployment misses; and (10) open medical language models require local validation, privacy review, and governance before any use, and are confined here to clinician-verified research extraction.
 
 \subsection{Future directions (out of primary scope)}
 Beyond the three-axis core, future work may add longitudinal occupational cohorts to strengthen temporality; a neurophysiological substudy of tinnitus subtypes using open OpenNeuro/EEG datasets; audiogram-digitization to unlock legacy paper audiograms; and community extension of the harmonization schema to additional national surveys. These are deliberately kept out of the primary AJA analyses to preserve focus.

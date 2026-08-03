@@ -1,8 +1,9 @@
 # STARS code
 
-Reproducible scaffold for the STARS **pre-analysis study protocol**. It runs
-end-to-end on synthetic data (no restricted files) and encodes the protocol's
-prespecified design decisions in code so the plan is auditable, not just
+Reproducible scaffold for the STARS **survey-weighted research study** (primary
+KNHANES result) and its **prespecified plan** for prospective components. It runs
+end-to-end on synthetic data (no restricted files) and encodes the study's
+prespecified design decisions in code so the analysis is auditable, not just
 described in prose. This README documents how to **reproduce every analysis** —
 including how to obtain the two national surveys.
 
@@ -16,6 +17,9 @@ including how to obtain the two national surveys.
   external-validation plan, and fairness subgroups.
 - **Design-based survey estimators** (`src/nhanes_analysis.py`): Taylor-linearized
   weighted prevalence and cluster-robust survey logistic — reused by both cohorts.
+  Support **domain (subpopulation) estimation** on the full design and a
+  conservative **single-PSU centering** option; cross-checkable in R `survey`
+  via `src/reproduce_survey.R`.
 - **NHANES pipeline** (`src/nhanes_analysis.py`) and **KNHANES pipeline**
   (`src/knhanes_analysis.py`, mapping-driven) that emit a results JSON and a LaTeX
   table the manuscript auto-includes.
@@ -110,17 +114,22 @@ file), edit the `files:` block in `config/knhanes_mapping.yaml` to match.
 `config/knhanes_mapping.yaml` is pre-filled with best-known KNHANES codes tagged
 by confidence. Confirm the **LIKELY/VERIFY** rows against your codebook:
 
+Values below reflect the codebook-verified mapping in `config/knhanes_mapping.yaml`
+(the tinnitus/audiometry/noise items live in the separate **이비인후검사 (ENT)**
+file, merged on the person id by the loader):
+
 | Field | Pre-filled | Confidence / action |
 |-------|-----------|---------------------|
 | `perceived_stress` | `BP1` (1–2 = high) | CONFIRMED |
 | `depressed_2wk` | `BP5` | CONFIRMED |
 | `age`,`sex`,`edu`,`ho_incm`,`occp` | as named | CONFIRMED |
 | `employment` | `EC_stt_1` | LIKELY — confirm |
-| `tinnitus_item` | `HtE_1` (1 = yes) | LIKELY — confirm code + values |
-| `bothersome_item` | `HtE_3` | VERIFY scale direction |
-| `occupational_noise` | `HtE_5` | VERIFY |
-| audiometry | `O_R_###`/`O_L_###` | LIKELY — confirm names |
-| `weight` | `wt_tot` | VERIFY — use the **otology-exam** sub-sample weight |
+| `tinnitus_item` | `T_Q_VN` (1 = yes, 2 = no) | CONFIRMED (ENT file) |
+| `bothersome_item` | `T_Q_VN1` (2,3 = annoying) | CONFIRMED (ENT file) |
+| `occupational_noise` | `T_NQ_OCP` (1 = yes) | CONFIRMED (ENT file) |
+| audiometry | `T_HR###_rt`/`T_HR###_lt` | CONFIRMED (ENT file; clean dB, NaN = not tested) |
+| `weight` | `wt_itvex` (pool: `/n_years`) | CONFIRMED in ALL file; no ENT-specific weight released (see Mo2) |
+| `strata`,`psu` | `kstrata`,`psu` | CONFIRMED |
 | `sleep_hours` | `<FILL>` | FILL (optional; mediator only) |
 
 ### Step 4 — Run and inspect coverage
@@ -130,8 +139,20 @@ python src/knhanes_analysis.py \
     --mapping config/knhanes_mapping.yaml \
     --data-dir data/raw/knhanes --cycles 2010 2011 2012 \
     --out outputs/knhanes_results.json \
-    --latex ../paper/tables/table_results_knhanes.tex
-cd ../paper && bash build.sh          # the KNHANES results table appears in the PDF
+    --latex ../paper/tables/table_results_knhanes.tex \
+    --latex-extended ../paper/tables/table_extended_knhanes.tex \
+    --dump-analytic outputs/knhanes_analytic.csv
+cd ../paper && bash build.sh          # the KNHANES results + extended tables appear
+```
+
+`--latex-extended` regenerates the extended/sensitivity table (mediator-adjusted,
+hearing-loss-adjusted, worse-ear, and high-frequency models) in place, replacing
+the `[pending data run]` placeholders. `--dump-analytic` writes the derived
+analytic frame so the design-based SEs can be **independently reproduced** in the
+R `survey` package (M6):
+
+```bash
+Rscript src/reproduce_survey.R outputs/knhanes_analytic.csv
 ```
 
 The run prints a **`Derived-variable coverage (non-null counts)`** report. Use it
@@ -153,8 +174,8 @@ python src/test_knhanes_analysis.py
 |---------|-------------|
 | `FileNotFoundError: Missing …/HN10_ALL.sas7bdat` | Raw file not in place; complete Step 1–2, or fix `files:` in the mapping. |
 | `Could not read … install pyreadstat` | `pip install pyreadstat` (robust for Korean-encoded/compressed SAS). |
-| `tinnitus`/`occ_noise` coverage = 0 | `HtE_*` code differs in your cycle → set the real name from the codebook. |
-| Prevalence looks off | Verify you used the **otology-exam** sub-sample weight, not the general exam weight. |
+| `tinnitus`/`occ_noise` coverage = 0 | The ENT file was not merged, or `T_Q_VN`/`T_NQ_OCP` differ in your cycle → confirm the ENT file is present and the codes from the codebook. |
+| Prevalence looks off | Confirm `wt_itvex` was pooled correctly (divided by the number of years); KDCA released no ENT-specific weight, so the interview+exam weight is used (see Mo2 in the manuscript). |
 
 ---
 

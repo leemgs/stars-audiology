@@ -71,6 +71,7 @@ audiometry:
   "4000": [T_HR4000_rt, T_HR4000_lt]
   "6000": [T_HR6000_rt, T_HR6000_lt]
 speech_freqs: ["500", "1000", "2000", "4000"]
+high_freqs: ["3000", "4000", "6000"]   # high-frequency PTA (noise-damage sensitive)
 invalid_threshold_codes: []            # [CONFIRMED] thresholds are clean dB; NaN = not tested
 
 # Raw files per cycle (KDCA files, placed locally under data-dir; not committed).

@@ -82,86 +82,167 @@ class SurveyEstimate:
 # --------------------------------------------------------------------------- #
 # Design-based estimation (Taylor linearization, stratified, with-replacement)
 # --------------------------------------------------------------------------- #
-def svy_mean(y: np.ndarray, w: np.ndarray, strata: np.ndarray,
-             psu: np.ndarray) -> SurveyEstimate:
-    """Design-based weighted proportion/mean with Taylor-linearized SE.
+def _linearized_var(u: np.ndarray, strata: np.ndarray, psu: np.ndarray,
+                    single_psu: str = "center") -> np.ndarray:
+    """Stratified, with-replacement variance of a linearized total from
+    per-observation influence values ``u`` (scalars or K-vectors per row).
 
-    Implements the standard stratified, with-replacement PSU linearization used
-    by survey packages: for the ratio estimator p = sum(w*y)/sum(w),
-    var(p) = sum_h [ n_h/(n_h-1) * sum_i (u_hi - ubar_h)^2 ],
-    with u_hi = sum_{j in PSU} w_ij (y_ij - p) / W.
+    Aggregates ``u`` to PSU totals within strata and sums the standard
+    ``n_h/(n_h-1) * Sigma (t_ha - tbar_h)^2`` contribution. **Single-PSU (lonely)
+    strata** are handled by ``single_psu``:
+
+    - ``"center"`` (default): center the lone PSU total at the grand mean of all
+      PSU totals and add ``(t - tbar_grand)^2`` --- the standard *conservative*
+      option (equivalent to R ``survey``'s ``options(survey.lonely.psu="adjust")``).
+      Dropping the term instead (the old behavior) *under*-estimates variance.
+    - ``"certainty"``: treat the stratum as a self-representing certainty PSU
+      contributing 0 variance (only correct when it truly is a certainty unit).
+    - ``"drop"``: legacy behavior (contributes 0); retained for comparison.
+
+    ``u`` may be 1-D (scalar influence, e.g. svy_mean) or 2-D ``(n, K)``
+    (vector influence, e.g. the score contributions of svy_logistic); the return
+    is a scalar variance or a ``(K, K)`` matrix accordingly.
     """
-    y = np.asarray(y, float); w = np.asarray(w, float)
-    m = np.isfinite(y) & np.isfinite(w) & (w > 0)
-    y, w, strata, psu = y[m], w[m], np.asarray(strata)[m], np.asarray(psu)[m]
-    W = w.sum()
-    p = float((w * y).sum() / W)
-    var = 0.0
+    u = np.asarray(u, float)
+    vec = u.ndim == 2
+    K = u.shape[1] if vec else 1
+    strata = np.asarray(strata); psu = np.asarray(psu)
+
+    # PSU totals grouped by stratum, plus every PSU total for the grand mean.
+    per_stratum = []            # list of (n_h, totals array)
+    all_totals = []
     for h in np.unique(strata):
         hs = strata == h
-        psu_h = psu[hs]
-        ups = np.unique(psu_h)
-        n_h = len(ups)
-        if n_h < 2:
-            continue  # single-PSU stratum contributes 0 (conservative)
-        u = np.array([(w[hs][psu_h == a] *
-                       (y[hs][psu_h == a] - p)).sum() / W for a in ups])
-        ubar = u.mean()
-        var += (n_h / (n_h - 1.0)) * ((u - ubar) ** 2).sum()
-    return SurveyEstimate(estimate=p, se=float(np.sqrt(max(var, 0.0))), n=int(m.sum()))
+        ph = psu[hs]; uh = u[hs]
+        ups = np.unique(ph)
+        tot = np.array([uh[ph == a].sum(axis=0) for a in ups])  # (n_h,) or (n_h,K)
+        per_stratum.append((len(ups), tot))
+        all_totals.append(tot)
+    all_totals = np.concatenate(all_totals, axis=0) if all_totals else np.zeros(
+        (0, K) if vec else 0)
+    grand = all_totals.mean(axis=0) if len(all_totals) else (
+        np.zeros(K) if vec else 0.0)
+
+    var = np.zeros((K, K)) if vec else 0.0
+    for n_h, tot in per_stratum:
+        if n_h >= 2:
+            tbar = tot.mean(axis=0)
+            c = tot - tbar
+            var = var + (n_h / (n_h - 1.0)) * (c.T @ c if vec else float((c ** 2).sum()))
+        elif single_psu == "center":
+            c = tot[0] - grand           # lone PSU centered at the grand mean
+            var = var + (np.outer(c, c) if vec else float(c * c))
+        # "certainty"/"drop": contribute 0
+    return var
+
+
+def svy_mean(y: np.ndarray, w: np.ndarray, strata: np.ndarray,
+             psu: np.ndarray, domain: Optional[np.ndarray] = None,
+             single_psu: str = "center") -> SurveyEstimate:
+    """Design-based weighted proportion/mean with Taylor-linearized SE.
+
+    Implements the standard stratified, with-replacement PSU linearization for
+    the ratio estimator ``p = sum(w*y)/sum(w)``.
+
+    **Domain (subpopulation) estimation.** Pass ``domain`` (a boolean array over
+    all rows) to estimate within a subpopulation *without subsetting the design*:
+    all rows with a valid weight are retained for the stratum/PSU variance
+    structure, and out-of-domain (or missing-outcome) rows contribute a zero
+    influence rather than being deleted. This is the correct way to estimate,
+    e.g., the 40--69 age band, and avoids the SE distortion that naive
+    pre-subsetting introduces. With ``domain=None`` every observed row is in the
+    domain (back-compatible).
+
+    **Single-PSU strata** are handled by ``single_psu`` (see ``_linearized_var``);
+    the default ``"center"`` is conservative, unlike the old silent drop.
+    """
+    y = np.asarray(y, float); w = np.asarray(w, float)
+    valid = np.isfinite(w) & (w > 0)                 # keep all design members
+    if domain is None:
+        dom = np.isfinite(y)
+    else:
+        dom = np.asarray(domain, bool) & np.isfinite(y)
+    strata = np.asarray(strata); psu = np.asarray(psu)
+    y, w, strata, psu, dom = (a[valid] for a in (y, w, strata, psu, dom))
+    ind = dom.astype(float)
+    y_safe = np.where(np.isfinite(y), y, 0.0)        # y only used where ind=1
+    Xhat = float((w * ind).sum())
+    if Xhat <= 0:
+        return SurveyEstimate(estimate=float("nan"), se=float("nan"), n=0)
+    p = float((w * ind * y_safe).sum() / Xhat)
+    u = ind * w * (y_safe - p) / Xhat                # influence; 0 outside domain
+    var = _linearized_var(u, strata, psu, single_psu)
+    return SurveyEstimate(estimate=p, se=float(np.sqrt(max(float(var), 0.0))),
+                          n=int(ind.sum()))
 
 
 def svy_logistic(df: pd.DataFrame, outcome: str, predictors: List[str],
-                 weight: str, strata: str, psu: str) -> Optional[dict]:
+                 weight: str, strata: str, psu: str,
+                 domain=None, single_psu: str = "center") -> Optional[dict]:
     """Design-weighted logistic regression with a design-based (linearized) SE.
 
     Point estimates: pseudo-maximum-likelihood weighted logistic (weights scaled
-    to sum to the sample size). Standard errors: a manually computed
-    cluster-robust sandwich with stratum finite-population correction --- the
-    textbook Taylor linearization for stratified multistage survey logistic
-    models --- so we do not rely on statsmodels' unsupported weighted cluster
-    covariance. Returns odds ratios with 95% CIs.
+    to sum to the sample size). Standard errors: a cluster-robust sandwich with
+    stratum correction --- the textbook Taylor linearization for stratified
+    multistage survey logistic models --- so we do not rely on statsmodels'
+    unsupported weighted cluster covariance. Returns odds ratios with 95% CIs.
+
+    **Domain (subpopulation) estimation.** ``domain`` (a boolean array/Series
+    over ``df`` rows, or a column name) restricts the *fitted* observations while
+    the sandwich ``meat`` is accumulated over the *full design* (every row with
+    valid design variables): out-of-domain and item-missing rows contribute a
+    zero score but still define the stratum/PSU structure. This avoids the SE
+    distortion of pre-subsetting the data before variance estimation.
+
+    **Single-PSU strata** use the conservative centering option by default
+    (``single_psu``; see ``_linearized_var``) instead of being silently dropped.
     """
     try:
         import statsmodels.api as sm
     except Exception:
         return None
-    cols = [outcome] + predictors + [weight, strata, psu]
-    d = df[cols].dropna().copy()
-    if d[outcome].nunique() < 2 or len(d) < 50:
+    design_cols = [weight, strata, psu]
+    if isinstance(domain, str):
+        dmask = df[domain].astype(bool).to_numpy()
+    elif domain is None:
+        dmask = np.ones(len(df), bool)
+    else:
+        dmask = np.asarray(domain, bool)
+
+    dv = df[design_cols].notna().all(axis=1).to_numpy() & (
+        df[weight].to_numpy() > 0)                              # design-valid rows
+    complete = df[[outcome] + predictors].notna().all(axis=1).to_numpy()
+    fit_mask = dv & dmask & complete                           # rows entering the fit
+    if int(fit_mask.sum()) < 50 or df.loc[fit_mask, outcome].nunique() < 2:
         return None
-    y = d[outcome].astype(int).values.astype(float)
-    Xdf = sm.add_constant(d[predictors].astype(float))
-    X = Xdf.values.astype(float)
-    w = d[weight].astype(float).values
+
+    dfit = df.loc[fit_mask]
+    y = dfit[outcome].astype(float).to_numpy()
+    Xdf = sm.add_constant(dfit[predictors].astype(float))
+    X = Xdf.to_numpy(dtype=float)
+    w = dfit[weight].astype(float).to_numpy()
     w = w * (len(w) / w.sum())          # scale to sum to n (relative weights)
 
     # Point estimates via weighted IRLS.
-    res = sm.GLM(y, X, family=sm.families.Binomial(),
-                 var_weights=w).fit()
+    res = sm.GLM(y, X, family=sm.families.Binomial(), var_weights=w).fit()
     beta = res.params
     p = 1.0 / (1.0 + np.exp(-(X @ beta)))
 
-    # Bread: inverse weighted information matrix.
+    # Bread: inverse weighted information matrix (fitted rows).
     Wd = w * p * (1.0 - p)
     bread = np.linalg.pinv((X * Wd[:, None]).T @ X)
 
-    # Meat: cluster-summed weighted scores with stratum correction.
-    score = (w * (y - p))[:, None] * X                     # per-obs score
-    strat = d[strata].astype(str).values
-    clus = (strat + "_" + d[psu].astype(str).values)
-    meat = np.zeros((X.shape[1], X.shape[1]))
-    for h in np.unique(strat):
-        hs = strat == h
-        cl_h = clus[hs]
-        ups = np.unique(cl_h)
-        n_h = len(ups)
-        if n_h < 2:
-            continue
-        u = np.array([score[hs][cl_h == a].sum(axis=0) for a in ups])
-        ubar = u.mean(axis=0)
-        centered = u - ubar
-        meat += (n_h / (n_h - 1.0)) * (centered.T @ centered)
+    # Meat: per-observation scores placed on the FULL design (0 outside the fit),
+    # then the stratified/clustered linearized variance with lonely-PSU centering.
+    K = X.shape[1]
+    dv_pos = {ix: i for i, ix in enumerate(df.index[dv])}
+    score_all = np.zeros((int(dv.sum()), K))
+    score_fit = (w * (y - p))[:, None] * X
+    for j, ix in enumerate(dfit.index):
+        score_all[dv_pos[ix]] = score_fit[j]
+    strat_dv = df.loc[dv, strata].astype(str).to_numpy()
+    psu_dv = df.loc[dv, psu].astype(str).to_numpy()
+    meat = _linearized_var(score_all, strat_dv, psu_dv, single_psu)
     cov = bread @ meat @ bread
     se = np.sqrt(np.clip(np.diag(cov), 0, None))
 
@@ -179,7 +260,7 @@ def svy_logistic(df: pd.DataFrame, outcome: str, predictors: List[str],
             "ci_high": float(np.exp(b + 1.96 * s)),
             "p_value": float(pval),
         }
-    out["_n"] = int(len(d))
+    out["_n"] = int(len(dfit))
     return out
 
 
@@ -341,27 +422,33 @@ def derive_variables(df: pd.DataFrame) -> pd.DataFrame:
 # Analysis
 # --------------------------------------------------------------------------- #
 def run_analysis(df: pd.DataFrame, age_min=40, age_max=69) -> dict:
-    d = df[(df["age"] >= age_min) & (df["age"] <= age_max)].copy()
-    res: Dict[str, object] = {"n_analytic": int(len(d)), "age_range": [age_min, age_max]}
+    # Domain (subpopulation) estimation: keep the FULL design and mark the 40--69
+    # analytic band as the domain, rather than subsetting before variance
+    # estimation (which distorts the stratum/PSU structure and the SEs).
+    dom = ((df["age"] >= age_min) & (df["age"] <= age_max)).to_numpy()
+    res: Dict[str, object] = {"n_analytic": int(dom.sum()),
+                              "age_range": [age_min, age_max]}
 
     def prev(col):
-        if col not in d:
+        if col not in df:
             return None
-        e = svy_mean(d[col].values, d["weight"].values, d["strata"].values, d["psu"].values)
+        e = svy_mean(df[col].to_numpy(), df["weight"].to_numpy(),
+                     df["strata"].to_numpy(), df["psu"].to_numpy(), domain=dom)
         return {"prevalence": e.estimate, "se": e.se,
                 "ci": [e.ci_low, e.ci_high], "n": e.n}
 
     res["prevalence"] = {k: prev(k) for k in ["tinnitus", "hearing_loss", "depressed"]}
 
-    # Associations (design-based logistic ORs), minimal adjustment set.
-    if {"tinnitus", "age", "sex"}.issubset(d.columns):
-        preds = [p for p in ["occ_noise", "depressed", "age", "sex"] if p in d]
-        res["assoc_tinnitus"] = svy_logistic(d, "tinnitus", preds,
-                                              "weight", "strata", "psu")
-    if {"hearing_loss", "age", "sex"}.issubset(d.columns):
-        preds = [p for p in ["occ_noise", "depressed", "age", "sex"] if p in d]
-        res["assoc_hearing_loss"] = svy_logistic(d, "hearing_loss", preds,
-                                                  "weight", "strata", "psu")
+    # Associations (design-based logistic ORs), minimal adjustment set, estimated
+    # on the 40--69 domain over the full design.
+    if {"tinnitus", "age", "sex"}.issubset(df.columns):
+        preds = [p for p in ["occ_noise", "depressed", "age", "sex"] if p in df]
+        res["assoc_tinnitus"] = svy_logistic(df, "tinnitus", preds,
+                                              "weight", "strata", "psu", domain=dom)
+    if {"hearing_loss", "age", "sex"}.issubset(df.columns):
+        preds = [p for p in ["occ_noise", "depressed", "age", "sex"] if p in df]
+        res["assoc_hearing_loss"] = svy_logistic(df, "hearing_loss", preds,
+                                                  "weight", "strata", "psu", domain=dom)
     return res
 
 
