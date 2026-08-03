@@ -15,8 +15,25 @@ tinnitus/hearing outcomes.
 
 Repository: <https://github.com/leemgs/stars-audiology>
 
+## Two papers
+
+This repository holds **two companion manuscripts**:
+
+- **Paper A — STARS** (`paper/`, targeted at *American Journal of Audiology*): the
+  empirical, survey-weighted finding above, with the AI/safety component demoted
+  to a prospective plan (no results).
+- **Paper B — SAFE-EAR** (`paper02/`, targeted at a medical-informatics venue):
+  develops that AI/safety component **with real results** — a deterministic,
+  guideline-derived referral-safety layer over open-LLM extraction, evaluated on
+  an open 71-case benchmark (no patient data). Rule coverage is 100%; end-to-end
+  safety is bounded by extraction, and the benchmark *discriminates* it (red-flag
+  recall 56% → 100% across a naive vs. an improved extractor). An actual MedGemma
+  evaluation is prospective; the benchmark and metrics are fixed as a prespecified
+  reference.
+
 | Folder | What it contains |
 |--------|------------------|
-| `paper/` | LaTeX manuscript — source sections, bibliography, tables, figures — and the compiled PDF. |
-| `code/`  | Reproducible analysis pipeline: survey-weighted NHANES/KNHANES analysis, an open medical-LLM extraction template, and the deterministic red-flag safety layer, with tests. |
-| `ppt/`   | English and Korean presentation decks (`pptxgenjs` source scripts + built `.pptx`). |
+| `paper/`   | **Paper A (STARS)** — LaTeX manuscript (source sections, bibliography, tables, figures) and the compiled PDF: the empirical stress–tinnitus–threshold survey study. |
+| `paper02/` | **Paper B (SAFE-EAR)** — LaTeX manuscript, auto-generated result tables, result JSONs, and compiled PDF: the deterministic referral-safety layer and open benchmark, with real results. |
+| `code/`    | Reproducible pipeline shared by both papers: survey-weighted NHANES/KNHANES analysis (Paper A) and the red-flag safety layer, open benchmark, rule-based extractors, and evaluation harness (Paper B), with tests. |
+| `ppt/`     | English and Korean presentation decks (`pptxgenjs` source scripts + built `.pptx`). |
