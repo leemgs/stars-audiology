@@ -55,8 +55,9 @@ outcomes:
   tinnitus_item: T_Q_VN           # [CONFIRMED] 설문5: 이명여부
   tinnitus_yes_values: [1]        # 1 = 있음
   tinnitus_no_values: [2]         # 2 = 없음 (8/9 -> missing)
-  bothersome_item: T_Q_VN1        # [CONFIRMED name] 설문5-1: 이명에 따른 생활불편
-  bothersome_yes_values: [2, 3]   # [VERIFY scale] answered only by tinnitus-positive
+  bothersome_item: T_Q_VN1        # [CONFIRMED] 설문5-1 이명 성가심: 1=성가시지않음,2=성가시고신경쓰임,3=심해서수면곤란
+  bothersome_yes_values: [2, 3]   # [CONFIRMED] "annoying tinnitus" = moderate+severe (per KNHANES literature)
+  bothersome_no_values: [1, 8]    # 1=not annoying, 8=비해당(no tinnitus) -> 0; 9=무응답 -> missing
   occupational_noise: T_NQ_OCP    # [CONFIRMED] 소음2: 기계음 3개월 이상 (1=예,2=아니오)
 
 # Pure-tone air-conduction thresholds (dB HL) per frequency: [right_var, left_var]

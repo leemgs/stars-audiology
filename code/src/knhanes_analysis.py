@@ -165,8 +165,13 @@ def derive_variables(df: pd.DataFrame, mapping: dict) -> pd.DataFrame:
     both = _get(df, m["outcomes"].get("bothersome_item"))
     if both is not None:
         byes = set(m["outcomes"].get("bothersome_yes_values", []))
-        out["bothersome_tinnitus"] = both.apply(
-            lambda v: 1.0 if v in byes else (np.nan if pd.isna(v) else 0.0))
+        bno = set(m["outcomes"].get("bothersome_no_values", []))
+        if bno:  # explicit yes/no; 무응답(9) and anything else -> missing
+            out["bothersome_tinnitus"] = both.apply(
+                lambda v: 1.0 if v in byes else (0.0 if v in bno else np.nan))
+        else:
+            out["bothersome_tinnitus"] = both.apply(
+                lambda v: 1.0 if v in byes else (np.nan if pd.isna(v) else 0.0))
     occ = _get(df, m["outcomes"]["occupational_noise"])
     if occ is not None:
         out["occ_noise"] = occ.map({1: 1.0, 2: 0.0})
