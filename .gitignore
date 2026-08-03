@@ -7,6 +7,13 @@ paper/*.out
 paper/*.bbl
 paper/*.blg
 paper/*.toc
+paper02/*.aux
+paper02/*.log
+paper02/*.out
+paper02/*.bbl
+paper02/*.blg
+paper02/*.toc
+paper02/*.xdv
 
 # Node / pptx build
 ppt/node_modules/
