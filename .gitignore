@@ -22,3 +22,11 @@ code/data/
 
 # NHANES/KNHANES raw data (never committed)
 code/data/
+
+# Derived analytic frame: individual-level rows from restricted KDCA microdata.
+# Produced locally by --dump-analytic for reproduce_survey.R; NEVER redistribute.
+code/outputs/knhanes_analytic.csv
+code/outputs/*_analytic.csv
+
+# Versioned PDF copy is a build artifact of build.sh; only paper/main.pdf is tracked.
+paper/STARS_AJA_public_dataset_manuscript_v0.9.pdf
