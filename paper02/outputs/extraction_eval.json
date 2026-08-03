@@ -1,70 +1,143 @@
 {
-  "n_docs": 21,
-  "per_feature": {
-    "sudden_hearing_loss": {
-      "precision": 0.4,
-      "recall": 0.6666666666666666,
-      "f1": 0.5,
-      "accuracy": 0.8095238095238095,
-      "support": 3
+  "n_docs": 37,
+  "extractors": {
+    "rule_v1": {
+      "per_feature": {
+        "sudden_hearing_loss": {
+          "precision": 0.3333333333333333,
+          "recall": 0.2222222222222222,
+          "f1": 0.26666666666666666,
+          "accuracy": 0.7027027027027027,
+          "support": 9
+        },
+        "rapidly_progressive_loss": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "accuracy": 0.9459459459459459,
+          "support": 4
+        },
+        "unilateral_sudden_symptom": {
+          "precision": 1.0,
+          "recall": 0.4,
+          "f1": 0.5714285714285715,
+          "accuracy": 0.7567567567567568,
+          "support": 15
+        },
+        "aural_fullness_acute_onset": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "accuracy": 0.9459459459459459,
+          "support": 4
+        },
+        "single_sided_tinnitus": {
+          "precision": 1.0,
+          "recall": 0.6,
+          "f1": 0.7499999999999999,
+          "accuracy": 0.9459459459459459,
+          "support": 5
+        },
+        "asymmetric_hearing": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "accuracy": 1.0,
+          "support": 2
+        },
+        "vertigo": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571428571428571,
+          "accuracy": 0.972972972972973,
+          "support": 4
+        },
+        "focal_neurologic_sign": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "accuracy": 1.0,
+          "support": 1
+        }
+      },
+      "macro": {
+        "precision": 0.9166666666666666,
+        "recall": 0.6215277777777778,
+        "f1": 0.7223214285714286,
+        "accuracy": 0.9087837837837838
+      },
+      "document_exact_feature_match": 0.5945945945945946,
+      "clinically_significant_error_rate": 0.2702702702702703,
+      "run_consistency": 1.0
     },
-    "rapidly_progressive_loss": {
-      "precision": 1.0,
-      "recall": 0.6666666666666666,
-      "f1": 0.8,
-      "accuracy": 0.9523809523809523,
-      "support": 3
-    },
-    "unilateral_sudden_symptom": {
-      "precision": 1.0,
-      "recall": 0.625,
-      "f1": 0.7692307692307693,
-      "accuracy": 0.8571428571428571,
-      "support": 8
-    },
-    "aural_fullness_acute_onset": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "accuracy": 1.0,
-      "support": 2
-    },
-    "single_sided_tinnitus": {
-      "precision": 1.0,
-      "recall": 0.75,
-      "f1": 0.8571428571428571,
-      "accuracy": 0.9523809523809523,
-      "support": 4
-    },
-    "asymmetric_hearing": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "accuracy": 1.0,
-      "support": 2
-    },
-    "vertigo": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "accuracy": 1.0,
-      "support": 2
-    },
-    "focal_neurologic_sign": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "accuracy": 1.0,
-      "support": 1
+    "rule_v2": {
+      "per_feature": {
+        "sudden_hearing_loss": {
+          "precision": 0.8181818181818182,
+          "recall": 1.0,
+          "f1": 0.9,
+          "accuracy": 0.9459459459459459,
+          "support": 9
+        },
+        "rapidly_progressive_loss": {
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.888888888888889,
+          "accuracy": 0.972972972972973,
+          "support": 4
+        },
+        "unilateral_sudden_symptom": {
+          "precision": 1.0,
+          "recall": 0.9333333333333333,
+          "f1": 0.9655172413793104,
+          "accuracy": 0.972972972972973,
+          "support": 15
+        },
+        "aural_fullness_acute_onset": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "accuracy": 1.0,
+          "support": 4
+        },
+        "single_sided_tinnitus": {
+          "precision": 1.0,
+          "recall": 0.6,
+          "f1": 0.7499999999999999,
+          "accuracy": 0.9459459459459459,
+          "support": 5
+        },
+        "asymmetric_hearing": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "accuracy": 1.0,
+          "support": 2
+        },
+        "vertigo": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "accuracy": 1.0,
+          "support": 4
+        },
+        "focal_neurologic_sign": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "accuracy": 1.0,
+          "support": 1
+        }
+      },
+      "macro": {
+        "precision": 0.9522727272727273,
+        "recall": 0.9416666666666667,
+        "f1": 0.9380507662835249,
+        "accuracy": 0.9797297297297297
+      },
+      "document_exact_feature_match": 0.8378378378378378,
+      "clinically_significant_error_rate": 0.0,
+      "run_consistency": 1.0
     }
-  },
-  "macro": {
-    "precision": 0.925,
-    "recall": 0.8385416666666666,
-    "f1": 0.8657967032967033,
-    "accuracy": 0.9464285714285714
-  },
-  "document_exact_feature_match": 0.6666666666666666,
-  "clinically_significant_error_rate": 0.14285714285714285,
-  "run_consistency": 1.0
+  }
 }

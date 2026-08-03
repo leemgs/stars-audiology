@@ -13,10 +13,12 @@ venue rather than an audiology journal.
 
 ## What is real here (and what is prospective)
 
-- **Real results:** a deterministic red-flag safety layer evaluated on an open
-  benchmark (rule coverage **100%** recall / 0% over-referral; **end-to-end 82%**
-  recall bounded by extraction), and a reproducible rule-based extraction baseline
-  (macro-F1 **0.87**, urgency-changing error **14%**, run-consistency **1.00**).
+- **Real results:** a deterministic red-flag safety layer on a 71-case open
+  benchmark (rule coverage **100%** recall / 0% over-referral). End-to-end safety
+  is dominated by extraction, and the benchmark *discriminates* it: red-flag
+  recall ranges from **56%** (naive extractor v1) to **100%** (improved extractor
+  v2) on identical cases; extraction macro-F1 **0.72 → 0.94**, urgency-changing
+  error **27% → 0%**, run-consistency **1.00**.
 - **Prospective:** evaluation of an actual open medical LLM (e.g., MedGemma) on
   clinical free text needs model access and IRB-approved data. The benchmark and
   metrics are fixed here so that comparison is prespecified.

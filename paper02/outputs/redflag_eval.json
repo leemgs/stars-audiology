@@ -1,9 +1,9 @@
 {
   "benchmark": {
-    "n_structured": 20,
-    "structured_urgent": 12,
-    "n_text": 21,
-    "text_urgent": 11,
+    "n_structured": 34,
+    "structured_urgent": 19,
+    "n_text": 37,
+    "text_urgent": 18,
     "text_categories": [
       "ambiguous",
       "colloquial",
@@ -12,29 +12,29 @@
     ]
   },
   "structured": {
-    "tp": 12,
+    "tp": 19,
     "fp": 0,
-    "tn": 8,
+    "tn": 15,
     "fn": 0,
     "sensitivity": 1.0,
     "sensitivity_ci": [
-      0.7574992425007574,
+      0.8318156346315496,
       1.0
     ],
     "specificity": 1.0,
     "specificity_ci": [
-      0.6755843804891231,
+      0.7961107336956521,
       1.0
     ],
     "over_referral": 0.0,
     "over_referral_ci": [
       0.0,
-      0.3244156195108769
+      0.20388926630434784
     ],
     "subgroup_recall": {
       "acute": {
-        "hit": 10,
-        "n": 10
+        "hit": 17,
+        "n": 17
       },
       "gradual": {
         "hit": 1,
@@ -43,109 +43,218 @@
     }
   },
   "end_to_end": {
-    "tp": 9,
-    "fp": 1,
-    "tn": 9,
-    "fn": 2,
-    "sensitivity": 0.8181818181818182,
-    "sensitivity_ci": [
-      0.5230138624217553,
-      0.9486333993289995
-    ],
-    "specificity": 0.9,
-    "specificity_ci": [
-      0.5958436145024278,
-      0.9821242504842788
-    ],
-    "over_referral": 0.1,
-    "over_referral_ci": [
-      0.01787574951572113,
-      0.4041563854975721
-    ],
-    "by_category": {
-      "ambiguous": {
-        "tp": 1,
-        "fp": 1,
-        "tn": 1,
-        "fn": 1,
-        "sensitivity": 0.5,
-        "sensitivity_ci": [
-          0.09452865480086614,
-          0.9054713451991339
-        ],
-        "specificity": 0.5,
-        "specificity_ci": [
-          0.09452865480086614,
-          0.9054713451991339
-        ],
-        "over_referral": 0.5,
-        "over_referral_ci": [
-          0.09452865480086614,
-          0.9054713451991339
-        ]
-      },
-      "colloquial": {
-        "tp": 3,
-        "fp": 0,
-        "tn": 1,
-        "fn": 1,
-        "sensitivity": 0.75,
-        "sensitivity_ci": [
-          0.3006360524426366,
-          0.9544139373553637
-        ],
-        "specificity": 1.0,
-        "specificity_ci": [
-          0.20654329147389294,
-          1.0
-        ],
-        "over_referral": 0.0,
-        "over_referral_ci": [
-          0.0,
-          0.7934567085261071
-        ]
-      },
-      "negation": {
-        "tp": 0,
-        "fp": 0,
-        "tn": 4,
-        "fn": 0,
-        "sensitivity": NaN,
-        "sensitivity_ci": [
-          NaN,
-          NaN
-        ],
-        "specificity": 1.0,
-        "specificity_ci": [
-          0.5100999795960008,
-          1.0
-        ],
-        "over_referral": 0.0,
-        "over_referral_ci": [
-          0.0,
-          0.48990002040399916
-        ]
-      },
-      "typical": {
-        "tp": 5,
-        "fp": 0,
-        "tn": 3,
-        "fn": 0,
-        "sensitivity": 1.0,
-        "sensitivity_ci": [
-          0.5655085052479191,
-          1.0
-        ],
-        "specificity": 1.0,
-        "specificity_ci": [
-          0.43849391955098227,
-          1.0
-        ],
-        "over_referral": 0.0,
-        "over_referral_ci": [
-          0.0,
-          0.5615060804490177
-        ]
+    "rule_v1": {
+      "tp": 10,
+      "fp": 2,
+      "tn": 17,
+      "fn": 8,
+      "sensitivity": 0.5555555555555556,
+      "sensitivity_ci": [
+        0.3371606942825164,
+        0.7544076889861088
+      ],
+      "specificity": 0.8947368421052632,
+      "specificity_ci": [
+        0.686054495051583,
+        0.9706420586049034
+      ],
+      "over_referral": 0.10526315789473684,
+      "over_referral_ci": [
+        0.029357941395096593,
+        0.313945504948417
+      ],
+      "by_category": {
+        "ambiguous": {
+          "tp": 1,
+          "fp": 2,
+          "tn": 2,
+          "fn": 2,
+          "sensitivity": 0.3333333333333333,
+          "sensitivity_ci": [
+            0.0614903152761605,
+            0.7923450448735121
+          ],
+          "specificity": 0.5,
+          "specificity_ci": [
+            0.15003570882017148,
+            0.8499642911798285
+          ],
+          "over_referral": 0.5,
+          "over_referral_ci": [
+            0.15003570882017148,
+            0.8499642911798285
+          ]
+        },
+        "colloquial": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 2,
+          "fn": 4,
+          "sensitivity": 0.42857142857142855,
+          "sensitivity_ci": [
+            0.15821692226262685,
+            0.7495457695909742
+          ],
+          "specificity": 1.0,
+          "specificity_ci": [
+            0.34237195288961925,
+            1.0
+          ],
+          "over_referral": 0.0,
+          "over_referral_ci": [
+            0.0,
+            0.6576280471103807
+          ]
+        },
+        "negation": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 7,
+          "fn": 0,
+          "sensitivity": NaN,
+          "sensitivity_ci": [
+            NaN,
+            NaN
+          ],
+          "specificity": 1.0,
+          "specificity_ci": [
+            0.6456611570247934,
+            1.0
+          ],
+          "over_referral": 0.0,
+          "over_referral_ci": [
+            0.0,
+            0.35433884297520657
+          ]
+        },
+        "typical": {
+          "tp": 6,
+          "fp": 0,
+          "tn": 6,
+          "fn": 2,
+          "sensitivity": 0.75,
+          "sensitivity_ci": [
+            0.40926987910258916,
+            0.9285223111419724
+          ],
+          "specificity": 1.0,
+          "specificity_ci": [
+            0.6096569663469354,
+            0.9999999999999999
+          ],
+          "over_referral": 0.0,
+          "over_referral_ci": [
+            0.0,
+            0.3903430336530645
+          ]
+        }
+      }
+    },
+    "rule_v2": {
+      "tp": 18,
+      "fp": 0,
+      "tn": 19,
+      "fn": 0,
+      "sensitivity": 1.0,
+      "sensitivity_ci": [
+        0.8241154494176252,
+        1.0
+      ],
+      "specificity": 1.0,
+      "specificity_ci": [
+        0.8318156346315496,
+        1.0
+      ],
+      "over_referral": 0.0,
+      "over_referral_ci": [
+        0.0,
+        0.16818436536845052
+      ],
+      "by_category": {
+        "ambiguous": {
+          "tp": 3,
+          "fp": 0,
+          "tn": 4,
+          "fn": 0,
+          "sensitivity": 1.0,
+          "sensitivity_ci": [
+            0.43849391955098227,
+            1.0
+          ],
+          "specificity": 1.0,
+          "specificity_ci": [
+            0.5100999795960008,
+            1.0
+          ],
+          "over_referral": 0.0,
+          "over_referral_ci": [
+            0.0,
+            0.48990002040399916
+          ]
+        },
+        "colloquial": {
+          "tp": 7,
+          "fp": 0,
+          "tn": 2,
+          "fn": 0,
+          "sensitivity": 1.0,
+          "sensitivity_ci": [
+            0.6456611570247934,
+            1.0
+          ],
+          "specificity": 1.0,
+          "specificity_ci": [
+            0.34237195288961925,
+            1.0
+          ],
+          "over_referral": 0.0,
+          "over_referral_ci": [
+            0.0,
+            0.6576280471103807
+          ]
+        },
+        "negation": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 7,
+          "fn": 0,
+          "sensitivity": NaN,
+          "sensitivity_ci": [
+            NaN,
+            NaN
+          ],
+          "specificity": 1.0,
+          "specificity_ci": [
+            0.6456611570247934,
+            1.0
+          ],
+          "over_referral": 0.0,
+          "over_referral_ci": [
+            0.0,
+            0.35433884297520657
+          ]
+        },
+        "typical": {
+          "tp": 8,
+          "fp": 0,
+          "tn": 6,
+          "fn": 0,
+          "sensitivity": 1.0,
+          "sensitivity_ci": [
+            0.6755843804891231,
+            1.0
+          ],
+          "specificity": 1.0,
+          "specificity_ci": [
+            0.6096569663469354,
+            0.9999999999999999
+          ],
+          "over_referral": 0.0,
+          "over_referral_ci": [
+            0.0,
+            0.3903430336530645
+          ]
+        }
       }
     }
   }
