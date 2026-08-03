@@ -2,7 +2,7 @@
 STARS reports one empirical finding and builds a prespecified companion program around it. The finding is a symptom-versus-threshold dissociation: in representative Korean adults, perceived stress is associated with the tinnitus symptom but not, after adjustment for occupational noise and age, with the audiometric threshold. The surrounding commitments are methodological rather than empirical: KNHANES is the development cohort and NHANES a directionally consistent support; AI is framed as a reproducible research accelerator bounded by a deterministic safety layer, not a diagnostic authority; and reproducibility is operationalized through open code, a data dictionary, model cards, safety tests, and a synthetic-data path.
 
 \subsection{Interpretation of the primary finding}
-The scientific claim is \emph{not} that workplace stress damages hearing. Rather, the primary KNHANES analysis shows that \emph{perceived stress} is associated with tinnitus but not, after the minimal sufficient adjustment, with the audiometric threshold: the stress--tinnitus association (OR 1.42) is robust to adjustment for occupational noise and age, whereas the stress--threshold association attenuates to non-significance (OR 1.18, $p=0.07$) as noise and age dominate. This asymmetry, prespecified as H1, has a clear reading: perceived stress relates to tinnitus perception and burden---a partly central, attention-modulated phenomenon---more than to cochlear thresholds. Because depressed mood and sleep are modeled as mediators, the primary estimate avoids overadjusting away a genuine indirect pathway; the prespecified extended (mediator-adjusted) model quantifies how much of the association is independent of mood and sleep (Section~\ref{sec:results}). On magnitude, an odds ratio of 1.42 is a modest but population-relevant increase in the odds of tinnitus at a stress prevalence of roughly one in four adults; we interpret it as a meaningful association rather than a large effect. We deliberately avoid dichotomizing the threshold result around $p=0.05$: OR 1.18 with a 95\% CI of 0.99--1.41 ($p=0.07$) is best read as a \emph{weak, attenuated} association whose confidence interval barely includes the null, not as evidence of ``no association''; the contrast with the tinnitus estimate is one of degree and precision, not a categorical significant-versus-null split.
+The scientific claim is \emph{not} that workplace stress damages hearing. Rather, the primary KNHANES analysis shows that \emph{perceived stress} is associated with tinnitus but not, after the minimal sufficient adjustment, with the audiometric threshold: the stress--tinnitus association (OR 1.42) is robust to adjustment for occupational noise and age, whereas the stress--threshold association attenuates to non-significance (OR 1.18, $p=0.07$) as noise and age dominate. This asymmetry, prespecified as H1, has a clear reading: perceived stress relates to tinnitus perception and burden---a partly central, attention-modulated phenomenon---more than to cochlear thresholds. Because depressed mood and sleep are modeled as mediators, the primary estimate avoids overadjusting away a genuine indirect pathway; the prespecified extended model shows the association is largely independent of mood (mediator-adjusted OR 1.29) and, tellingly, of measurable hearing loss (hearing-loss-adjusted OR 1.44), so it is not an artifact of under-adjustment for the strongest tinnitus correlate. The dissociation is, however, \emph{relative rather than absolute}: while the better-ear and high-frequency threshold associations are null, perceived stress is weakly associated with the \emph{worse-ear} threshold (OR 1.15, 1.00--1.31), the ear most relevant to asymmetric disease---a signal we do not over-read, as it does not survive false-discovery-rate adjustment across the secondary contrasts ($q\approx0.07$). On magnitude, an odds ratio of 1.42 is a modest but population-relevant increase in the odds of tinnitus at a stress prevalence of roughly one in four adults; we interpret it as a meaningful association rather than a large effect. We deliberately avoid dichotomizing the threshold result around $p=0.05$: OR 1.18 with a 95\% CI of 0.99--1.41 ($p=0.07$) is best read as a \emph{weak, attenuated} association whose confidence interval barely includes the null, not as evidence of ``no association''; the contrast with the tinnitus estimate is one of degree and precision, not a categorical significant-versus-null split.
 
 \subsection{Directionality and reverse causation}
 The single most important threat to interpreting the stress--tinnitus association
@@ -14,16 +14,21 @@ bothersome tinnitus is itself a well-documented stressor that disrupts sleep,
 concentration, and mood, so a positive cross-sectional association is expected
 under a purely tinnitus$\rightarrow$stress mechanism. Our design cannot resolve
 this, and we therefore make no claim that stress temporally precedes or produces
-tinnitus. Two considerations bound---without eliminating---the concern. First, we
-report a prespecified \emph{sensitivity analysis restricted to non-bothersome
-tinnitus} versus no tinnitus (Table~\ref{tab:results_knhanes_extended}): because
-non-bothersome tinnitus exerts a weaker feedback pressure on distress, a
-persisting stress association there is harder to explain by reverse causation
-alone, whereas an association confined to bothersome tinnitus would point toward
-it. Second, the symptom-versus-threshold dissociation itself is more consistent
-with a central/attentional link than with stress-induced cochlear injury, but it
-too is direction-agnostic. Resolving temporality requires the prospective cohort
-(Stage~3), not these data.
+tinnitus. Two considerations bound---without eliminating---the concern. First, our
+prespecified \emph{sensitivity analysis restricted to non-bothersome tinnitus}
+versus no tinnitus is informative (Table~\ref{tab:results_knhanes_extended}):
+because non-bothersome tinnitus exerts weaker feedback pressure on distress, the
+fact that the stress association \emph{persists} there (OR 1.24, 1.05--1.45;
+$q<0.02$ after false-discovery-rate adjustment) is harder to explain by reverse
+causation alone. At the same time, the association is strongest for bothersome
+tinnitus (OR 1.79), and this monotone gradient from no tinnitus to non-bothersome
+to bothersome is exactly what a reverse/feedback contribution would also produce.
+The honest reading is therefore mixed: the persistence in non-bothersome cases
+argues against a \emph{purely} reverse-causal account, while the gradient is
+consistent with reverse causation contributing to the bothersome end. Second, the
+symptom-versus-threshold dissociation is more consistent with a central/attentional
+link than with stress-induced cochlear injury, but it too is direction-agnostic.
+Resolving temporality requires the prospective cohort (Stage~3), not these data.
 
 \subsection{Measurement validity of the exposure and outcome}
 Both the exposure and the primary outcome are \emph{single self-report items},
