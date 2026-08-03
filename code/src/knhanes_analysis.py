@@ -139,6 +139,27 @@ def derive_variables(df: pd.DataFrame, mapping: dict) -> pd.DataFrame:
         out["perceived_stress"] = ps.apply(
             lambda v: 1.0 if v in hi else (np.nan if pd.isna(v) else 0.0))
 
+    # SES covariates for the fully-adjusted sensitivity model (reviewer #4).
+    # Education and household income are treated as ordinal integers.
+    edu = _get(df, m["common"].get("education"))
+    if edu is not None:
+        out["education"] = pd.to_numeric(edu, errors="coerce")
+    inc = _get(df, m["common"].get("income"))
+    if inc is not None:
+        out["income"] = pd.to_numeric(inc, errors="coerce")
+
+    # Optional smoking / cardiometabolic flags (skipped if left <FILL>).
+    cx = m.get("covariates_extended", {})
+    def _binary(name_key, yes_key, out_name):
+        col = _get(df, cx.get(name_key))
+        yes = set(cx.get(yes_key, []) or [])
+        if col is not None and yes:
+            out[out_name] = col.apply(
+                lambda v: 1.0 if v in yes else (np.nan if pd.isna(v) else 0.0))
+    _binary("smoking_current", "smoking_yes_values", "smoking")
+    _binary("hypertension", "hypertension_yes_values", "hypertension")
+    _binary("diabetes", "diabetes_yes_values", "diabetes")
+
     # Mediators
     phq_items = [c for c in m["mediators"].get("depression_phq9_items", []) if c in df]
     if phq_items:
@@ -295,6 +316,16 @@ def run_analysis(df: pd.DataFrame, mapping: dict) -> dict:
     if "tinnitus" in df and have_core and "hearing_loss" in df:
         res["assoc_tinnitus_hearing_adj"] = logit("tinnitus", base + ["hearing_loss"])
 
+    # (b2) FULLY-ADJUSTED tinnitus model (reviewer #4): base + depressed mood +
+    #      whatever conventional covariates are available (SES: education, income;
+    #      and, if mapped, smoking, hypertension, diabetes). Any covariate absent
+    #      from the derived frame is simply omitted, so this still runs SES-adjusted.
+    extra = [c for c in ["depressed", "education", "income",
+                         "smoking", "hypertension", "diabetes"] if c in df]
+    if "tinnitus" in df and have_core and extra:
+        res["assoc_tinnitus_fulladj"] = logit("tinnitus", base + extra)
+        res["fulladj_covariates"] = extra
+
     # (c) EXTENDED (mediator-adjusted) hearing-loss model: base + depressed mood.
     if "hearing_loss" in df and have_core and "depressed" in df:
         res["assoc_hearing_loss_extended"] = logit("hearing_loss", base + ["depressed"])
@@ -320,6 +351,7 @@ def run_analysis(df: pd.DataFrame, mapping: dict) -> dict:
     secondary = {
         "tinnitus_extended": "assoc_tinnitus_extended",
         "tinnitus_hearing_adj": "assoc_tinnitus_hearing_adj",
+        "tinnitus_fulladj": "assoc_tinnitus_fulladj",
         "hearing_loss_extended": "assoc_hearing_loss_extended",
         "hearing_loss_worse": "assoc_hearing_loss_worse",
         "hearing_loss_hf": "assoc_hearing_loss_hf",
@@ -331,6 +363,22 @@ def run_analysis(df: pd.DataFrame, mapping: dict) -> dict:
              if res.get(key) and "perceived_stress" in res[key]}
     if pvals:
         res["fdr_secondary_perceived_stress"] = benjamini_hochberg(pvals)
+
+    # Exploratory mediation (difference method on the log-odds of perceived
+    # stress): the share of the crude stress->tinnitus association attenuated by
+    # adjusting for depressed mood. Interpreted cautiously -- cross-sectional
+    # mediation assumptions, and logistic non-collapsibility, apply.
+    at, ate = res.get("assoc_tinnitus"), res.get("assoc_tinnitus_extended")
+    if at and ate and "perceived_stress" in at and "perceived_stress" in ate:
+        import math
+        bc = math.log(at["perceived_stress"]["odds_ratio"])
+        ba = math.log(ate["perceived_stress"]["odds_ratio"])
+        res["mediation_depressed_tinnitus"] = {
+            "or_crude": at["perceived_stress"]["odds_ratio"],
+            "or_mediator_adjusted": ate["perceived_stress"]["odds_ratio"],
+            "prop_attenuated": (1.0 - ba / bc) if bc else None,
+            "method": "difference (log-odds), exploratory",
+        }
 
     return res
 
@@ -399,6 +447,7 @@ def to_latex_extended(res: dict) -> str:
         ("Tinnitus --- minimal-sufficient (primary)", "assoc_tinnitus"),
         ("\\quad + depressed mood (mediator-adjusted)", "assoc_tinnitus_extended"),
         ("\\quad + audiometric hearing loss", "assoc_tinnitus_hearing_adj"),
+        ("\\quad + SES/comorbidity (fully adjusted)", "assoc_tinnitus_fulladj"),
         ("Hearing loss, better ear --- minimal-sufficient", "assoc_hearing_loss"),
         ("\\quad + depressed mood (mediator-adjusted)", "assoc_hearing_loss_extended"),
         ("Hearing loss, worse ear --- minimal-sufficient", "assoc_hearing_loss_worse"),

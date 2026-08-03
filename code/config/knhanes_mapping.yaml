@@ -47,6 +47,19 @@ mediators:
   depressed_2wk: BP5              # [CONFIRMED] 최근 1년 2주 이상 연속 우울감: 1=예, 2=아니오
   sleep_hours: <FILL>            # [FILL] sleep-duration var not standardized in 2010-2012 (optional; mediator only)
 
+# Optional covariates for the FULLY-ADJUSTED sensitivity model (reviewer #4):
+# education and income (SES) are already in `common` and are used automatically.
+# Smoking and cardiometabolic flags are added here so a fuller model can be fit
+# once their codebook variable names/values are confirmed. Any field left <FILL>
+# is simply skipped (the model drops it), so the SES-adjusted model still runs.
+covariates_extended:
+  smoking_current: <FILL>         # [FILL] e.g., BS3_1 current-smoking status (confirm codes)
+  smoking_yes_values: []          # [FILL] value(s) coding "current smoker"
+  hypertension: <FILL>            # [FILL] e.g., DI1_dg diagnosed hypertension (confirm)
+  hypertension_yes_values: []     # [FILL]
+  diabetes: <FILL>                # [FILL] e.g., DE1_dg diagnosed diabetes (confirm)
+  diabetes_yes_values: []         # [FILL]
+
 outcomes:
   # ** CONFIRMED against the real 2010-2012 이비인후검사 (ENT) files. ** These live
   # in the HN{yy}_ENT file (merged into the 기본DB on the person id by the loader),
