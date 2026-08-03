@@ -28,24 +28,24 @@ function check(slide){ /* layout self-check hook (no-op in standalone build) */ 
 let s=pptx.addSlide();
 s.background = { color: C.light };
 s.addText('STARS', {x:0.7,y:0.75,w:7,h:0.7,fontSize:44,bold:true,color:C.navy,margin:0});
-s.addText('A pre-analysis study protocol: perceived stress & work-related factors, tinnitus, and hearing outcomes', {x:0.75,y:1.62,w:7.2,h:0.95,fontSize:19,color:C.dark,bold:false,breakLine:false,margin:0.02});
-pill(s,'AJA study protocol',0.75,2.9,1.75,C.blue);
-pill(s,'KNHANES + NHANES',2.65,2.9,1.85,C.teal);
-pill(s,'No results yet (protocol)',4.65,2.9,2.0,C.orange);
+s.addText('Perceived stress tracks the tinnitus symptom more than the audiometric threshold — a survey-weighted KNHANES study', {x:0.75,y:1.62,w:7.2,h:0.95,fontSize:18,color:C.dark,bold:false,breakLine:false,margin:0.02});
+pill(s,'AJA research article',0.75,2.9,1.85,C.blue);
+pill(s,'KNHANES + NHANES',2.75,2.9,1.85,C.teal);
+pill(s,'Primary results reported',4.75,2.9,2.05,C.teal);
 s.addShape(pptx.ShapeType.ellipse,{x:8.25,y:0.95,w:1.55,h:1.55,fill:{color:C.blue,transparency:12},line:{color:C.blue}});
 s.addShape(pptx.ShapeType.ellipse,{x:10.2,y:2.55,w:1.55,h:1.55,fill:{color:C.teal,transparency:12},line:{color:C.teal}});
 s.addShape(pptx.ShapeType.ellipse,{x:8.25,y:4.15,w:1.55,h:1.55,fill:{color:C.orange,transparency:12},line:{color:C.orange}});
 s.addText('Audiology', {x:8.47,y:1.52,w:1.12,h:0.2,fontSize:12,bold:true,color:C.white,align:'center',margin:0});
 s.addText('Open\nScience', {x:10.47,y:3.05,w:1.0,h:0.3,fontSize:11,bold:true,color:C.white,align:'center',margin:0});
 s.addText('Clinical\nSafety', {x:8.47,y:4.65,w:1.1,h:0.3,fontSize:11,bold:true,color:C.white,align:'center',margin:0});
-s.addText('Geunsik Lim · Hyun Jo\nDraft v0.9 · August 1, 2026', {x:0.75,y:6.55,w:6,h:0.5,fontSize:12,color:C.gray,margin:0});
+s.addText('Geunsik Lim · Hyun Jo\nv1.0 · August 2026', {x:0.75,y:6.55,w:6,h:0.5,fontSize:12,color:C.gray,margin:0});
 check(s);
 }
 
 // 2
 {
 let s=pptx.addSlide(); title(s,'Core research question','Association, not unsupported causation'); footer(s);
-s.addText('Can public population datasets and open medical AI help researchers identify robust, clinically useful associations among stress, tinnitus, and hearing outcomes?', {x:0.8,y:1.25,w:11.6,h:0.8,fontSize:23,bold:true,color:C.navy,margin:0.03,fit:'shrink'});
+s.addText('Is perceived stress associated with the tinnitus symptom more than with the audiometric threshold? A prespecified, survey-weighted public-data test.', {x:0.8,y:1.25,w:11.6,h:0.8,fontSize:23,bold:true,color:C.navy,margin:0.03,fit:'shrink'});
 const xs=[1.0,4.6,8.2]; const labels=['Stress-related exposure','Tinnitus / hearing outcomes','Clinical actionability']; const desc=['perceived stress, work variables, sleep, noise','audiometry, tinnitus, hearing difficulty, asymmetry','referral safety, rehabilitation, follow-up']; const colors=[C.orange,C.blue,C.teal];
 for(let i=0;i<3;i++){ s.addShape(pptx.ShapeType.roundRect,{x:xs[i],y:2.65,w:3.0,h:1.45,rectRadius:0.08,fill:{color:colors[i],transparency:5},line:{color:colors[i]}}); s.addText(labels[i],{x:xs[i]+0.2,y:2.95,w:2.6,h:0.32,fontSize:17,bold:true,color:C.white,align:'center',margin:0}); s.addText(desc[i],{x:xs[i]+0.25,y:3.33,w:2.5,h:0.45,fontSize:10.5,color:C.white,align:'center',margin:0.02}); }
 s.addShape(pptx.ShapeType.line,{x:4.0,y:3.35,w:0.55,h:0,line:{color:C.gray,pt:2,beginArrowType:'none',endArrowType:'triangle'}});
@@ -54,9 +54,30 @@ s.addText('Principle: use public data for associations and reproducible benchmar
 check(s);
 }
 
+//2b Primary result
+{
+let s=pptx.addSlide(); title(s,'Primary result (real KNHANES data)','Adults 40–69 · cycles 2010–2012 · survey-weighted; associations, not causal'); footer(s);
+s.addShape(pptx.ShapeType.roundRect,{x:0.85,y:1.35,w:5.6,h:2.05,rectRadius:0.08,fill:{color:'EEF6FF'},line:{color:C.blue}});
+s.addText('Perceived stress → TINNITUS',{x:1.1,y:1.58,w:5.1,h:0.3,fontSize:16,bold:true,color:C.navy,margin:0});
+s.addText('OR 1.42',{x:1.1,y:1.95,w:3.0,h:0.6,fontSize:40,bold:true,color:C.blue,margin:0});
+s.addText('(95% CI 1.26–1.60, p<0.001)',{x:1.1,y:2.7,w:5.1,h:0.28,fontSize:14,color:C.dark,margin:0});
+s.addText('the symptom — significant',{x:1.1,y:3.0,w:5.1,h:0.25,fontSize:13,italic:true,color:C.gray,margin:0});
+s.addShape(pptx.ShapeType.roundRect,{x:6.9,y:1.35,w:5.6,h:2.05,rectRadius:0.08,fill:{color:'FFF7ED'},line:{color:C.orange}});
+s.addText('Perceived stress → HEARING LOSS',{x:7.15,y:1.58,w:5.1,h:0.3,fontSize:16,bold:true,color:C.navy,margin:0});
+s.addText('OR 1.18',{x:7.15,y:1.95,w:3.0,h:0.6,fontSize:40,bold:true,color:C.orange,margin:0});
+s.addText('(0.99–1.41, p=0.07, ns)',{x:7.15,y:2.7,w:5.1,h:0.28,fontSize:14,color:C.dark,margin:0});
+s.addText('the audiometric threshold — attenuated',{x:7.15,y:3.0,w:5.1,h:0.25,fontSize:13,italic:true,color:C.gray,margin:0});
+s.addShape(pptx.ShapeType.roundRect,{x:0.85,y:3.65,w:11.65,h:0.6,rectRadius:0.06,fill:{color:C.teal,transparency:8},line:{color:C.teal}});
+s.addText('Symptom-versus-threshold dissociation (hypothesis H1): stress tracks tinnitus, not the threshold, once occupational noise and age are adjusted.',{x:1.05,y:3.76,w:11.25,h:0.4,fontSize:15,bold:true,color:C.white,align:'center',margin:0});
+s.addText('Robust: the tinnitus association persists after adjusting for depressed mood (1.29) and hearing loss (1.44), and for non-bothersome tinnitus (1.24) — evidence against pure reverse causation.',{x:0.95,y:4.5,w:11.5,h:0.55,fontSize:13.5,color:C.dark,align:'center',margin:0.02});
+const pv=[['Tinnitus','21.1%'],['Hearing loss','15.4%'],['High stress','24.3%']];
+for(let i=0;i<3;i++){ const x=2.0+i*3.1; s.addShape(pptx.ShapeType.roundRect,{x,y:5.25,w:2.7,h:0.85,rectRadius:0.06,fill:{color:C.light},line:{color:'D1D5DB'}}); s.addText(pv[i][1],{x,y:5.36,w:2.7,h:0.4,fontSize:22,bold:true,color:C.navy,align:'center',margin:0}); s.addText('prevalence: '+pv[i][0],{x,y:5.8,w:2.7,h:0.22,fontSize:11,color:C.gray,align:'center',margin:0}); }
+check(s);
+}
+
 //3
 {
-let s=pptx.addSlide(); title(s,'Dataset decision','KNHANES selected as development dataset; NHANES selected as external validation'); footer(s);
+let s=pptx.addSlide(); title(s,'Dataset decision','KNHANES = primary development cohort (has a stress item); NHANES = supporting'); footer(s);
 const data=[['KNHANES','Primary development','Korean population, prior tinnitus/hearing research, audiometry and health covariates'],['NHANES','External validation','Public CDC files, audiometry, noise exposure, cross-national robustness'],['OHHR / OpenNeuro','Secondary methods','Useful for audiology or neurophysiology substudy, not main stress-outcome analysis']];
 for(let i=0;i<data.length;i++){
  const y=1.25+i*1.25;
@@ -103,7 +124,7 @@ check(s);
 //6
 {
 let s=pptx.addSlide(); title(s,'Expected contributions','Higher credibility, robustness, and usefulness for the audiology community'); footer(s);
-const cards=[['1 · Association framework','Separate stress–tinnitus from stress–threshold; no causal claim'],['2 · Cross-national validation','KNHANES→NHANES: calibration, recalibration, common support, fairness'],['3 · Governed, safe AI','Clinician-verified extraction + deterministic red-flag override'],['4 · Open reproducible scaffold','Mappings, code, model cards, safety tests, synthetic-data path']];
+const cards=[['1 · Primary finding','Symptom-vs-threshold dissociation for perceived stress (tinnitus OR 1.42; threshold ns); no causal claim'],['2 · Open reproducible scaffold','Mappings, unit-tested design-based estimators, model cards, safety tests — every number regenerable'],['3 · Cross-national validation (prospective)','KNHANES→NHANES: calibration, recalibration, common support, fairness'],['4 · Governed, safe AI (prospective)','Clinician-verified extraction + deterministic red-flag override']];
 for(let i=0;i<cards.length;i++){
  const x=i%2===0?0.9:6.8; const y=i<2?1.35:4.0;
  s.addShape(pptx.ShapeType.roundRect,{x,y,w:5.1,h:1.65,rectRadius:0.07,fill:{color:'FFFFFF'},line:{color:'D1D5DB',pt:1}});
@@ -129,9 +150,9 @@ check(s);
 {
 let s=pptx.addSlide(); title(s,'Aims and prespecified hypotheses','Falsifiable claims frozen before analysis'); footer(s);
 const aims=[
- ['H1','Association','Perceived stress is associated with tinnitus after adjustment; the stress–threshold association attenuates once age and noise are controlled.'],
- ['H2','Transportability','KNHANES models retain discrimination in NHANES; calibration is restored by recalibration (tinnitus > hearing-loss model).'],
- ['H3','Safe, explainable AI','Schema-constrained extraction reaches high clinician-verified accuracy; the red-flag layer achieves near-complete recall.'],
+ ['H1','Association — SUPPORTED','Perceived stress is associated with tinnitus after adjustment (OR 1.42); the stress–threshold association attenuates to non-significance (OR 1.18) once age and noise are controlled.'],
+ ['H2','Transportability (prospective)','KNHANES models retain discrimination in NHANES; calibration is restored by recalibration (tinnitus > hearing-loss model).'],
+ ['H3','Safe, explainable AI (prospective)','Schema-constrained extraction reaches high clinician-verified accuracy; the red-flag layer achieves near-complete recall.'],
  ['A4','Shared benefit','Open code, data dictionary, model cards, prompts, and a synthetic-data path lower the barrier for global reuse.']
 ];
 for(let i=0;i<aims.length;i++){
@@ -168,9 +189,9 @@ check(s);
 let s=pptx.addSlide(); s.background={color:C.navy};
 s.addText('STARS', {x:0.85,y:0.9,w:6.5,h:0.55,fontSize:38,bold:true,color:C.white,margin:0});
 s.addText('Open, reproducible audiology research for tinnitus, hearing loss, stress-related exposures, and safe AI-assisted clinical learning.', {x:0.9,y:1.75,w:10.8,h:0.9,fontSize:24,color:C.white,bold:false,margin:0.02});
-s.addText('Next step: finalize variable mapping and run KNHANES/NHANES baseline analysis.', {x:0.9,y:4.95,w:9.5,h:0.4,fontSize:19,bold:true,color:'DDEEFF',margin:0});
+s.addText('Now: the primary KNHANES finding is reported and fully reproducible. Next: AJA submission; prospective cross-national validation, AI extraction, and clinical extension.', {x:0.9,y:4.85,w:11.4,h:0.6,fontSize:17,bold:true,color:'DDEEFF',margin:0});
 s.addText('Geunsik Lim · leemgs@g.skku.edu\nHyun Jo · joehyun@ajou.ac.kr', {x:0.9,y:6.15,w:6,h:0.45,fontSize:13,color:'DDEEFF',margin:0});
 check(s);
 }
 
-pptx.writeFile({ fileName: 'STARS_AJA_public_dataset_presentation_v0.9.pptx' });
+pptx.writeFile({ fileName: 'stars-audiology-presentation-v1.0.pptx' });

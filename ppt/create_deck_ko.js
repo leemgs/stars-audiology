@@ -38,24 +38,24 @@ function check(slide){ /* layout self-check hook (no-op in standalone build) */ 
 let s=pptx.addSlide();
 s.background = { color: C.light };
 s.addText('STARS', {x:0.7,y:0.75,w:7,h:0.7,fontSize:44,bold:true,color:C.navy,margin:0});
-s.addText('사전분석 연구 프로토콜: 인지된 스트레스·근로 요인, 이명, 청력 결과', {x:0.75,y:1.62,w:7.2,h:0.95,fontSize:19,color:C.dark,bold:false,breakLine:false,margin:0.02});
-pill(s,'AJA 연구 프로토콜',0.75,2.9,1.75,C.blue);
-pill(s,'KNHANES + NHANES',2.65,2.9,1.85,C.teal);
-pill(s,'아직 결과 없음(프로토콜)',4.65,2.9,2.1,C.orange);
+s.addText('인지된 스트레스는 청력 역치보다 이명 증상과 더 연관 — 복합표본 가중 KNHANES 연구', {x:0.75,y:1.62,w:7.2,h:0.95,fontSize:18,color:C.dark,bold:false,breakLine:false,margin:0.02});
+pill(s,'AJA 연구논문',0.75,2.9,1.6,C.blue);
+pill(s,'KNHANES + NHANES',2.5,2.9,1.85,C.teal);
+pill(s,'주 결과 보고됨',4.5,2.9,1.6,C.teal);
 s.addShape(pptx.ShapeType.ellipse,{x:8.25,y:0.95,w:1.55,h:1.55,fill:{color:C.blue,transparency:12},line:{color:C.blue}});
 s.addShape(pptx.ShapeType.ellipse,{x:10.2,y:2.55,w:1.55,h:1.55,fill:{color:C.teal,transparency:12},line:{color:C.teal}});
 s.addShape(pptx.ShapeType.ellipse,{x:8.25,y:4.15,w:1.55,h:1.55,fill:{color:C.orange,transparency:12},line:{color:C.orange}});
 s.addText('청각학', {x:8.47,y:1.52,w:1.12,h:0.2,fontSize:12,bold:true,color:C.white,align:'center',margin:0});
 s.addText('오픈\n사이언스', {x:10.47,y:3.0,w:1.0,h:0.4,fontSize:11,bold:true,color:C.white,align:'center',margin:0});
 s.addText('임상\n안전성', {x:8.47,y:4.6,w:1.1,h:0.4,fontSize:11,bold:true,color:C.white,align:'center',margin:0});
-s.addText('Geunsik Lim · Hyun Jo\n초안 v0.9 · 2026년 8월 1일', {x:0.75,y:6.55,w:6,h:0.5,fontSize:12,color:C.gray,margin:0});
+s.addText('Geunsik Lim · Hyun Jo\nv1.0 · 2026년 8월', {x:0.75,y:6.55,w:6,h:0.5,fontSize:12,color:C.gray,margin:0});
 check(s);
 }
 
 // 2
 {
 let s=pptx.addSlide(); title(s,'핵심 연구 질문','인과관계가 아닌 연관성 규명'); footer(s);
-s.addText('공개 인구집단 데이터와 공개 의료 AI를 활용해 스트레스·이명·난청 사이의 강건하고 임상적으로 유용한 연관성을 규명할 수 있는가?', {x:0.8,y:1.25,w:11.6,h:0.8,fontSize:23,bold:true,color:C.navy,margin:0.03,fit:'shrink'});
+s.addText('인지된 스트레스는 청력 역치보다 이명 증상과 더 강하게 연관되는가? 사전지정·복합표본 가중 공개데이터 검정.', {x:0.8,y:1.25,w:11.6,h:0.8,fontSize:23,bold:true,color:C.navy,margin:0.03,fit:'shrink'});
 const xs=[1.0,4.6,8.2]; const labels=['스트레스 관련 노출','이명 / 청력 결과','임상적 실행가능성']; const desc=['인지된 스트레스, 근로 변수, 수면, 소음','순음청력검사, 이명, 청력 곤란, 비대칭','안전한 의뢰, 재활, 추적관찰']; const colors=[C.orange,C.blue,C.teal];
 for(let i=0;i<3;i++){ s.addShape(pptx.ShapeType.roundRect,{x:xs[i],y:2.65,w:3.0,h:1.45,rectRadius:0.08,fill:{color:colors[i],transparency:5},line:{color:colors[i]}}); s.addText(labels[i],{x:xs[i]+0.2,y:2.95,w:2.6,h:0.32,fontSize:17,bold:true,color:C.white,align:'center',margin:0}); s.addText(desc[i],{x:xs[i]+0.25,y:3.33,w:2.5,h:0.55,fontSize:10.5,color:C.white,align:'center',margin:0.02}); }
 s.addShape(pptx.ShapeType.line,{x:4.0,y:3.35,w:0.55,h:0,line:{color:C.gray,pt:2,beginArrowType:'none',endArrowType:'triangle'}});
@@ -64,9 +64,30 @@ s.addText('원칙: 공개 데이터는 연관성과 재현 가능한 벤치마�
 check(s);
 }
 
+//2b 주 결과
+{
+let s=pptx.addSlide(); title(s,'주 결과 (실제 KNHANES 데이터)','성인 40–69세 · 2010–2012 · 복합표본 가중; 인과 아닌 연관'); footer(s);
+s.addShape(pptx.ShapeType.roundRect,{x:0.85,y:1.35,w:5.6,h:2.05,rectRadius:0.08,fill:{color:'EEF6FF'},line:{color:C.blue}});
+s.addText('인지된 스트레스 → 이명',{x:1.1,y:1.58,w:5.1,h:0.3,fontSize:16,bold:true,color:C.navy,margin:0});
+s.addText('OR 1.42',{x:1.1,y:1.95,w:3.0,h:0.6,fontSize:40,bold:true,color:C.blue,margin:0});
+s.addText('(95% CI 1.26–1.60, p<0.001)',{x:1.1,y:2.7,w:5.1,h:0.28,fontSize:14,color:C.dark,margin:0});
+s.addText('증상 — 유의',{x:1.1,y:3.0,w:5.1,h:0.25,fontSize:13,italic:true,color:C.gray,margin:0});
+s.addShape(pptx.ShapeType.roundRect,{x:6.9,y:1.35,w:5.6,h:2.05,rectRadius:0.08,fill:{color:'FFF7ED'},line:{color:C.orange}});
+s.addText('인지된 스트레스 → 청력손실',{x:7.15,y:1.58,w:5.1,h:0.3,fontSize:16,bold:true,color:C.navy,margin:0});
+s.addText('OR 1.18',{x:7.15,y:1.95,w:3.0,h:0.6,fontSize:40,bold:true,color:C.orange,margin:0});
+s.addText('(0.99–1.41, p=0.07, 비유의)',{x:7.15,y:2.7,w:5.1,h:0.28,fontSize:14,color:C.dark,margin:0});
+s.addText('청력 역치 — 약화',{x:7.15,y:3.0,w:5.1,h:0.25,fontSize:13,italic:true,color:C.gray,margin:0});
+s.addShape(pptx.ShapeType.roundRect,{x:0.85,y:3.65,w:11.65,h:0.6,rectRadius:0.06,fill:{color:C.teal,transparency:8},line:{color:C.teal}});
+s.addText('증상 vs 역치 해리 (가설 H1): 소음·연령 보정 후, 스트레스는 청력 역치가 아닌 이명 증상과 연관된다.',{x:1.05,y:3.76,w:11.25,h:0.4,fontSize:15,bold:true,color:C.white,align:'center',margin:0});
+s.addText('강건성: 이명 연관성은 우울(1.29)·청력손실(1.44) 보정 후에도, 비괴로운 이명(1.24)에서도 유지 — 단순 역인과로 설명되지 않음.',{x:0.95,y:4.5,w:11.5,h:0.55,fontSize:13.5,color:C.dark,align:'center',margin:0.02});
+const pv=[['이명','21.1%'],['청력손실','15.4%'],['고스트레스','24.3%']];
+for(let i=0;i<3;i++){ const x=2.0+i*3.1; s.addShape(pptx.ShapeType.roundRect,{x,y:5.25,w:2.7,h:0.85,rectRadius:0.06,fill:{color:C.light},line:{color:'D1D5DB'}}); s.addText(pv[i][1],{x,y:5.36,w:2.7,h:0.4,fontSize:22,bold:true,color:C.navy,align:'center',margin:0}); s.addText('유병률: '+pv[i][0],{x,y:5.8,w:2.7,h:0.22,fontSize:11,color:C.gray,align:'center',margin:0}); }
+check(s);
+}
+
 //3
 {
-let s=pptx.addSlide(); title(s,'데이터셋 선정','개발용 KNHANES, 외부검증용 NHANES'); footer(s);
+let s=pptx.addSlide(); title(s,'데이터셋 선정','주 개발 KNHANES(스트레스 문항 보유), 보조 NHANES'); footer(s);
 const data=[['KNHANES','주 개발 데이터','한국인 대상, 이명/청력 선행연구, 순음청력 및 건강 공변량'],['NHANES','외부 검증','공개 CDC 자료, 순음청력, 소음 노출, 국가 간 강건성'],['OHHR / OpenNeuro','보조 방법 검증','청각학·신경생리 하위연구에 유용, 주 스트레스-결과 분석에는 부적합']];
 for(let i=0;i<data.length;i++){
  const y=1.25+i*1.25;
@@ -113,7 +134,7 @@ check(s);
 //6
 {
 let s=pptx.addSlide(); title(s,'기대 기여','청각학계를 위한 신뢰성·강건성·유용성 향상'); footer(s);
-const cards=[['1 · 연관성 프레임워크','스트레스–이명과 스트레스–역치를 구분; 인과 주장 없음'],['2 · 국가 간 검증','KNHANES→NHANES: 보정·재보정·공통지원·공정성'],['3 · 거버넌스 안전 AI','임상의 검증 추출 + 결정론적 응급징후 우선 대체'],['4 · 공개 재현 스캐폴드','매핑·코드·모델카드·안전테스트·합성데이터']];
+const cards=[['1 · 주 발견','인지된 스트레스의 증상 vs 역치 해리(이명 OR 1.42; 역치 비유의); 인과 주장 없음'],['2 · 공개 재현 스캐폴드','매핑·단위테스트된 설계기반 추정기·모델카드·안전테스트 — 모든 수치 재생성 가능'],['3 · 국가 간 검증 (전향적)','KNHANES→NHANES: 보정·재보정·공통지원·공정성'],['4 · 거버넌스 안전 AI (전향적)','임상의 검증 추출 + 결정론적 응급징후 우선 대체']];
 for(let i=0;i<cards.length;i++){
  const x=i%2===0?0.9:6.8; const y=i<2?1.35:4.0;
  s.addShape(pptx.ShapeType.roundRect,{x,y,w:5.1,h:1.65,rectRadius:0.07,fill:{color:'FFFFFF'},line:{color:'D1D5DB',pt:1}});
@@ -139,9 +160,9 @@ check(s);
 {
 let s=pptx.addSlide(); title(s,'연구 목표 및 사전 가설','분석 전 고정한 반증 가능한 주장'); footer(s);
 const aims=[
- ['H1','연관성','보정 후에도 인지된 스트레스는 이명과 연관; 연령·소음 보정 시 스트레스-역치 연관성은 약화된다.'],
- ['H2','이식성','KNHANES 모형은 NHANES에서 변별력을 유지; 재보정으로 보정도가 회복된다(이명 > 난청 모형).'],
- ['H3','안전·설명가능 AI','스키마 제약 추출은 임상의 검증 정확도가 높고, 응급징후 계층은 거의 완전한 재현율을 달성한다.'],
+ ['H1','연관성 — 지지됨','보정 후 인지된 스트레스는 이명과 연관(OR 1.42); 연령·소음 보정 시 스트레스-역치 연관성은 비유의로 약화(OR 1.18).'],
+ ['H2','이식성 (전향적)','KNHANES 모형은 NHANES에서 변별력을 유지; 재보정으로 보정도가 회복된다(이명 > 난청 모형).'],
+ ['H3','안전·설명가능 AI (전향적)','스키마 제약 추출은 임상의 검증 정확도가 높고, 응급징후 계층은 거의 완전한 재현율을 달성한다.'],
  ['A4','홍익 기여','공개 코드·데이터 사전·모델 카드·프롬프트·합성데이터 경로로 전 세계 재사용 장벽을 낮춘다.']
 ];
 for(let i=0;i<aims.length;i++){
@@ -178,9 +199,9 @@ check(s);
 let s=pptx.addSlide(); s.background={color:C.navy};
 s.addText('STARS', {x:0.85,y:0.9,w:6.5,h:0.55,fontSize:38,bold:true,color:C.white,margin:0});
 s.addText('이명·난청·스트레스 관련 노출과 안전한 AI 보조 임상 학습을 위한 공개·재현 가능한 청각학 연구.', {x:0.9,y:1.75,w:10.8,h:0.9,fontSize:24,color:C.white,bold:false,margin:0.02});
-s.addText('다음 단계: 변수 매핑을 확정하고 KNHANES/NHANES 기준선 분석을 실행.', {x:0.9,y:4.95,w:10.5,h:0.4,fontSize:19,bold:true,color:'DDEEFF',margin:0});
+s.addText('현재: 주 KNHANES 발견을 보고했고 완전히 재현 가능. 다음: AJA 투고; 전향적 국가 간 검증·AI 추출·임상 확장.', {x:0.9,y:4.85,w:11.4,h:0.6,fontSize:17,bold:true,color:'DDEEFF',margin:0});
 s.addText('Geunsik Lim · leemgs@g.skku.edu\nHyun Jo · joehyun@ajou.ac.kr', {x:0.9,y:6.15,w:6,h:0.45,fontSize:13,color:'DDEEFF',margin:0});
 check(s);
 }
 
-pptx.writeFile({ fileName: 'STARS_AJA_public_dataset_presentation_ko_v0.9.pptx' });
+pptx.writeFile({ fileName: 'stars-audiology-presentation-ko-v1.0.pptx' });
