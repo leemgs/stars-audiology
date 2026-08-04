@@ -35,6 +35,21 @@ This repository holds **two companion manuscripts**:
   evaluation is prospective; the benchmark and metrics are fixed as a prespecified
   reference.
 
+### Paper A vs. Paper B at a glance
+
+| | **Paper A — STARS** | **Paper B — SAFE-EAR** |
+|---|---|---|
+| **Question** | *Is perceived stress associated with the tinnitus symptom vs. the audiometric threshold?* | *Can a deterministic safety layer keep LLM-assisted otology triage safe, and what bounds it?* |
+| **Type** | Empirical epidemiology (observational) | Safety engineering + open benchmark (methods) |
+| **Data** | Real public survey microdata (KNHANES/NHANES, adults 40–69) | 71-case referral benchmark, expert-authored/synthetic — **no patient data** |
+| **Method** | Survey-weighted, design-based regression | Guideline-derived deterministic red-flag rules + rule-based extraction + evaluation harness |
+| **Headline result** | Perceived stress → **tinnitus OR 1.42** (p<0.001) but **threshold OR 1.18** (ns): a symptom-vs-threshold dissociation | Rule coverage **100%**; end-to-end recall **56% → 100%** across a naive vs. improved extractor → **extraction is the safety bottleneck** |
+| **Role of AI** | None in the result; AI/safety is a *prospective plan* (appendix) | AI/LLM extraction **is the subject**; MedGemma eval prospective, benchmark fixed as reference |
+| **Target venue** | *American Journal of Audiology* (clinical audiology) | Medical-informatics / digital-health (e.g., JAMIA, npj Digital Medicine) |
+| **Relationship** | The primary finding + clinical motivation | Develops STARS's prospective safety component **with results** |
+
+**In one line:** *Paper A* asks a clinical-epidemiology question on real survey data (what stress is associated with); *Paper B* asks a safety-engineering question on an open benchmark (whether AI-assisted referral can be made safe, and where it fails). They are complementary, not overlapping.
+
 | Folder | What it contains |
 |--------|------------------|
 | `paper/`   | **Paper A (STARS)** — LaTeX manuscript (source sections, bibliography, tables, figures) and the compiled PDF: the empirical stress–tinnitus–threshold survey study. |
