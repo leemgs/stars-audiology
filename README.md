@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./stars-audiology.png" alt="STARS — Stress, Tinnitus, and Audiometric Research Study" width="100%">
+</p>
+
 # STARS
 
 **STARS** = **S**tress, **T**innitus, and **A**udiometric **R**esearch **S**tudy.
