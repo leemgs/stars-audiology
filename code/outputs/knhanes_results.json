@@ -189,6 +189,56 @@
     },
     "_n": 9142
   },
+  "assoc_tinnitus_fulladj": {
+    "perceived_stress": {
+      "odds_ratio": 1.2899808957664831,
+      "ci_low": 1.1268595124499583,
+      "ci_high": 1.4767153252534622,
+      "p_value": 0.00022290063647245617
+    },
+    "occ_noise": {
+      "odds_ratio": 1.3215352190926373,
+      "ci_low": 1.1069009704395025,
+      "ci_high": 1.577788241172815,
+      "p_value": 0.0020478289993510757
+    },
+    "age": {
+      "odds_ratio": 1.020838706141686,
+      "ci_low": 1.0111420601768908,
+      "ci_high": 1.0306283409620236,
+      "p_value": 2.280374142937802e-05
+    },
+    "sex": {
+      "odds_ratio": 1.0155458146774394,
+      "ci_low": 0.8950213697335673,
+      "ci_high": 1.1523001981683125,
+      "p_value": 0.8108503690790785
+    },
+    "depressed": {
+      "odds_ratio": 1.4311246567598022,
+      "ci_low": 1.1918749442578704,
+      "ci_high": 1.7183998984567437,
+      "p_value": 0.0001227053354164731
+    },
+    "education": {
+      "odds_ratio": 0.9453028810486824,
+      "ci_low": 0.8802381900911208,
+      "ci_high": 1.015176967982309,
+      "p_value": 0.12210410944643613
+    },
+    "income": {
+      "odds_ratio": 0.9217344127765128,
+      "ci_low": 0.8655893818558213,
+      "ci_high": 0.9815211987408334,
+      "p_value": 0.011031748857636359
+    },
+    "_n": 9307
+  },
+  "fulladj_covariates": [
+    "depressed",
+    "education",
+    "income"
+  ],
   "assoc_hearing_loss_extended": {
     "perceived_stress": {
       "odds_ratio": 1.1104360254480927,
@@ -329,6 +379,22 @@
       "p_value": 0.04511566149948987
     },
     "_n": 8781
+  },
+  "fdr_secondary_perceived_stress": {
+    "tinnitus_hearing_adj": 1.7004182950586255e-07,
+    "bothersome_tinnitus": 1.890891745404133e-07,
+    "tinnitus_extended": 0.00044580127294491234,
+    "tinnitus_fulladj": 0.00044580127294491234,
+    "nonbothersome_tinnitus": 0.017186204743738286,
+    "hearing_loss_worse": 0.06192648629092664,
+    "hearing_loss_extended": 0.3179583186388584,
+    "hearing_loss_hf": 0.34326299233525237
+  },
+  "mediation_depressed_tinnitus": {
+    "or_crude": 1.419326220919719,
+    "or_mediator_adjusted": 1.2889085939041933,
+    "prop_attenuated": 0.2752465411005761,
+    "method": "difference (log-odds), exploratory"
   },
   "cycles": [
     "2010",
