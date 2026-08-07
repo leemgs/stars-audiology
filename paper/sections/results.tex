@@ -105,8 +105,10 @@ treated as a limitation (Discussion) rather than silently ignored.
 (healthy-worker) contrast, the KNHANES$\rightarrow$NHANES external validation
 (calibration, recalibration, common support, case-mix standardization; H2), and
 subgroup fairness (SES; race/ethnicity in NHANES) are prospective components that
-follow the prespecified plan (Methods and Section~\ref{sec:ai}); they carry no
-results here.
+follow the prespecified plan (Methods); they carry no results here. The
+open-LLM extraction and deterministic referral-safety layer are developed, with
+results, in a companion paper (SAFE-EAR) and are out of scope for this empirical
+article.
 
 \subsection{Supporting results (NHANES): directional consistency}
 Using the tested, design-based pipeline (\texttt{code/src/nhanes\_analysis.py};
@@ -139,6 +141,3 @@ mediator in the DAG, these are mediator-level associations, and NHANES lacks the
 perceived-stress exposure; they therefore motivate---but do not substitute
 for---the primary KNHANES stress analysis. All values are reproduced by the
 committed results file and can be regenerated end-to-end from the CDC files.
-
-\subsection{Planned AI-component reporting}
-LLM-extracted fields will be reported with the per-field metric suite of Section~\ref{sec:ai} (exact match; precision/recall/F1; omission; span agreement; temporal/laterality/onset/duration accuracy; document-level match; run consistency; clinically significant error rate), plus clinician correction time and per-version performance. The red-flag layer will be reported per Table~\ref{tab:redflag} (dual-expert-labeled vignettes; sensitivity with 95\% CI; specificity/over-referral; subgroup and robustness), with any missed red flag audited as a critical failure and with the explicit caveat that finite-set perfection does not guarantee zero deployment misses. Model cards accompany each released model, documenting intended use (Table~\ref{tab:intended}), data provenance, subgroup metrics, and prohibitions.

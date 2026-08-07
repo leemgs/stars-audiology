@@ -69,7 +69,7 @@ The safe design principle is therefore not a better classifier but a \emph{non-o
 \paragraph{Contributions.}
 \begin{enumerate}[leftmargin=1.5em,itemsep=1pt]
 \item A deterministic red-flag safety layer derived from the SSNHL and tinnitus clinical practice guidelines \citep{chandrasekhar2019ssnhl,tunkel2014cpg}, which overrides model output and cannot be suppressed by a low predicted risk.
-\item An \textbf{open benchmark} (41 expert-authored/synthetic cases; no patient data) and a \textbf{two-level evaluation} that separates \emph{rule coverage} (on correct features) from \emph{end-to-end} performance (on free text), isolating where risk actually arises.
+\item An \textbf{open benchmark} (71 expert-authored/synthetic cases; no patient data) and a \textbf{two-level evaluation} that separates \emph{rule coverage} (on correct features) from \emph{end-to-end} performance (on free text), isolating where risk actually arises.
 \item \textbf{Real results}: complete rule coverage (100\% recall, 0\% over-referral); end-to-end safety dominated by extraction, with recall ranging from 56\% (naive extractor) to 100\% (improved extractor) on the same benchmark---so the benchmark \emph{measures} the safety bottleneck. Two reproducible rule-based extractors are released as prespecified references for future open-LLM (e.g., MedGemma) comparison.
 \item Open code, rules, benchmark, and metrics, so the evaluation is reproducible and extensible.
 \end{enumerate}
