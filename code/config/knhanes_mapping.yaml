@@ -87,6 +87,12 @@ speech_freqs: ["500", "1000", "2000", "4000"]
 high_freqs: ["3000", "4000", "6000"]   # high-frequency PTA (noise-damage sensitive)
 invalid_threshold_codes: []            # [CONFIRMED] thresholds are clean dB; NaN = not tested
 
+# Tympanometry (고막검사) per ear for a conductive-exclusion sensitivity. KNHANES
+# has NO bone-conduction (no air-bone gap), but T_Tymp flags middle-ear pathology:
+# 0=normal, 1/2=abnormal, 8/9=missing. "normal_tymp" = normal in BOTH ears.
+tympanometry: [T_Tymp_rt, T_Tymp_lt]   # [CONFIRMED]
+tympanometry_normal_value: 0
+
 # Raw files per cycle (KDCA files, placed locally under data-dir; not committed).
 # `exam` = the "기본DB" HN{yy}_ALL file (stress BP1 + covariates + weights).
 # `ent`  = the "이비인후검사" HN{yy}_ENT file (audiometry + tinnitus + noise).

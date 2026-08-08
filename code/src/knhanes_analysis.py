@@ -243,6 +243,16 @@ def derive_variables(df: pd.DataFrame, mapping: dict) -> pd.DataFrame:
         out["hf_hearing_loss"] = np.where(
             out["better_ear_hf_pta"].notna(),
             (out["better_ear_hf_pta"] > cut).astype(float), np.nan)
+
+    # Tympanometry: normal middle ear in BOTH ears, for a conductive-exclusion
+    # sensitivity (KNHANES has air-conduction thresholds but no bone conduction /
+    # air-bone gap). 0=normal, 1/2=abnormal, 8/9=missing.
+    tv = m.get("tympanometry")
+    if tv and all(v in df.columns for v in tv):
+        nv = m.get("tympanometry_normal_value", 0)
+        valid = df[tv[0]].isin([0, 1, 2]) & df[tv[1]].isin([0, 1, 2])
+        both_normal = (df[tv[0]] == nv) & (df[tv[1]] == nv)
+        out["tymp_normal"] = np.where(valid, both_normal.astype(float), np.nan)
     return out
 
 
@@ -344,6 +354,18 @@ def run_analysis(df: pd.DataFrame, mapping: dict) -> dict:
         res["assoc_bothersome_tinnitus"] = logit("bothersome_tinnitus", base)
     if "nonbothersome_tinnitus" in df and have_core:
         res["assoc_nonbothersome_tinnitus"] = logit("nonbothersome_tinnitus", base)
+
+    # (h) CONDUCTIVE-EXCLUSION sensitivity: restrict to participants with NORMAL
+    #     tympanometry in both ears, since KNHANES lacks bone conduction to
+    #     compute an air-bone gap (addresses conductive-contamination concern).
+    if "tymp_normal" in df:
+        dom_t = dom & (df["tymp_normal"].to_numpy() == 1)
+        def logit_t(outcome, preds):
+            return svy_logistic(df, outcome, preds, "weight", "strata", "psu", domain=dom_t)
+        if "hearing_loss" in df and have_core:
+            res["assoc_hearing_loss_tympnorm"] = logit_t("hearing_loss", base)
+        if "tinnitus" in df and have_core:
+            res["assoc_tinnitus_tympnorm"] = logit_t("tinnitus", base)
 
     # Multiplicity: Benjamini-Hochberg FDR across the prespecified SECONDARY
     # perceived-stress contrasts (the two primary endpoints -- tinnitus and
@@ -453,6 +475,8 @@ def to_latex_extended(res: dict) -> str:
         ("Hearing loss, worse ear --- minimal-sufficient", "assoc_hearing_loss_worse"),
         ("Hearing loss, high-freq (3/4/6\\,kHz) --- minimal-sufficient",
          "assoc_hearing_loss_hf"),
+        ("Hearing loss, normal tympanometry (conductive-excluded)",
+         "assoc_hearing_loss_tympnorm"),
         ("Bothersome tinnitus --- minimal-sufficient", "assoc_bothersome_tinnitus"),
         ("Non-bothersome tinnitus vs none (reverse-causation sensitivity)",
          "assoc_nonbothersome_tinnitus"),

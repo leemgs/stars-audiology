@@ -90,16 +90,20 @@ the borderline worse-ear association does \emph{not} survive adjustment
 not part of this secondary family.
 \IfFileExists{tables/table_extended_knhanes.tex}{\input{tables/table_extended_knhanes}}{}
 
-\paragraph{Audiometric protocol and conductive contamination.} The KNHANES ENT
-examination provides pure-tone \emph{air-conduction} thresholds per ear; the
-better-ear speech-frequency PTA is the primary hearing-loss definition, with the
-worse-ear and high-frequency definitions above as prespecified sensitivity
-analyses. Because air-conduction thresholds alone cannot separate conductive from
-sensorineural loss, any conductive component is a source of outcome
-misclassification; the availability of tympanometry/bone-conduction data to
-exclude conductive patterns in these cycles is confirmed against the KNHANES
-user guide, and where such data are absent, conductive contamination is
-treated as a limitation (Discussion) rather than silently ignored.
+\paragraph{Audiometric protocol and conductive-exclusion sensitivity.} The
+KNHANES ENT examination provides pure-tone \emph{air-conduction} thresholds per
+ear \emph{and tympanometry}, but \emph{not} bone conduction, so an air--bone gap
+cannot be computed directly. Because air-conduction thresholds alone conflate
+conductive and sensorineural loss, we used tympanometry to exclude middle-ear
+pathology: restricting the hearing-loss model to participants with \emph{normal
+tympanometry in both ears} (Table~\ref{tab:results_knhanes_extended}), the
+perceived-stress association with better-ear hearing loss \emph{strengthened} to
+significance (OR 1.29, 1.07--1.55), while the tinnitus association was essentially
+unchanged (OR 1.42, 1.25--1.62). This indicates that the null full-sample
+threshold estimate was in part a conductive-contamination artifact, and that the
+symptom-versus-threshold contrast is therefore one of \emph{degree}---perceived
+stress relates more strongly to the tinnitus symptom than to the sensorineural
+threshold---rather than an absolute presence-versus-absence dissociation.
 
 \paragraph{Further prospective analyses.} The employed-restricted
 (healthy-worker) contrast, the KNHANES$\rightarrow$NHANES external validation
