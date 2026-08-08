@@ -8,8 +8,11 @@ This is the **companion paper** to the STARS survey study in [`../paper/`](../pa
 STARS reports the empirical finding (perceived stress tracks the tinnitus symptom
 more than the audiometric threshold) and specifies a prospective AI/safety
 component; **this paper develops that safety/extraction component with real
-results** on an open benchmark, and targets a digital-health / medical-informatics
-venue rather than an audiology journal.
+results** on an open benchmark, and targets the *Journal of the American Medical
+Informatics Association* (JAMIA) — a SCIE-indexed venue that is free to publish in
+via its standard (non-open-access) route — rather than an audiology journal.
+The manuscript follows JAMIA's *Research and Applications* format (structured
+abstract, ICMJE/Vancouver numbered references).
 
 ## What is real here (and what is prospective)
 
