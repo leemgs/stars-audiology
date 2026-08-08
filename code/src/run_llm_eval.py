@@ -59,8 +59,16 @@ def _resolve_extractors(names, model_id, hf_token, include_scripted):
             try:
                 from llm_medgemma import build_medgemma_extractor
                 resolved[name] = build_medgemma_extractor(model_id, hf_token=hf_token)
-            except Exception as exc:  # ImportError, OSError (gated/no weights), etc.
-                skipped[name] = f"{type(exc).__name__}: {exc}"
+            except ImportError:
+                skipped[name] = (
+                    "transformers/torch not installed in this environment; "
+                    "`pip install -r code/requirements.txt` and re-run to load "
+                    f"{model_id}")
+            except Exception as exc:  # OSError: gated download / offline / no weights
+                skipped[name] = (
+                    f"model weights for {model_id} not accessible in this "
+                    "environment (gated download, offline, or no GPU); run this "
+                    f"command where the model is available -- {type(exc).__name__}")
         else:
             skipped[name] = "unknown extractor"
     return resolved, skipped
@@ -112,16 +120,22 @@ def to_latex(res):
         "E2E recall & E2E spec. & Run consist. \\\\", "\\midrule",
     ]
     for name, r in res["extractors"].items():
-        if r.get("status") != "ok":
-            continue
-        f = r["field_level"]
-        e = r["end_to_end"]
-        lines.append(
-            f"{_LABEL.get(name, name)} & {_num(f['macro']['f1'])} & "
-            f"{_num(f['document_exact_feature_match'])} & "
-            f"{_num(f['clinically_significant_error_rate'])} & "
-            f"{_pct(e['sensitivity'])} & {_pct(e['specificity'])} & "
-            f"{_num(f['run_consistency'])} \\\\")
+        if r.get("status") == "ok":
+            f = r["field_level"]
+            e = r["end_to_end"]
+            lines.append(
+                f"{_LABEL.get(name, name)} & {_num(f['macro']['f1'])} & "
+                f"{_num(f['document_exact_feature_match'])} & "
+                f"{_num(f['clinically_significant_error_rate'])} & "
+                f"{_pct(e['sensitivity'])} & {_pct(e['specificity'])} & "
+                f"{_num(f['run_consistency'])} \\\\")
+        elif name == "medgemma":
+            # Preregistered row: the model is scored by the same command once its
+            # gated weights are available; render an explicit pending marker
+            # rather than omit the row or invent numbers.
+            lines.append(
+                f"{_LABEL.get(name, name)} & \\multicolumn{{6}}{{c}}{{\\emph{{"
+                "pending model-access run (same command; see caption)}} \\\\")
     lines += ["\\bottomrule", "\\end{tabular}", "\\end{table}", ""]
     return "\n".join(lines)
 

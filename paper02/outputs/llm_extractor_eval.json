@@ -1,0 +1,224 @@
+{
+  "n_docs": 37,
+  "model": "google/medgemma-4b-it",
+  "extractors": {
+    "rule_v1": {
+      "status": "ok",
+      "field_level": {
+        "per_feature": {
+          "sudden_hearing_loss": {
+            "precision": 0.3333333333333333,
+            "recall": 0.2222222222222222,
+            "f1": 0.26666666666666666,
+            "accuracy": 0.7027027027027027,
+            "support": 9
+          },
+          "rapidly_progressive_loss": {
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.6666666666666666,
+            "accuracy": 0.9459459459459459,
+            "support": 4
+          },
+          "unilateral_sudden_symptom": {
+            "precision": 1.0,
+            "recall": 0.4,
+            "f1": 0.5714285714285715,
+            "accuracy": 0.7567567567567568,
+            "support": 15
+          },
+          "aural_fullness_acute_onset": {
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.6666666666666666,
+            "accuracy": 0.9459459459459459,
+            "support": 4
+          },
+          "single_sided_tinnitus": {
+            "precision": 1.0,
+            "recall": 0.6,
+            "f1": 0.7499999999999999,
+            "accuracy": 0.9459459459459459,
+            "support": 5
+          },
+          "asymmetric_hearing": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "accuracy": 1.0,
+            "support": 2
+          },
+          "vertigo": {
+            "precision": 1.0,
+            "recall": 0.75,
+            "f1": 0.8571428571428571,
+            "accuracy": 0.972972972972973,
+            "support": 4
+          },
+          "focal_neurologic_sign": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "accuracy": 1.0,
+            "support": 1
+          }
+        },
+        "macro": {
+          "precision": 0.9166666666666666,
+          "recall": 0.6215277777777778,
+          "f1": 0.7223214285714286,
+          "accuracy": 0.9087837837837838
+        },
+        "document_exact_feature_match": 0.5945945945945946,
+        "clinically_significant_error_rate": 0.2702702702702703,
+        "run_consistency": 1.0
+      },
+      "end_to_end": {
+        "sensitivity": 0.5555555555555556,
+        "sensitivity_ci": [
+          0.3371606942825164,
+          0.7544076889861088
+        ],
+        "specificity": 0.8947368421052632,
+        "specificity_ci": [
+          0.686054495051583,
+          0.9706420586049034
+        ],
+        "over_referral": 0.10526315789473684,
+        "tp": 10,
+        "fp": 2,
+        "tn": 17,
+        "fn": 8,
+        "by_category": {
+          "ambiguous": {
+            "sensitivity": 0.3333333333333333,
+            "specificity": 0.5
+          },
+          "colloquial": {
+            "sensitivity": 0.42857142857142855,
+            "specificity": 1.0
+          },
+          "negation": {
+            "sensitivity": NaN,
+            "specificity": 1.0
+          },
+          "typical": {
+            "sensitivity": 0.75,
+            "specificity": 1.0
+          }
+        }
+      }
+    },
+    "rule_v2": {
+      "status": "ok",
+      "field_level": {
+        "per_feature": {
+          "sudden_hearing_loss": {
+            "precision": 0.8181818181818182,
+            "recall": 1.0,
+            "f1": 0.9,
+            "accuracy": 0.9459459459459459,
+            "support": 9
+          },
+          "rapidly_progressive_loss": {
+            "precision": 0.8,
+            "recall": 1.0,
+            "f1": 0.888888888888889,
+            "accuracy": 0.972972972972973,
+            "support": 4
+          },
+          "unilateral_sudden_symptom": {
+            "precision": 1.0,
+            "recall": 0.9333333333333333,
+            "f1": 0.9655172413793104,
+            "accuracy": 0.972972972972973,
+            "support": 15
+          },
+          "aural_fullness_acute_onset": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "accuracy": 1.0,
+            "support": 4
+          },
+          "single_sided_tinnitus": {
+            "precision": 1.0,
+            "recall": 0.6,
+            "f1": 0.7499999999999999,
+            "accuracy": 0.9459459459459459,
+            "support": 5
+          },
+          "asymmetric_hearing": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "accuracy": 1.0,
+            "support": 2
+          },
+          "vertigo": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "accuracy": 1.0,
+            "support": 4
+          },
+          "focal_neurologic_sign": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "accuracy": 1.0,
+            "support": 1
+          }
+        },
+        "macro": {
+          "precision": 0.9522727272727273,
+          "recall": 0.9416666666666667,
+          "f1": 0.9380507662835249,
+          "accuracy": 0.9797297297297297
+        },
+        "document_exact_feature_match": 0.8378378378378378,
+        "clinically_significant_error_rate": 0.0,
+        "run_consistency": 1.0
+      },
+      "end_to_end": {
+        "sensitivity": 1.0,
+        "sensitivity_ci": [
+          0.8241154494176252,
+          1.0
+        ],
+        "specificity": 1.0,
+        "specificity_ci": [
+          0.8318156346315496,
+          1.0
+        ],
+        "over_referral": 0.0,
+        "tp": 18,
+        "fp": 0,
+        "tn": 19,
+        "fn": 0,
+        "by_category": {
+          "ambiguous": {
+            "sensitivity": 1.0,
+            "specificity": 1.0
+          },
+          "colloquial": {
+            "sensitivity": 1.0,
+            "specificity": 1.0
+          },
+          "negation": {
+            "sensitivity": NaN,
+            "specificity": 1.0
+          },
+          "typical": {
+            "sensitivity": 1.0,
+            "specificity": 1.0
+          }
+        }
+      }
+    },
+    "medgemma": {
+      "status": "skipped",
+      "reason": "transformers/torch not installed in this environment; `pip install -r code/requirements.txt` and re-run to load google/medgemma-4b-it"
+    }
+  }
+}
