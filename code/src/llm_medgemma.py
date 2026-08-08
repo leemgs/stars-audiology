@@ -120,48 +120,64 @@ def build_extractor_from_generate(generate: Generate) -> Callable[[str], Dict[st
 def load_medgemma(model_id: str = DEFAULT_MODEL,
                   max_new_tokens: int = 256,
                   device: Optional[str] = None,
-                  dtype: str = "auto",
+                  dtype: str = "bfloat16",
                   hf_token: Optional[str] = None) -> Generate:
-    """Load a MedGemma (Gemma-family) instruct model and return a deterministic
-    ``generate(prompt) -> str``. Requires ``transformers`` (and typically a GPU);
-    raises a clear ImportError/OSError if unavailable so callers can skip."""
+    """Load a MedGemma model and return a deterministic ``generate(prompt) -> str``.
+
+    Uses the ``transformers`` ``pipeline`` API so a single code path covers both
+    MedGemma layouts: the ``*-it`` 4B/27B checkpoints are multimodal
+    (``image-text-to-text``) while the ``*-text-it`` / ``*-pt`` checkpoints are
+    plain causal LMs (``text-generation``). We try the multimodal task first and
+    fall back to text generation. Decoding is greedy (``do_sample=False``) for
+    reproducibility. Requires ``transformers``/``torch`` (and a GPU in practice);
+    raises ImportError/OSError if unavailable so callers can skip cleanly.
+
+    The prompt is text-only (schema-constrained field extraction), so no image is
+    ever passed even for the multimodal checkpoints.
+    """
     import os
 
-    import torch  # noqa: F401  (imported for side effect / availability check)
-    from transformers import AutoModelForCausalLM, AutoProcessor, AutoTokenizer
+    import torch
+    from transformers import pipeline
 
-    token = hf_token or os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
-    if device is None:
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-    torch_dtype = ("auto" if dtype == "auto"
-                   else getattr(torch, dtype))
+    token = (hf_token or os.environ.get("HF_TOKEN")
+             or os.environ.get("HUGGING_FACE_HUB_TOKEN"))
+    torch_dtype = "auto" if dtype == "auto" else getattr(torch, dtype)
+    device_map = device if device is not None else "auto"
 
-    # MedGemma 4B is multimodal (uses a processor); text-only variants use a
-    # tokenizer. Try the tokenizer path first, fall back to the processor.
-    try:
-        tokenizer = AutoTokenizer.from_pretrained(model_id, token=token)
-        processor = None
-    except Exception:  # pragma: no cover - depends on model variant
-        processor = AutoProcessor.from_pretrained(model_id, token=token)
-        tokenizer = processor.tokenizer
+    pipe = None
+    task_used = None
+    last_err: Optional[Exception] = None
+    for task in ("image-text-to-text", "text-generation"):
+        try:
+            pipe = pipeline(task, model=model_id, torch_dtype=torch_dtype,
+                            device_map=device_map, token=token)
+            task_used = task
+            break
+        except Exception as exc:  # wrong task for this checkpoint, or load error
+            last_err = exc
+            continue
+    if pipe is None:
+        raise OSError(f"could not load {model_id} as image-text-to-text or "
+                      f"text-generation: {last_err}")
 
-    model = AutoModelForCausalLM.from_pretrained(
-        model_id, torch_dtype=torch_dtype, device_map=device, token=token)
-    model.eval()
+    def _last_content(out) -> str:
+        gen = out[0]["generated_text"]
+        if isinstance(gen, list):          # chat format: list of role/content turns
+            return str(gen[-1]["content"])
+        return str(gen)                    # plain string completion
 
     def _generate(prompt: str) -> str:
-        messages = [{"role": "user", "content": prompt}]
-        inputs = tokenizer.apply_chat_template(
-            messages, add_generation_prompt=True, return_tensors="pt",
-            return_dict=True).to(model.device)
-        input_len = inputs["input_ids"].shape[-1]
-        import torch as _torch
-        with _torch.no_grad():
-            out = model.generate(
-                **inputs, max_new_tokens=max_new_tokens,
-                do_sample=False, temperature=None, top_p=None, top_k=None)
-        gen = out[0][input_len:]
-        return tokenizer.decode(gen, skip_special_tokens=True)
+        if task_used == "image-text-to-text":
+            messages = [{"role": "user",
+                         "content": [{"type": "text", "text": prompt}]}]
+            out = pipe(text=messages, max_new_tokens=max_new_tokens,
+                       do_sample=False)
+        else:
+            messages = [{"role": "user", "content": prompt}]
+            out = pipe(messages, max_new_tokens=max_new_tokens,
+                       do_sample=False, return_full_text=False)
+        return _last_content(out)
 
     return _generate
 
