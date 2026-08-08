@@ -1,12 +1,12 @@
 # Cover Letter (Draft)
 
 > Draft for the STARS submission to the *American Journal of Audiology* (AJA).
-> Placeholders in **[brackets]** must be completed before submission (the date;
-> optionally the editor's name). This is a working draft, not a final letter.
+> Optionally address the letter to the handling editor by name; otherwise the
+> generic "Dear Editor" greeting is submission-ready.
 
 ---
 
-**[Date]**
+**August 8, 2026**
 
 To the Editor-in-Chief
 *American Journal of Audiology* (AJA)
