@@ -39,7 +39,7 @@ We believe STARS offers AJA readers a transparent, reproducible, and clinically 
 
 Sincerely,
 
-**Geunsik Lim** (corresponding author) — Sungkyunkwan University, Republic of Korea — leemgs@g.skku.edu — ORCID **[to be added]**
+**Geunsik Lim** (corresponding author) — Sungkyunkwan University, Republic of Korea — leemgs@g.skku.edu — ORCID [0000-0003-1845-7132](https://orcid.org/0000-0003-1845-7132)
 **Hyun Jo** — Ajou University School of Medicine, Republic of Korea — joehyun@ajou.ac.kr — ORCID **[to be added]**
 
 ---
