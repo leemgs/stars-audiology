@@ -6,6 +6,15 @@ Two audits in one document:
 
 Status legend: ✅ verified OK · ⚠️ needs attention · ❌ defect · 🔧 fixed in this revision.
 
+> **Historical note (post-audit reorganization).** This audit predates the
+> two-paper split. The AI/prediction component and its LaTeX artifacts —
+> `sections/ai_system.tex` and `tables/table_ai.tex`, `table_metrics.tex`,
+> `table_redflag.tex`, `table_intended_use.tex`, plus the `TRIPOD-AI_checklist.md`
+> — were subsequently moved out of Paper A into the companion SAFE-EAR paper
+> (`../paper02/`). References below to those files are therefore historical:
+> Paper A is now a purely observational (STROBE) study, and the AI content,
+> benchmark, and TRIPOD+AI checklist live under `../paper02/`.
+
 ---
 
 ## §1. Bibliography
