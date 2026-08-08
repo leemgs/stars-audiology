@@ -12,7 +12,7 @@
 ]
 \node[data] (knhanes) {\textbf{Stage 1}\\KNHANES\\development};
 \node[data, right=of knhanes] (nhanes) {\textbf{Stage 2}\\NHANES\\external validation};
-\node[data, right=of nhanes] (clinic) {\textbf{Stage 3}\\Ajou Univ.\ Hospital\\clinical cohort};
+\node[data, right=of nhanes] (clinic) {\textbf{Stage 3}\\Hospital-based\\clinical cohort};
 
 \node[ai, below=of knhanes] (harm) {Harmonized\\feature schema};
 \node[ai, below=of nhanes] (model) {Interpretable +\\boosted models\\(calibrated)};
