@@ -31,16 +31,15 @@ We are pleased to submit our manuscript, **STARS** (**S**tress, **T**innitus, an
 
 **Rigor and reporting.** The observational analyses follow STROBE and the prediction models follow TRIPOD+AI; the planned clinical extension will follow SPIRIT. All code, configuration, tables, and a synthetic-data path are openly available at <https://github.com/leemgs/stars-audiology>.
 
-**Responsible-AI statement.** Any prediction model in STARS is a research risk-stratification tool with a declared intended use—never a screening, diagnostic, or triage device—and open medical language models are confined to clinician-verified research extraction. Generative AI tools assisted in drafting; the authors reviewed and take full responsibility for all content.
+**Responsible-AI statement.** Any prediction model in STARS is a research risk-stratification tool with a declared intended use—never a screening, diagnostic, or triage device—and open medical language models are confined to clinician-verified research extraction. Generative AI tools assisted in drafting; the author reviewed and takes full responsibility for all content.
 
-**Declarations.** This manuscript is original, is not under consideration elsewhere, and has not been published previously. All authors have approved the submission and agree to be accountable for the work. The analyses use fully deidentified, publicly available survey data; the prospective clinical extension will proceed only under institutional review board approval at Ajou University Hospital. The authors declare no competing interests. No external funding supported this work.
+**Declarations.** This manuscript is original, is not under consideration elsewhere, and has not been published previously. The author has approved the submission and agrees to be accountable for the work. The analyses use fully deidentified, publicly available survey data; any prospective clinical extension will proceed only under institutional review board approval. The author declares no competing interests. No external funding supported this work.
 
 We believe STARS offers AJA readers a transparent, reproducible, and clinically safe template for studying stress-related auditory outcomes, and we thank you for considering it.
 
 Sincerely,
 
-**Geunsik Lim** (corresponding author) — Sungkyunkwan University, Republic of Korea — leemgs@g.skku.edu — ORCID [0000-0003-1845-7132](https://orcid.org/0000-0003-1845-7132)
-**Hyun Jo** — Ajou University School of Medicine, Republic of Korea — joehyun@ajou.ac.kr — ORCID **[to be added]**
+**Geunsik Lim** (sole and corresponding author) — Sungkyunkwan University, Republic of Korea — leemgs@g.skku.edu — ORCID [0000-0003-1845-7132](https://orcid.org/0000-0003-1845-7132)
 
 ---
 
