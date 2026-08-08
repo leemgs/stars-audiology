@@ -40,17 +40,22 @@ All public-data analyses use survey-aware methods (Taylor-linearization variance
 \subsection{Prospective prediction and safety components (companion paper)}
 Beyond the association analyses reported here, the STARS program prespecifies two \emph{research-only} risk-stratification targets (tinnitus presence and audiometric hearing loss) and a deterministic, guideline-derived referral-safety layer for sudden sensorineural hearing loss. These are prospective components---never screening, diagnostic, or triage devices---and are developed \emph{with results}, together with their intended-use specifications, evaluation metrics, and an open safety benchmark, in a companion paper (SAFE-EAR); they carry no results in this empirical article and are not discussed further here.
 
-\subsection{External Validation Across Survey Designs}
-Transporting a KNHANES model to NHANES confronts differences in weighting, population prevalence, age range, category coding, and health-system context. We therefore prespecify:
-\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
-\item \textbf{Unweighted vs.\ weighted performance} reported separately---unweighted for individual-level prediction, survey-weighted for population-level performance.
-\item \textbf{Calibration-in-the-large and calibration slope reported separately}, before and after recalibration (intercept-only, then intercept+slope update of the frozen model).
-\item \textbf{Common-support analysis} restricting comparison to the overlapping covariate region of the two surveys.
-\item \textbf{Case-mix standardization} to distinguish genuine model transportability from case-mix differences in prevalence/age.
-\item \textbf{A reduced common model} (predictors available and comparable in both surveys) versus \textbf{country-specific extended models}, so that limited measurement invariance does not masquerade as poor transportability.
-\end{itemize}
-
-\paragraph{Fairness and subgroup evaluation.} Discrimination and calibration are reported within prespecified subgroups: sex, age band, employment status, noise-exposure status, unilateral/asymmetric hearing, \emph{socioeconomic status} (education/income), and \emph{race/ethnicity} (NHANES, where collected). Subgroup calibration and error gaps are first-class results, not afterthoughts.
+\subsection{Prospective external validation (companion program)}
+Cross-national transportability of a \emph{fitted} KNHANES model to NHANES (Aim~2)
+is a prospective component and carries no results in this empirical article; the
+NHANES analyses reported here are directional support under a distinct distress
+proxy, not a validation of a transported model. To keep the plan falsifiable and
+auditable, the transportability protocol is prespecified and recorded in the
+repository: weighted versus unweighted performance; calibration-in-the-large and
+slope before and after intercept-only then intercept$+$slope recalibration of the
+frozen model; common-support restriction to the overlapping covariate region;
+case-mix standardization to separate genuine transportability from
+prevalence/age differences; and a reduced common model versus country-specific
+extended models. Discrimination and calibration are prespecified to be reported
+within subgroups (sex, age band, employment, noise exposure, unilateral/asymmetric
+hearing, socioeconomic status, and race/ethnicity where collected), with subgroup
+calibration and error gaps as first-class results. These analyses are developed in
+the companion program of work.
 
 \subsection{Sensitivity Analyses}
 Prespecified sensitivity analyses test alternative hearing-loss definitions (25 vs.\ 20~dB HL; high-frequency PTA; worse-ear and per-ear), age restrictions, exclusion of conductive patterns when tympanometry permits, alternative stress operationalizations, mediator- vs.\ confounder-treatment of depressed mood/sleep, all-adult vs.\ employed-restricted populations, and stratification by noise exposure, sex, and asymmetry.
