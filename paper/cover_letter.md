@@ -1,8 +1,8 @@
 # Cover Letter (Draft)
 
 > Draft for the STARS submission to the *American Journal of Audiology* (AJA).
-> Placeholders in **[brackets]** must be completed before submission (ORCID,
-> dates, editor name). This is a working draft, not a final letter.
+> Placeholders in **[brackets]** must be completed before submission (the date;
+> optionally the editor's name). This is a working draft, not a final letter.
 
 ---
 
@@ -16,11 +16,11 @@ American Speech-Language-Hearing Association
 
 Dear Editor,
 
-We are pleased to submit our manuscript, **STARS** (**S**tress, **T**innitus, and **A**udiometric **R**esearch **S**tudy), for consideration in the *American Journal of Audiology*. We propose it as a **Research Article (survey-weighted public-data analysis) reported against a prespecified analysis plan**, and we would welcome your guidance on the most appropriate article category.
+I am pleased to submit my manuscript, **STARS** (**S**tress, **T**innitus, and **A**udiometric **R**esearch **S**tudy), for consideration in the *American Journal of Audiology*. I propose it as a **Research Article (survey-weighted public-data analysis) reported against a prespecified analysis plan**, and I would welcome your guidance on the most appropriate article category.
 
 **What the manuscript is.** STARS reports a survey-weighted, reproducible analysis of the associations among perceived stress, tinnitus, and hearing outcomes in adults, built around one primary finding and a prespecified plan for prospective follow-on components. To guard against analyst degrees of freedom, the design—survey cycles, age windows, endpoints, a causal DAG with a minimal sufficient adjustment set, and all metrics—was fixed before analysis, and it is accompanied by fully open, reproducible code that regenerates every number.
 
-**Primary finding (real KNHANES data).** In the Korea National Health and Nutrition Examination Survey (adults 40–69; otologic cycles 2010–2012)—which, unlike NHANES, carries a general perceived-stress item—high perceived stress was associated with **tinnitus** (OR 1.42, 95% CI 1.26–1.60, *p* < 0.001) but only weakly and non-significantly with the **audiometric threshold** (OR 1.18, 0.99–1.41, *p* = 0.07), which was instead dominated by occupational noise and age. This prespecified **symptom-versus-threshold dissociation** (hypothesis H1) is the manuscript’s central contribution. In supporting U.S. NHANES analyses, the same directional pattern recurred under a PHQ-9 distress proxy—directional consistency, not external validation of the stress exposure. We are explicit that all estimates are cross-sectional associations, that reverse causation (tinnitus→stress) cannot be excluded, and that the single-item exposure biases associations toward the null.
+**Primary finding (real KNHANES data).** In the Korea National Health and Nutrition Examination Survey (adults 40–69; otologic cycles 2010–2012)—which, unlike NHANES, carries a general perceived-stress item—high perceived stress was associated with **tinnitus** (OR 1.42, 95% CI 1.26–1.60, *p* < 0.001) but only weakly and non-significantly with the **audiometric threshold** (OR 1.18, 0.99–1.41, *p* = 0.07), which was instead dominated by occupational noise and age. This prespecified **symptom-versus-threshold dissociation** (hypothesis H1) is the manuscript’s central contribution. In supporting U.S. NHANES analyses, the same directional pattern recurred under a PHQ-9 distress proxy—directional consistency, not external validation of the stress exposure. I am explicit that all estimates are cross-sectional associations, that reverse causation (tinnitus→stress) cannot be excluded, and that the single-item exposure biases associations toward the null.
 
 **Why it fits AJA and why it matters clinically.** The work is deliberately audiology-centered: it separates tinnitus presence from bothersome tinnitus and analyzes better-ear, worse-ear, and high-frequency thresholds rather than a single better-ear summary. Clinically, it supports incorporating stress into counseling for stable tinnitus while cautioning against attributing acute or asymmetric hearing loss to “stress.” A deterministic “red-flag” referral layer for sudden sensorineural hearing loss (SSNHL) is presented as a **prospective** safety-engineering component (design only), so a low predicted risk can never suppress urgent evaluation.
 
@@ -35,7 +35,7 @@ We are pleased to submit our manuscript, **STARS** (**S**tress, **T**innitus, an
 
 **Declarations.** This manuscript is original, is not under consideration elsewhere, and has not been published previously. The author has approved the submission and agrees to be accountable for the work. The analyses use fully deidentified, publicly available survey data; any prospective clinical extension will proceed only under institutional review board approval. The author declares no competing interests. No external funding supported this work.
 
-We believe STARS offers AJA readers a transparent, reproducible, and clinically safe template for studying stress-related auditory outcomes, and we thank you for considering it.
+I believe STARS offers AJA readers a transparent, reproducible, and clinically safe template for studying stress-related auditory outcomes, and I thank you for considering it.
 
 Sincerely,
 
