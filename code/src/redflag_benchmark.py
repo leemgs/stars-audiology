@@ -428,9 +428,11 @@ def schema_to_features(fields: Dict[str, str]) -> Dict[str, bool]:
     safety feature flags, so an open medical LLM (e.g., MedGemma) plugs into the
     SAME harness once model access is available.
 
-    Note: the current schema underspecifies two red-flag inputs -- audiometric
-    *asymmetry* and *rapidly progressive* course -- so those map conservatively.
-    This gap is itself a prespecified schema-refinement finding.
+    The extraction schema now carries the two red-flag inputs the earlier version
+    omitted -- audiometric ``asymmetry`` and a ``rapidly_progressive`` course --
+    so an LLM mapped through this adapter no longer inherits those blind spots.
+    Unknown/missing fields still map conservatively (to False), which keeps the
+    mapping safe by construction: a rule can only fire on an affirmative field.
     """
     def yes(k):
         return str(fields.get(k, "")).lower() == "yes"
@@ -438,13 +440,15 @@ def schema_to_features(fields: Dict[str, str]) -> Dict[str, bool]:
     lat = str(fields.get("laterality", "")).lower()
     unilateral = lat in ("left", "right")
     sudden = course == "sudden" and yes("hearing_loss_reported")
+    rapid = course in ("rapidly_progressive", "progressive")
+    acute = sudden or rapid
     return {
         "sudden_hearing_loss": sudden,
-        "rapidly_progressive_loss": False,     # not in current schema (conservative)
-        "unilateral_sudden_symptom": unilateral and course == "sudden",
-        "aural_fullness_acute_onset": yes("ear_fullness") and course == "sudden",
+        "rapidly_progressive_loss": rapid,
+        "unilateral_sudden_symptom": unilateral and acute,
+        "aural_fullness_acute_onset": yes("ear_fullness") and acute,
         "single_sided_tinnitus": yes("tinnitus_present") and unilateral,
-        "asymmetric_hearing": False,           # not in current schema (conservative)
+        "asymmetric_hearing": yes("audiometric_asymmetry"),
         "vertigo": yes("vertigo"),
         "focal_neurologic_sign": yes("neurologic_red_flag"),
     }
@@ -462,9 +466,11 @@ def make_llm_extractor(generate):
     return _extract
 
 
-# Registry so evaluation scripts can iterate over extractors uniformly.
-# An open-LLM extractor (e.g., MedGemma) is added prospectively:
-#   EXTRACTORS["medgemma"] = make_llm_extractor(my_local_generate_fn)
+# Registry of the open, deterministic rule-based references. An open medical LLM
+# (MedGemma) is evaluated through the SAME harness via run_llm_eval.py, which
+# builds its extractor with llm_medgemma.build_medgemma_extractor and scores it
+# against this identical benchmark/adapter. It is not registered here because the
+# model is a gated, GPU-dependent download; run_llm_eval.py loads it on demand.
 EXTRACTORS = {
     "rule_v1": extract_features,
     "rule_v2": extract_features_v2,

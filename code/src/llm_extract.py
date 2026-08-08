@@ -14,9 +14,10 @@ from typing import Dict, Optional
 EXTRACTION_SCHEMA = {
     "symptom_onset_date": "YYYY-MM-DD or unknown",
     "laterality": "left/right/bilateral/unknown",
-    "course": "sudden/gradual/fluctuating/unknown",
+    "course": "sudden/rapidly_progressive/gradual/fluctuating/unknown",
     "tinnitus_present": "yes/no/unknown",
     "hearing_loss_reported": "yes/no/unknown",
+    "audiometric_asymmetry": "yes/no/unknown",
     "ear_fullness": "yes/no/unknown",
     "vertigo": "yes/no/unknown",
     "neurologic_red_flag": "yes/no/unknown",
@@ -24,6 +25,11 @@ EXTRACTION_SCHEMA = {
     "treatment_date": "YYYY-MM-DD or unknown",
     "noise_exposure": "occupational/recreational/none/unknown",
 }
+# Note: ``course`` now includes ``rapidly_progressive`` and the schema adds
+# ``audiometric_asymmetry`` so that an LLM extractor plugged into the safety
+# harness can surface the two red-flag inputs the earlier schema omitted
+# (rapidly-progressive course and audiometric asymmetry). See
+# redflag_benchmark.schema_to_features, which consumes these fields.
 
 
 @dataclass

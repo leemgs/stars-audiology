@@ -5,5 +5,9 @@ statsmodels>=0.14
 pyyaml>=6.0
 requests>=2.31
 pyreadstat>=1.2
+# Open medical-LLM (MedGemma) extractor path (run_llm_eval.py --extractor medgemma).
+# Only needed to execute the LLM; the rule-based references and the LLM-path unit
+# tests (test_llm_medgemma.py) run without these.
 transformers>=4.43
 accelerate>=0.33
+torch>=2.1
