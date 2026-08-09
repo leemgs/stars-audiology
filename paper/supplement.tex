@@ -1,0 +1,77 @@
+% Supplementary Materials for STARS (Paper A).
+% Compile standalone:  pdflatex supplement.tex  (twice, for cross-references)
+% Submitted as a separate Supplemental file; excluded from the main-text length.
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{setspace}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\onehalfspacing
+
+% Number supplementary tables/figures with an "S" prefix.
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\title{Supplementary Materials\\[2pt]
+\large Perceived Stress Tracks the Tinnitus Symptom More Than the Audiometric
+Threshold: A Survey-Weighted KNHANES Study (STARS)}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-3em}
+
+\noindent These Supplementary Materials collect (i) the \emph{prospective} program
+components of STARS (design only; no results in the main empirical article) and
+(ii) the methods-detail tables. They are referenced from the main text as
+``Supplementary Methods~S1/S2'' and ``Supplementary Table~S1--S3.''
+
+\section*{Supplementary Methods}
+
+\subsection*{S1. Prospective external validation (companion program)}
+Cross-national transportability of a \emph{fitted} KNHANES model to NHANES
+(Aim~2) is a prospective component and carries no results in the main empirical
+article; the NHANES analyses reported in the main text are directional support
+under a distinct distress proxy, not a validation of a transported model. To keep
+the plan falsifiable and auditable, the transportability protocol is prespecified
+and recorded in the repository: weighted versus unweighted performance;
+calibration-in-the-large and slope before and after intercept-only then
+intercept$+$slope recalibration of the frozen model; common-support restriction to
+the overlapping covariate region; case-mix standardization to separate genuine
+transportability from prevalence/age differences; and a reduced common model
+versus country-specific extended models. Discrimination and calibration are
+prespecified to be reported within subgroups (sex, age band, employment, noise
+exposure, unilateral/asymmetric hearing, socioeconomic status, and race/ethnicity
+where collected), with subgroup calibration and error gaps as first-class results.
+These analyses are developed in the companion program of work.
+
+\subsection*{S2. Prospective clinical extension (hospital-based cohort)}
+A prospective otolaryngology/audiology cohort is specified to address what public
+cross-sectional data cannot: treatment timing, sudden sensorineural hearing loss
+(SSNHL) recovery trajectories, tinnitus burden over time, and hearing-aid
+rehabilitation. This cohort contributes deidentified audiograms and clinical
+narratives for clinical external validation and provides the substrate for the AI
+extraction and safety evaluations developed in the companion SAFE-EAR paper. Raw
+clinical data are not redistributed; only derived, deidentified, or synthetic
+artifacts are shared through the open repository, subject to institutional review
+board (IRB) approval and data-governance review.
+
+\section*{Supplementary Tables}
+
+\input{tables/table_datasets}      % Supplementary Table S1
+\input{tables/table_variables}     % Supplementary Table S2
+\input{tables/table_harmonization} % Supplementary Table S3
+
+\end{document}

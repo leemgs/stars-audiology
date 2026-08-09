@@ -19,7 +19,7 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric,arrows.meta,positioning,fit,backgrounds}
 \usepackage{fancyhdr}
-\onehalfspacing
+\doublespacing
 \setlength{\parindent}{0.4in}
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
 
@@ -131,9 +131,8 @@ End-to-end, performance was dominated by extraction and the benchmark measured t
 \input{tables/table_redflag_bycat}
 
 \subsection{Extraction baseline}
-Field-level metrics track the end-to-end gap (Table~\ref{tab:extraction_compare}): the naive extractor reached macro-F1 0.72 with a 27\% urgency-changing error rate, while the improved extractor reached macro-F1 0.94 with a 0\% urgency-changing error rate on this benchmark; both were perfectly reproducible (run-to-run consistency 1.00). Per feature (improved extractor; Table~\ref{tab:extraction}), detection was strong across the safety-relevant fields. Two structural gaps we previously flagged---the extraction \emph{schema} not encoding audiometric \emph{asymmetry} or a \emph{rapidly-progressive} course---have since been closed: the schema now carries an \texttt{audiometric\_asymmetry} field and a \texttt{rapidly\_progressive} course value, and the adapter maps both to their red-flag features (verified by unit tests), so an LLM mapped through the adapter no longer inherits those blind spots. The rule-based baseline numbers are unaffected (the adapter feeds only the LLM path).
+Field-level metrics track the end-to-end gap (Table~\ref{tab:llm_compare}): the naive extractor reached macro-F1 0.72 with a 27\% urgency-changing error rate, while the improved extractor reached macro-F1 0.94 with a 0\% urgency-changing error rate on this benchmark; both were perfectly reproducible (run-to-run consistency 1.00). Per feature (improved extractor; Table~\ref{tab:extraction}), detection was strong across the safety-relevant fields. Two structural gaps we previously flagged---the extraction \emph{schema} not encoding audiometric \emph{asymmetry} or a \emph{rapidly-progressive} course---have since been closed: the schema now carries an \texttt{audiometric\_asymmetry} field and a \texttt{rapidly\_progressive} course value, and the adapter maps both to their red-flag features (verified by unit tests), so an LLM mapped through the adapter no longer inherits those blind spots. The rule-based baseline numbers are unaffected (the adapter feeds only the LLM path).
 
-\input{tables/table_extraction_compare}
 \input{tables/table_extraction}
 
 \subsection{Open medical-LLM (MedGemma) evaluation}
