@@ -1,147 +1,67 @@
 \section{Results}\label{sec:results}
-This section reports the \emph{primary} perceived-stress analyses in the KNHANES
-development cohort, followed by the \emph{supporting} NHANES analyses. KNHANES is
-the primary test of the aims because, unlike NHANES, it carries a general
-perceived-stress item (the NHANES psychological-distress proxy is the PHQ-9
-depression screen, which the study DAG treats as a \emph{mediator}). All public-data
-estimates are design-based (survey-weighted, Taylor-linearized) and are
-associations, not causal effects.
+We report the \emph{primary} perceived-stress analyses in the KNHANES development
+cohort, then the \emph{supporting} NHANES analyses. KNHANES is the primary test
+because, unlike NHANES, it carries a general perceived-stress item (the NHANES
+PHQ-9 proxy is a DAG \emph{mediator}). All estimates are design-based
+(survey-weighted, Taylor-linearized) associations, not causal effects, and every
+value below is reproduced by the committed \texttt{outputs/knhanes\_results.json}
+and \texttt{nhanes\_results.json}.
 
-\subsection{Primary results (KNHANES development cohort)}
-The primary analyses use real KNHANES microdata for Korean adults aged 40--69,
-pooling the otologic-examination cycles 2010--2012 (KNHANES V). The
-perceived-stress and covariate items (health-interview file) were merged on the
-person identifier to the separate ENT (otolaryngology) examination file that carries
-pure-tone audiometry, the tinnitus item, and occupational-noise exposure; the
-survey weight (\texttt{wt\_itvex}) was pooled across the three years and
-Taylor-linearized. The analysis is produced by
-\texttt{code/src/knhanes\_analysis.py} with \texttt{config/knhanes\_mapping.yaml}
-(the same validated design-based estimators as the NHANES pipeline), and the
-committed \texttt{outputs/knhanes\_results.json} reproduces every value below.
-Of the pooled otologic-examination records for adults 40--69 (analytic domain
-$n=10{,}467$), the complete-case models retained 9{,}142--9{,}532 participants
-depending on the outcome, with the remainder excluded for an item-missing outcome
-or covariate (STROBE participant flow; per-variable non-missing counts are printed
-by the pipeline and recorded in the repository).
+\subsection{Primary results (KNHANES, adults 40--69)}
+Pooling the otologic-examination cycles 2010--2012 (KNHANES V; analytic domain
+$n=10{,}467$; complete-case models retained 9{,}142--9{,}532 by outcome),
+survey-weighted prevalence was 21.1\% (95\% CI 19.9--22.3) for any tinnitus, 7.0\%
+(6.3--7.7) for bothersome tinnitus, 15.4\% (14.5--16.4) for better-ear
+speech-frequency hearing loss ($>$25 dB HL), and 24.3\% (23.2--25.3) for high
+perceived stress.
 \IfFileExists{tables/table_results_knhanes.tex}{\input{tables/table_results_knhanes}}{}
 
-\paragraph{Prevalence.} Survey-weighted prevalence among adults 40--69 was 21.1\%
-(95\% CI 19.9--22.3; $n=9{,}657$) for any tinnitus, 7.0\% (6.3--7.7) for
-bothersome tinnitus (moderate-or-severe annoyance on the KNHANES 3-level item,
-$\approx$33\% of those with tinnitus), 15.4\% (14.5--16.4; $n=9{,}325$) for
-better-ear speech-frequency hearing loss ($>$25 dB HL), and 24.3\% (23.2--25.3;
-$n=9{,}751$) for high perceived stress.
+\paragraph{Primary association (H1).} In the minimal-sufficient model (perceived
+stress, occupational noise, age, sex), high perceived stress was associated with
+\emph{tinnitus} (OR 1.42, 1.26--1.60) but only weakly and non-significantly with
+\emph{better-ear hearing loss} (OR 1.18, 0.99--1.41), where occupational noise (OR
+1.72, 1.44--2.06) and age (OR 1.13 per year) dominated. This is the prespecified
+symptom-versus-threshold dissociation (H1): perceived stress tracks the tinnitus
+\emph{symptom} ($p<0.001$) but attenuates against the audiometric \emph{threshold}
+($p=0.07$) once occupational noise and age are accounted for.
 
-\paragraph{Primary association (H1).} In the mutually adjusted, minimal-sufficient
-model (perceived stress, occupational noise, age, sex), high perceived stress was
-associated with \emph{tinnitus} (OR 1.42, 1.26--1.60), alongside occupational
-noise (OR 1.37, 1.15--1.63) and age (OR 1.03 per year), with no significant sex
-difference. Its association with \emph{audiometric hearing loss} was weaker and
-did not reach significance (OR 1.18, 0.99--1.41); there, occupational noise (OR
-1.72, 1.44--2.06), age (OR 1.13 per year), and male sex (female sex OR 0.47,
-0.40--0.55) dominated. These are design-based associations, not causal effects.
-
-\paragraph{Interpretation (H1 supported).} This is precisely the prespecified
-pattern of H1, now demonstrated in the primary cohort with the \emph{actual}
-perceived-stress exposure: perceived stress tracks the tinnitus \emph{symptom}
-(OR 1.42, $p<0.001$) but attenuates against the audiometric \emph{threshold}
-(OR 1.18, $p=0.07$) once occupational noise and age are accounted for. The
-symptom-versus-threshold dissociation seen preliminarily in NHANES (with a
-distress proxy) thus holds for the genuine stress exposure in KNHANES, consistent
-with a stress--tinnitus association that is not primarily explained by measurable
-cochlear threshold shift.
-
-\paragraph{Extended and sensitivity models.} We tested whether the primary
-stress--tinnitus association is an artifact of under-adjustment or of reverse
-causation using prespecified secondary specifications that isolate the
-perceived-stress odds ratio (Table~\ref{tab:results_knhanes_extended}). The
-association \emph{survived} adjustment for the mediator depressed mood (OR 1.29,
-1.13--1.47) and, importantly, adjustment for \emph{audiometric hearing loss}
-(OR 1.44, 1.27--1.64), one of the strongest tinnitus correlates: stress tracks
-tinnitus over and above measurable threshold shift and mood. A \emph{fully
-adjusted} model additionally including socioeconomic status (education, income)
-and---where the codebook variables are supplied---smoking and cardiometabolic
-comorbidity is reported in the same table (Table~\ref{tab:results_knhanes_extended})
-to address residual confounding by conventional covariates. In an exploratory
-difference-method decomposition, adjustment for depressed mood attenuated the
-perceived-stress log-odds for tinnitus by $\approx$27\% (OR
-1.42~$\rightarrow$~1.29)---an estimate of the share statistically consistent with
-mediation through mood, read cautiously given the cross-sectional design and
-logistic non-collapsibility. For hearing loss,
-the null better-ear estimate persisted after mediator adjustment (OR 1.11,
-0.92--1.34), but the dissociation was \emph{relative, not absolute}: perceived
-stress showed a weak association with \emph{worse-ear} speech-frequency hearing
-loss (OR 1.15, 1.00--1.31)---the ear most relevant to unilateral/asymmetric
-disease---while the \emph{high-frequency} (3/4/6\,kHz) definition remained null
-(OR 1.07, 0.93--1.23).
-
-\emph{Reverse-causation sensitivity and multiplicity.} Because bothersome tinnitus
-is itself a stressor, we contrasted bothersome and non-bothersome cases. Perceived
-stress was associated with bothersome tinnitus most strongly (OR 1.79, 1.46--2.21)
-but \emph{remained} associated with non-bothersome tinnitus versus no tinnitus (OR
-1.24, 1.05--1.45), a gradient that argues against a purely reverse-causal
-explanation while remaining consistent with a feedback contribution (Discussion).
-Across the seven secondary contrasts we control the false-discovery rate
-(Benjamini--Hochberg); the mediator-adjusted, hearing-loss-adjusted, bothersome,
-and non-bothersome tinnitus associations remain significant ($q<0.02$), whereas
-the borderline worse-ear association does \emph{not} survive adjustment
-($q\approx0.07$) and should be read cautiously. The two primary endpoints
-(tinnitus and better-ear hearing loss) constitute the confirmatory H1 test and are
-not part of this secondary family.
+\paragraph{Sensitivity analyses.} The stress--tinnitus association survived
+adjustment for the mediator depressed mood (OR 1.29, 1.13--1.47) and for
+audiometric hearing loss itself (OR 1.44, 1.27--1.64), so it is not an artifact of
+under-adjustment for the strongest tinnitus correlate
+(Table~\ref{tab:results_knhanes_extended}). It persisted for \emph{non-bothersome}
+tinnitus versus none (OR 1.24, 1.05--1.45) and was strongest for bothersome
+tinnitus (OR 1.79, 1.46--2.21); across seven secondary contrasts we control the
+false-discovery rate (Benjamini--Hochberg), and these remain significant
+($q<0.02$). The dissociation is \emph{relative, not absolute}: perceived stress
+was weakly associated with the \emph{worse-ear} threshold (OR 1.15, 1.00--1.31;
+does not survive FDR, $q\approx0.07$) but not with the high-frequency definition
+(OR 1.07, 0.93--1.23). Because the KNHANES examination provides air-conduction
+thresholds and tympanometry but not bone conduction, we excluded middle-ear
+pathology using normal bilateral tympanometry: the stress--threshold association
+then \emph{strengthened} to significance (OR 1.29, 1.07--1.55) while the tinnitus
+association was essentially unchanged (OR 1.42, 1.25--1.62), indicating the
+full-sample null was partly a conductive-contamination artifact and that the
+contrast is one of \emph{degree}.
 \IfFileExists{tables/table_extended_knhanes.tex}{\input{tables/table_extended_knhanes}}{}
 
-\paragraph{Audiometric protocol and conductive-exclusion sensitivity.} The
-KNHANES ENT examination provides pure-tone \emph{air-conduction} thresholds per
-ear \emph{and tympanometry}, but \emph{not} bone conduction, so an air--bone gap
-cannot be computed directly. Because air-conduction thresholds alone conflate
-conductive and sensorineural loss, we used tympanometry to exclude middle-ear
-pathology: restricting the hearing-loss model to participants with \emph{normal
-tympanometry in both ears} (Table~\ref{tab:results_knhanes_extended}), the
-perceived-stress association with better-ear hearing loss \emph{strengthened} to
-significance (OR 1.29, 1.07--1.55), while the tinnitus association was essentially
-unchanged (OR 1.42, 1.25--1.62). This indicates that the null full-sample
-threshold estimate was in part a conductive-contamination artifact, and that the
-symptom-versus-threshold contrast is therefore one of \emph{degree}---perceived
-stress relates more strongly to the tinnitus symptom than to the sensorineural
-threshold---rather than an absolute presence-versus-absence dissociation.
-
-\paragraph{Further prospective analyses.} The employed-restricted
-(healthy-worker) contrast, the KNHANES$\rightarrow$NHANES external validation
-(calibration, recalibration, common support, case-mix standardization; H2), and
-subgroup fairness (SES; race/ethnicity in NHANES) are prospective components that
-follow the prespecified plan (Methods); they carry no results here. The
-open-LLM extraction and deterministic referral-safety layer are developed, with
-results, in a companion paper (SAFE-EAR) and are out of scope for this empirical
-article.
+The employed-restricted (healthy-worker) contrast, the KNHANES$\rightarrow$NHANES
+external validation (H2), and subgroup fairness are prospective components that
+follow the prespecified plan (Methods; Supplementary Methods~S1) and carry no
+results here; the open-LLM extraction and referral-safety layer are developed,
+with results, in the companion SAFE-EAR paper.
 
 \subsection{Supporting results (NHANES): directional consistency}
-Using the tested, design-based pipeline (\texttt{code/src/nhanes\_analysis.py};
-estimators unit-tested in \texttt{code/src/test\_nhanes\_analysis.py}), we
-analyzed real NHANES public-use files for U.S. adults aged 40--69, pooling the
-2011--2012, 2015--2016, and 2017--2018 cycles (Table~\ref{tab:results}).
+For U.S. adults aged 40--69 (pooling 2011--2012, 2015--2016, 2017--2018;
+Table~\ref{tab:results}), survey-weighted prevalence was 28.5\% (26.5--30.4) for
+any tinnitus, 12.0\% (10.4--13.6) for better-ear hearing loss, and 8.4\% (7.5--9.4)
+for a positive PHQ-9 screen. In mutually adjusted design-based models,
+\emph{tinnitus} was associated with occupational noise (OR 1.59, 1.32--1.92),
+depressed mood (OR 1.61, 1.23--2.11), and female sex (OR 1.61, 1.35--1.91) but not
+age; \emph{hearing loss} was dominated by age (OR 1.11 per year, 1.09--1.13) and
+depressed mood (OR 2.29, 1.56--3.35), inversely by female sex (OR 0.42,
+0.29--0.61), and only weakly by noise (OR 1.22, 0.94--1.58). Because the PHQ-9
+proxy is a DAG mediator and NHANES lacks the perceived-stress exposure, these
+mediator-level associations reproduce the symptom-versus-threshold pattern in a
+different population but do not substitute for the primary KNHANES analysis.
 \IfFileExists{tables/table_results.tex}{\input{tables/table_results}}{}
-
-\paragraph{Prevalence.} Survey-weighted prevalence was 28.5\% (95\% CI 26.5--30.4;
-$n=5{,}354$) for any tinnitus in the past 12 months, 12.0\% (10.4--13.6;
-$n=4{,}808$) for better-ear speech-frequency hearing loss ($>$25 dB HL), and 8.4\%
-(7.5--9.4; $n=7{,}293$) for a positive PHQ-9 depression screen.
-
-\paragraph{Associations.} In mutually adjusted design-based logistic models
-(adjusting for occupational noise, depressed mood, age, and sex), \emph{tinnitus}
-was associated with occupational-noise exposure (OR 1.59, 1.32--1.92), depressed
-mood (OR 1.61, 1.23--2.11), and female sex (OR 1.61, 1.35--1.91), but not with age
-(OR 1.00, 0.98--1.01). \emph{Hearing loss} was associated with age (OR 1.11 per
-year, 1.09--1.13) and depressed mood (OR 2.29, 1.56--3.35), inversely with female
-sex (OR 0.42, 0.29--0.61), and only weakly and non-significantly with occupational
-noise (OR 1.22, 0.94--1.58). These are associations, not causal effects.
-
-\paragraph{Interpretation (a priori pattern).} The pattern is coherent with the
-framework's hypotheses. The psychological-distress proxy is associated with both
-outcomes, but more than doubles the odds of \emph{audiometric} hearing loss while
-showing a smaller association with \emph{tinnitus}; age dominates hearing loss but
-is unrelated to tinnitus in this band; and the sex pattern (higher tinnitus,
-lower hearing loss in women) matches known epidemiology. Because the proxy is a
-mediator in the DAG, these are mediator-level associations, and NHANES lacks the
-perceived-stress exposure; they therefore motivate---but do not substitute
-for---the primary KNHANES stress analysis. All values are reproduced by the
-committed results file and can be regenerated end-to-end from the CDC files.

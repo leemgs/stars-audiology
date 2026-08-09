@@ -1,26 +1,71 @@
 \section{Introduction}
-Tinnitus and hearing loss are among the most common auditory health concerns worldwide, affecting communication, sleep, emotional well-being, work participation, and quality of life. The World Health Organization estimates that more than 1.5 billion people live with some degree of hearing loss, a number projected to rise substantially by 2050 \citep{who2021world}. Tinnitus alone affects an estimated 10--15\% of adults, and a clinically meaningful subset experiences bothersome tinnitus that interferes with concentration and mood \citep{tunkel2014cpg,mccormack2016review}. In employed middle-aged adults, tinnitus frequently emerges in a context of psychosocial stress, long working hours, sleep disruption, occupational or recreational noise, cardiometabolic risk, and delayed help-seeking. Because these factors are temporally and biologically intertwined, simple causal narratives are unreliable and can mislead both patients and clinicians.
+Tinnitus and hearing loss are among the most common auditory health concerns
+worldwide, affecting communication, sleep, mood, work participation, and quality
+of life. More than 1.5 billion people live with some hearing loss, a number
+projected to rise by 2050 \citep{who2021world}, and tinnitus affects an estimated
+10--15\% of adults, a meaningful subset of whom experience bothersome tinnitus
+\citep{tunkel2014cpg,mccormack2016review}. In employed middle-aged adults,
+tinnitus frequently emerges alongside psychosocial stress, sleep disruption,
+noise, and delayed help-seeking; because these factors are intertwined, simple
+causal narratives are unreliable and can mislead patients and clinicians.
 
-\subsection{Motivating clinical observation}
-The framework is motivated by a common and instructive clinical trajectory, presented here as an anonymized composite rather than as identifiable patient data. A worker in the late 40s to early 50s first experiences unilateral tinnitus in one ear during a period of heavy workload. Reasoning intuitively, the person ``rests'' the affected ear by shifting phone calls and earphone use to the contralateral side; over roughly nine months the tinnitus resolves. About a year later, the previously unaffected ear develops sudden aural fullness and a ``pop'' during a stressful workday, followed within days to weeks by reduced audibility of soft sounds. Lacking awareness of the narrow treatment window for sudden sensorineural hearing loss (SSNHL), the person delays evaluation for roughly two months; by the time intratympanic and systemic steroid therapy is attempted, recovery is incomplete. This trajectory highlights two clinically actionable points that STARS (Stress, Tinnitus, and Audiometric Research Study) is built around: (i) stress-associated tinnitus is common and often self-limiting, but (ii) sudden or rapidly progressive hearing loss is a medical urgency in which delayed care---not stress per se---may drive irreversible impairment. Attributing acute hearing symptoms to ``stress'' without audiological and otolaryngological assessment is therefore hazardous.
-
-\subsection{Conservative premise and exposure naming}
-STARS begins from a conservative and testable premise: \emph{perceived stress and work-related factors} may be \emph{associated} with tinnitus and hearing outcomes, but public cross-sectional datasets are primarily suited to estimating associations, not to proving that stress directly causes tinnitus or sensorineural hearing loss. We adopt a strict naming principle throughout: because KNHANES and NHANES contain general perceived-stress, mood, and employment items rather than validated job-strain instruments (e.g., the Job Content Questionnaire or Effort--Reward Imbalance scale), we never describe the exposure as measured ``occupational stress.'' It is labeled \emph{perceived stress} (the psychological-distress/stress item) with \emph{work-related factors} (occupation, employment status, and, where available, working hours and shift work) modeled as distinct covariates or effect modifiers. This distinction is central to the framework's statistical claims and to its clinical safety posture.
+\subsection{Motivating observation and naming principle}
+Consider an anonymized composite trajectory: a worker in their late 40s develops
+unilateral tinnitus during heavy workload, which resolves over months; about a
+year later the other ear develops sudden fullness and reduced audibility, but---
+unaware of the narrow treatment window for sudden sensorineural hearing loss
+(SSNHL)---the person delays care, and recovery is incomplete. Two clinically
+actionable points follow: stress-associated tinnitus is common and often
+self-limiting, but sudden or rapidly progressive hearing loss is an urgency in
+which delayed care, not stress, drives irreversible impairment. Attributing acute
+hearing symptoms to ``stress'' without assessment is hazardous. Accordingly, STARS
+(Stress, Tinnitus, and Audiometric Research Study) adopts a strict naming
+principle: because KNHANES and NHANES carry general perceived-stress and mood
+items rather than validated job-strain instruments, we never call the exposure
+measured ``occupational stress.'' It is labeled \emph{perceived stress}, with
+\emph{work-related factors} (occupation, employment, and where available hours and
+shift work) modeled as distinct covariates.
 
 \subsection{A survey-weighted study reported against a prespecified plan}
-This is a survey-weighted research study whose \emph{primary} hypothesis test---the perceived-stress analysis in KNHANES---is reported in full (Section~\ref{sec:results}), with supporting NHANES analyses. To limit analyst degrees of freedom (e.g., selecting cycles or covariate sets after seeing results), the design, variable definitions, survey cycles, adjustment sets, and evaluation plan were fixed \emph{before} analysis, and the analysis code and committed outputs make every reported value reproducible. Three further components---cross-national validation, clinician-verified AI extraction, and a clinical extension---are \emph{prospective}: their designs are specified here, but they carry no results and are deliberately kept subordinate to the empirical finding so as not to blur the article's identity.
+This is a survey-weighted study whose \emph{primary} hypothesis test---the
+perceived-stress analysis in KNHANES---is reported in full
+(Section~\ref{sec:results}), with supporting NHANES analyses. To limit analyst
+degrees of freedom, the design, variable definitions, cycles, adjustment sets, and
+evaluation plan were fixed \emph{before} analysis, and committed code and outputs
+make every value reproducible. Three further components---cross-national
+validation, clinician-verified AI extraction, and a clinical extension---are
+\emph{prospective} (design only) and kept subordinate to the empirical finding.
 
 \subsection{Aims and hypotheses}
-The framework has four aims, each with prespecified, falsifiable hypotheses. \textbf{Aim~1 is the empirical contribution of this article and is tested and reported here.} Aim~3 (AI extraction and referral safety) is developed \emph{with results} in the companion SAFE-EAR paper, and the open pipeline of Aim~4 accompanies this article; Aim~2 (cross-national external validation) is prospective, with its design specified for the companion program of work.
+Aim~1 is the empirical contribution reported here; Aim~3 is developed \emph{with
+results} in the companion SAFE-EAR paper, Aim~4's open pipeline accompanies this
+article, and Aim~2 is prospective.
 \begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
-\item \textbf{Association (development).} Estimate weighted associations between perceived stress and (a) tinnitus status and (b) audiometric hearing loss in KNHANES, adjusting for noise exposure and health covariates. \emph{H1: A positive association between perceived stress and tinnitus persists after adjustment; the association with audiometric thresholds is weaker and may attenuate to non-significance after adjusting for noise and age.}
-\item \textbf{Transportability (external validation).} Test whether harmonized feature definitions and prediction models developed in KNHANES retain discrimination and calibration in NHANES. \emph{H2: Discrimination degrades modestly but calibration can be restored by recalibration, supporting cross-national transportability of the tinnitus model more than the hearing-loss model.}
-\item \textbf{Explainable, safe AI (companion paper).} Evaluate whether schema-constrained extraction feeding a deterministic red-flag layer reliably routes SSNHL and neurologic warning signs to urgent referral. \emph{H3: the safety layer achieves near-complete red-flag recall, bounded by extraction quality.} This aim is developed \emph{with results} in the companion SAFE-EAR paper and carries no results here.
-\item \textbf{Open, shared benefit.} Provide an openly licensed, reproducible pipeline (code, data dictionary, model cards, prompts) that lowers the barrier for researchers to reproduce analyses and add local cohorts.
+\item \textbf{Association (development).} Estimate weighted associations between
+perceived stress and (a) tinnitus and (b) audiometric hearing loss in KNHANES,
+adjusting for noise and health covariates. \emph{H1: a positive stress--tinnitus
+association persists after adjustment, while the association with audiometric
+thresholds is weaker and may attenuate to non-significance after adjusting for
+noise and age.}
+\item \textbf{Transportability.} Test whether harmonized models developed in
+KNHANES retain discrimination and calibration in NHANES. \emph{H2: discrimination
+degrades modestly but calibration is restorable by recalibration.}
+\item \textbf{Explainable, safe AI (companion paper).} Evaluate whether
+schema-constrained extraction feeding a deterministic red-flag layer routes SSNHL
+and neurologic warning signs to urgent referral. \emph{H3: near-complete red-flag
+recall, bounded by extraction quality.} Developed with results in SAFE-EAR.
+\item \textbf{Open, shared benefit.} Provide an openly licensed, reproducible
+pipeline (code, data dictionary, model cards, prompts).
 \end{enumerate}
 
 \subsection{Contributions}
-The article's contributions are ordered by what it demonstrates. \emph{First} and primary: a survey-weighted, public-data result showing that perceived stress dissociates the tinnitus \emph{symptom} from the audiometric \emph{threshold}, reported without unsupported causal claims and reproducible end-to-end from committed code. \emph{Second}: an open, reproducible scaffold---harmonized variable mappings, executable design-based estimators, model cards, and safety tests---that lets others regenerate every number and add local cohorts. The remaining contributions are \emph{prospective} (design only): a prespecified KNHANES$\rightarrow$NHANES external-validation plan (calibration, recalibration, clinical utility, subgroup fairness), and a clinically governed AI component in which schema-constrained language-model extraction is clinician-verified and a deterministic red-flag layer overrides probabilistic predictions for time-critical hearing symptoms.
-
-\subsection{Scope and positioning}
-The spine of this AJA-targeted article is the empirical symptom-versus-threshold finding in KNHANES, with NHANES as directional support and the open scaffold as its reproducibility guarantee. The prospective components---cross-national validation of \emph{research-only} risk-stratification models and a deterministic referral-safety layer for sudden hearing loss---are presented as a clearly bounded companion program, not as results of this study; the safety layer and open-LLM extraction are developed with results in a companion paper (SAFE-EAR). Any prediction model is explicitly a research risk-stratification tool, not a screening, diagnostic, or triage device, and AI is an enabling research tool throughout, never a replacement for clinical judgment. Optional neurophysiological substudies (OpenNeuro tinnitus imaging/EEG) and audiogram-digitization of legacy records are noted only briefly as future directions and are out of scope here.
+Primary: a survey-weighted, public-data result showing that perceived stress
+dissociates the tinnitus \emph{symptom} from the audiometric \emph{threshold},
+reported without unsupported causal claims and reproducible end-to-end. Secondary:
+an open, reproducible scaffold (harmonized mappings, design-based estimators,
+model cards, safety tests) that lets others regenerate every number and add local
+cohorts. The remaining components---a prespecified KNHANES$\rightarrow$NHANES
+external-validation plan and a clinically governed AI/referral-safety component in
+which a deterministic red-flag layer overrides probabilistic predictions---are
+prospective (design only); any prediction model is a research risk-stratification
+tool, never a screening, diagnostic, or triage device.
