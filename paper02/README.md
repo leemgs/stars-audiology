@@ -16,20 +16,30 @@ abstract, ICMJE/Vancouver numbered references).
 
 ## What is real here (and what is prospective)
 
-- **Real results:** a deterministic red-flag safety layer on a 71-case open
-  benchmark (rule coverage **100%** recall / 0% over-referral). End-to-end safety
-  is dominated by extraction, and the benchmark *discriminates* it: red-flag
-  recall ranges from **56%** (naive extractor v1) to **100%** (improved extractor
-  v2) on identical cases; extraction macro-F1 **0.72 → 0.94**, urgency-changing
-  error **27% → 0%**, run-consistency **1.00**.
-- **Prospective:** evaluation of an actual open medical LLM (e.g., MedGemma) on
-  clinical free text needs model access and IRB-approved data. The benchmark and
-  metrics are fixed here so that comparison is prespecified.
-- **No patient data:** every case is expert-authored or synthetic.
+- **Real results — deterministic layer:** a guideline-derived red-flag safety
+  layer on a 71-case open benchmark (rule coverage **100%** recall / 0%
+  over-referral). End-to-end safety is dominated by *extraction*, and the
+  benchmark *discriminates* it.
+- **Real results — an actual open medical LLM (MedGemma):** `google/medgemma-4b-it`
+  was scored through the *same* harness and adapter as the rule-based references
+  (deterministic decoding, run on a free-tier GPU). End-to-end red-flag recall
+  spans **naive 56% → MedGemma-4b-it 78%** (14/18; specificity **100%**) **→ tuned
+  100%** on identical cases; MedGemma macro-F1 **0.75**, urgency-changing error
+  **10.8%**, run-consistency **1.00**. Because MedGemma never authored the
+  benchmark nor saw its cue lists, **its 78% is an extractor-independent
+  measurement** — the benchmark is neither saturated (a capable open medical LLM
+  still misses 4/18) nor gamed (the tuned 100% reflects benchmark-specific
+  tuning) — which resolves the circularity concern of a self-authored benchmark.
+  The honest off-the-shelf expectation (~78%) is why clinician verification is
+  load-bearing.
+- **Still prospective:** evaluation on **real** clinical free text (rather than the
+  open benchmark) needs IRB-approved, deidentified data; larger MedGemma variants
+  and few-shot prompting remain to be tested.
+- **No patient data:** every benchmark case is expert-authored or synthetic.
 
 ## Reproduce the results
 
-From `../code/`:
+From `../code/` — the rule-based references and unit tests run anywhere (no GPU):
 
 ```bash
 python src/run_redflag_eval.py \
@@ -38,11 +48,26 @@ python src/run_redflag_eval.py \
 python src/run_extraction_eval.py \
     --out ../paper02/outputs/extraction_eval.json \
     --latex ../paper02/tables/table_extraction.tex
-python src/test_safety.py        # deterministic-layer unit tests
+python src/test_safety.py            # deterministic-layer unit tests
+python src/test_llm_medgemma.py      # full LLM path, validated without weights
 ```
 
+Reproduce the **MedGemma** row (needs a GPU + accepted MedGemma license + `HF_TOKEN`):
+
+```bash
+python src/run_llm_eval.py --extractor rule_v1,rule_v2,medgemma \
+    --model google/medgemma-4b-it \
+    --out ../paper02/outputs/llm_extractor_eval.json \
+    --latex ../paper02/tables/table_llm_compare.tex
+```
+
+No local GPU? Open the turnkey **free-GPU notebook**
+[`code/notebooks/medgemma_eval_colab.ipynb`](../code/notebooks/medgemma_eval_colab.ipynb)
+(Colab/Kaggle free-tier T4 is enough for the 4B model).
+
 Benchmark and code: `code/src/redflag_benchmark.py`, `safety.py`,
-`run_redflag_eval.py`, `run_extraction_eval.py`.
+`llm_extract.py`, `llm_medgemma.py`, `run_redflag_eval.py`,
+`run_extraction_eval.py`, `run_llm_eval.py`.
 
 ## Build the PDF
 

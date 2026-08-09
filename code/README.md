@@ -25,9 +25,15 @@ including how to obtain the two national surveys.
   table the manuscript auto-includes.
 - **Baseline models** (`src/modeling.py`): discrimination, Brier, calibration-in-
   the-large, and calibration slope.
-- **LLM extraction template + evaluation** (`src/llm_extract.py`, `src/llm_eval.py`).
-- **Deterministic red-flag safety layer** (`src/safety.py`) + evaluation harness
-  (`src/test_safety.py`).
+- **SAFE-EAR safety/extraction stack (Paper B)** — an open 71-case red-flag
+  benchmark (`src/redflag_benchmark.py`), a **deterministic guideline-derived
+  safety layer** (`src/safety.py`), schema-constrained extraction
+  (`src/llm_extract.py`, `src/llm_eval.py`), and a real open-medical-LLM
+  extractor (`src/llm_medgemma.py`, `google/medgemma-4b-it`). A **unified runner**
+  (`src/run_llm_eval.py`) scores the rule-based references *and* MedGemma through
+  one harness (end-to-end recall **naive 56% → MedGemma 78% → tuned 100%**);
+  tests in `src/test_safety.py` and `src/test_llm_medgemma.py`. See
+  `notebooks/medgemma_eval_colab.ipynb` to reproduce the MedGemma row on a free GPU.
 
 ---
 
