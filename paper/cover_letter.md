@@ -6,7 +6,7 @@
 
 ---
 
-**August 8, 2026**
+**August 21, 2026**
 
 To the Editor-in-Chief
 *American Journal of Audiology* (AJA)
@@ -20,14 +20,14 @@ I am pleased to submit my manuscript, **STARS** (**S**tress, **T**innitus, and *
 
 **What the manuscript is.** STARS reports a survey-weighted, reproducible analysis of the associations among perceived stress, tinnitus, and hearing outcomes in adults, built around one primary finding and a prespecified plan for prospective follow-on components. To guard against analyst degrees of freedom, the design—survey cycles, age windows, endpoints, a causal DAG with a minimal sufficient adjustment set, and all metrics—was fixed before analysis, and it is accompanied by fully open, reproducible code that regenerates every number.
 
-**Primary finding (real KNHANES data).** In the Korea National Health and Nutrition Examination Survey (adults 40–69; otologic cycles 2010–2012)—which, unlike NHANES, carries a general perceived-stress item—high perceived stress was associated with **tinnitus** (OR 1.42, 95% CI 1.26–1.60, *p* < 0.001) but only weakly and non-significantly with the **audiometric threshold** (OR 1.18, 0.99–1.41, *p* = 0.07), which was instead dominated by occupational noise and age. This prespecified **symptom-versus-threshold dissociation** (hypothesis H1) is the manuscript’s central contribution. In supporting U.S. NHANES analyses, the same directional pattern recurred under a PHQ-9 distress proxy—directional consistency, not external validation of the stress exposure. I am explicit that all estimates are cross-sectional associations, that reverse causation (tinnitus→stress) cannot be excluded, and that the single-item exposure biases associations toward the null.
+**Primary finding (real KNHANES data).** In the Korea National Health and Nutrition Examination Survey (adults 40–69; otologic cycles 2010–2012)—which, unlike NHANES, carries a general perceived-stress item—high perceived stress was associated with **tinnitus** (OR 1.42, 95% CI 1.26–1.60, *p* < 0.001) but only weakly and non-significantly with the **audiometric threshold** (OR 1.18, 0.99–1.41, *p* = 0.07), which was instead dominated by occupational noise and age. This prespecified **symptom-versus-threshold dissociation** (hypothesis H1) is the manuscript’s central contribution. In supporting U.S. NHANES analyses, the same directional pattern recurred under a PHQ-9 distress proxy—directional consistency, not external validation of the stress exposure. I am explicit that all estimates are cross-sectional associations, that reverse causation (tinnitus→stress) cannot be excluded, and that bias from the single-item exposure may operate in either direction.
 
-**Why it fits AJA and why it matters clinically.** The work is deliberately audiology-centered: it separates tinnitus presence from bothersome tinnitus and analyzes better-ear, worse-ear, and high-frequency thresholds rather than a single better-ear summary. Clinically, it supports incorporating stress into counseling for stable tinnitus while cautioning against attributing acute or asymmetric hearing loss to “stress.” A deterministic “red-flag” referral layer for sudden sensorineural hearing loss (SSNHL) is presented as a **prospective** safety-engineering component (design only), so a low predicted risk can never suppress urgent evaluation.
+**Why it fits AJA and why it matters clinically.** The work is deliberately audiology-centered: it separates tinnitus presence from bothersome tinnitus and analyzes better-ear, worse-ear, and high-frequency thresholds rather than a single better-ear summary. Clinically, it supports incorporating stress into counseling for stable tinnitus while cautioning against using psychosocial context to dismiss acute or asymmetric hearing loss. The separate SAFE-EAR companion study evaluates a deterministic referral-safety layer; those engineering results are not claimed as findings of this epidemiologic manuscript.
 
 **Contributions.**
 1. A prespecified, reproducible survey-weighted result dissociating the tinnitus **symptom** from the audiometric **threshold** for perceived stress, without unsupported causal claims.
 2. An open, reproducible scaffold—harmonized variable mappings, unit-tested design-based estimators (with domain estimation and conservative single-PSU handling), model cards, and safety tests—so others can regenerate every number and add local cohorts.
-3. *(Prospective, design only)* a KNHANES→NHANES external-validation plan (calibration, recalibration, common support, subgroup fairness) and a clinician-governed AI-extraction plus deterministic red-flag referral-safety component.
+3. A prespecified KNHANES→NHANES external-validation plan (calibration, recalibration, common support, and subgroup fairness), clearly separated from the completed analyses.
 
 **Rigor and reporting.** The observational analyses follow STROBE and the prediction models follow TRIPOD+AI; the planned clinical extension will follow SPIRIT. All code, configuration, tables, and a synthetic-data path are openly available at <https://github.com/leemgs/stars-audiology>.
 
@@ -42,7 +42,3 @@ I believe STARS offers AJA readers a transparent, reproducible, and clinically s
 Sincerely,
 
 **Geunsik Lim** (sole and corresponding author) — Sungkyunkwan University, Republic of Korea — leemgs@g.skku.edu — ORCID [0000-0003-1845-7132](https://orcid.org/0000-0003-1845-7132)
-
----
-
-*Suggested reviewers and any preferred/non-preferred reviewers can be added here per AJA policy.*

@@ -108,11 +108,10 @@ AJA uses masked peer review, so you submit **two** things: a non-anonymized
   The normal `./build.sh` (no `\def\BLIND{}`) still produces the full,
   non-anonymized PDF — the toggle defaults to off.
 
-  **Not auto-masked** (would damage the text if stripped programmatically), so
-  handle manually before submitting the anonymized copy: identity-revealing
-  self-citations (`ha2022localization`, `kim2022bppv`, `kim2021ct`) and in-text
-  institution mentions (e.g., "Ajou University Hospital" in Methods, Figure~1,
-  and Declarations). Soften these to neutral phrasing in a review copy.
+  The current manuscript body contains no unguarded author or institutional identifiers
+  and no identity-revealing self-citations. The toggle suppresses the remaining author
+  block, contribution identities, corresponding-author details, and repository
+  URL. Re-run the masking audit after any substantive revision.
 
 ### Reporting checklists
 

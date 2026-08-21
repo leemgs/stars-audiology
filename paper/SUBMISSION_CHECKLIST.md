@@ -31,7 +31,7 @@ below.
 | Item | Status | Notes |
 |------|--------|-------|
 | Title page with full title, running head, all authors + affiliations | ✅ | In `main.tex`; running head "STARS / Stress, Tinnitus, and Hearing Outcomes". |
-| **Masked ("blinded") manuscript** for review | ◑ | **Mechanism added:** a standalone `title_page.tex` (non-anonymized) plus a `\ifblind` toggle in `main.tex` that suppresses the author block, corresponding-author/CRediT identities, and repository URLs (`pdflatex "\def\BLIND{}\input{main.tex}"` — see `README.md`). **Still manual before submitting the anonymized copy:** soften identity-revealing self-citations (`ha2022localization`, `kim2022bppv`, `kim2021ct`) and in-text institution mentions ("Ajou University Hospital"). |
+| **Masked ("blinded") manuscript** for review | ✅ | A standalone `title_page.tex` plus the `\ifblind` toggle suppresses the author block, corresponding-author/CRediT identities, and repository URLs. The current body has no unguarded author or institutional identifiers and no identity-revealing self-citations. Re-run the masking audit after revisions. |
 | Double-spaced, 12 pt | ✅ | `\doublespacing`, `12pt` class option. |
 | Continuous line numbers | ✅ | `lineno` package active. |
 | Page numbers | ✅ | `fancyhdr` centered footer. |
@@ -42,8 +42,8 @@ below.
 | Item | Status | Notes |
 |------|--------|-------|
 | Structured abstract | ✅ | Purpose / Method / Results / Conclusions headings present. |
-| Abstract word limit | ⚠️ verify | Abstract is **~320 words**; ASHA journals commonly cap abstracts near **200–250 words**. Confirm the AJA limit and trim if needed. |
-| Keywords | ✅ | Present; consider trimming to the journal's max (often ≤ 5–6). |
+| Abstract word limit | ✅ | Abstract has been tightened to approximately 250 words, including its structured headings. Verify the portal's automated count at upload. |
+| Keywords | ✅ | Six focused keywords. |
 
 ## 3. References (APA 7th edition)
 
@@ -74,16 +74,16 @@ below.
 | Code availability | ✅ | GitHub repo stated. |
 | **AI-use disclosure** | ✅ | Generative-AI drafting disclosed; model roles constrained. ASHA requires AI-use disclosure — good that it is explicit. |
 | Reporting-guideline checklists (STROBE / TRIPOD+AI / SPIRIT) | ✅ | Filled **STROBE** and **TRIPOD+AI** checklists created in `paper/checklists/`, each item mapped to the manuscript section addressing it. Upload as supplements. SPIRIT applies only to the future Stage-3 clinical trial. |
-| ORCID for each author | ⚠️ | Placeholders `[to be added]` in the cover letter; add real ORCIDs in the portal. |
+| ORCID for each author | ✅ | Sole-author ORCID 0000-0003-1845-7132 is present in the cover letter and title page; enter it in the portal metadata too. |
 
 ## 6. Cover letter
 
 | Item | Status | Notes |
 |------|--------|-------|
 | Cover letter present | ✅ | `cover_letter.md` — strong; asks editor for article-category guidance. |
-| Bracketed placeholders filled | ⚠️ | `[Date]`, editor name, ORCIDs still bracketed. |
+| Bracketed placeholders filled | ✅ | Date and ORCID are filled; the generic “Dear Editor” salutation avoids an unnecessary editor-name placeholder. |
 | Originality / not-under-review statement | ✅ | Included. |
-| Suggested reviewers | ⚠️ | Placeholder line present; add per AJA policy if requested. |
+| Suggested reviewers | ✅ | No placeholder remains in the letter; supply names only if the submission portal requests them. |
 
 ## 7. Consistency (see `REVIEW_NOTES.md` for detail)
 
@@ -98,11 +98,11 @@ below.
 ## Pre-submission action list (ordered)
 
 1. **Confirm the AJA article category** with the editorial office (drives everything else). *(author — editorial office)*
-2. Masked-review **mechanism done** (`title_page.tex` + `\ifblind` build). Remaining manual pass: soften identity-revealing self-citations and in-text institution mentions in the anonymized copy.
+2. Masked-review **mechanism and manuscript audit done** (`title_page.tex` + `\ifblind` build); repeat the audit after any revision.
 3. ~~Convert references to APA 7~~ (**done**) — ~~expand "et al." entries; complete/verify all sources~~ (**done**: all author lists filled, `hoffman` placeholder replaced with the verified 2017 source, `mahboubi` issue/DOI added).
 4. Cycle windows ~~reconciliation~~ (**done**: NHANES 2017–2018; KNHANES narrowed to 2010–2012 / KNHANES V).
-5. Trim the **abstract** to the AJA limit; trim keywords if needed. *(author — needs the confirmed AJA word limit; ~320 words now)*
+5. ~~Trim the abstract and keywords~~ (**done**: approximately 250 words and six keywords); confirm the portal's automated count.
 6. ~~Create the filled STROBE + TRIPOD+AI checklists~~ (**done**, `paper/checklists/`) — upload as supplements at submission.
-7. Fill cover-letter placeholders (**date, editor, ORCIDs**) and add ORCIDs in the portal. *(author — real values)*
+7. ~~Fill cover-letter placeholders~~ (**done**); add the ORCID in the portal metadata.
 8. Enter **financial/nonfinancial disclosures** in the ASHA portal fields. *(author — portal)*
 9. Re-build the PDF (`./build.sh`) and confirm no `??`/`[?]` cross-references remain.

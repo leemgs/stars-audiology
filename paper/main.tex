@@ -39,13 +39,13 @@
 %   pdflatex -interaction=nonstopmode "\def\BLIND{}\input{main.tex}"
 %   bibtex main ; then repeat the pdflatex line twice more.
 % Upload paper/title_page.tex separately as the non-anonymized title page.
-% NOTE: identity-revealing self-citations and in-text institution mentions are
-% NOT auto-masked (removing them would damage the text) — see paper/README.md.
+% The manuscript body contains no unguarded author or institutional identifiers
+% and no identity-revealing self-citations; the toggle suppresses repository URLs.
 \newif\ifblind
 \ifdefined\BLIND\blindtrue\else\blindfalse\fi
 % ---------------------------------------------------------------------------
 
-\title{Perceived Stress Tracks the Tinnitus Symptom More Than the Audiometric Threshold: A Survey-Weighted KNHANES Study (STARS)\\[2pt]\large With a Prespecified Cross-National Validation Plan and a Clinician-Governed Referral-Safety Component}
+\title{Perceived Stress Tracks the Tinnitus Symptom More Than the Audiometric Threshold: A Survey-Weighted KNHANES Study (STARS)}
 \ifblind
 \author{\normalsize\textit{[Author names and affiliations withheld for masked review]}}
 \else
