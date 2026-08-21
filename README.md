@@ -20,24 +20,25 @@ Repository: <https://github.com/leemgs/stars-audiology>
 
 ### Core idea
 In a nationally representative Korean sample (KNHANES, adults 40–69), **perceived
-stress tracks the tinnitus _symptom_ but not the audiometric _threshold_** once
-occupational noise and age are accounted for — a **symptom-vs-threshold
-dissociation**. Intuitively: stress is entangled with *how much a person is
-bothered by / reports* tinnitus, not with the *actual cochlear damage* measured
-by pure-tone audiometry.
+stress was associated more strongly with the tinnitus _symptom_ than with
+better-ear hearing loss** after adjustment for occupational noise, age, and sex.
+This is a **symptom-vs-threshold contrast of degree**, not evidence that stress is
+unrelated to hearing thresholds: the primary hearing-loss estimate was weak and
+imprecise, and it strengthened after excluding middle-ear pathology.
 
 ### Core contributions
 1. **A prespecified, survey-weighted, reproducible result** — stress ↔ tinnitus
-   **OR 1.42** (95% CI 1.26–1.60, *p*<0.001) vs. stress ↔ hearing threshold
-   **OR 1.18** (0.99–1.41, *n.s.* after adjusting for noise and age); NHANES gives
-   directionally consistent support under a distress proxy.
+   **OR 1.42** (95% CI 1.26–1.60, *p*<0.001) vs. stress ↔ better-ear hearing loss
+   **OR 1.18** (0.99–1.41, *p*=0.07 after adjustment); after excluding middle-ear
+   pathology using bilateral tympanometry, the hearing-loss estimate was
+   **OR 1.29** (1.07–1.55). NHANES gives directional consistency under a distinct
+   distress proxy, not external validation of perceived stress.
 2. **An open, reproducible analysis scaffold** — harmonized variable mappings,
    design-based estimators (domain estimation, conservative single-PSU handling),
    model cards, and a synthetic-data path, so every number can be regenerated.
-3. **A prespecified plan (design only, no results)** for prospective components:
-   cross-national external validation and a clinician-governed, safety-gated
-   AI-extraction/referral component (the latter is executed *with results* in
-   Paper B).
+3. **A prespecified prospective cross-national validation plan** that is clearly
+   separated from the completed analyses. The clinician-governed extraction and
+   referral-safety evaluation is reported independently, with results, in Paper B.
 
 > **What Paper A does _not_ claim.** It is **cross-sectional**, so it reports an
 > **association, not causation**, and does **not** show that stress *causes* or
@@ -45,7 +46,21 @@ by pure-tone audiometry.
 > tinnitus raising stress — cannot be excluded). Clinically it supports
 > *considering* stress when counseling patients with **stable** tinnitus, while
 > **cautioning against attributing acute or asymmetric hearing loss to "stress"** —
-> which is exactly the danger Paper B guards against.
+> which is exactly the danger Paper B guards against. Because stress and tinnitus
+> were measured with single self-report items, measurement error may bias the
+> estimate in either direction; OR 1.42 is not presented as a lower bound.
+
+### Submission-ready artifacts
+
+- `paper/main.tex` contains the focused AJA Research Article and a structured
+  abstract of approximately 240 words with six keywords.
+- `paper/title_page.tex` is the non-anonymized title page; the `\ifblind` toggle
+  in `paper/main.tex` suppresses author, affiliation, contribution, and repository
+  identifiers for masked review.
+- `paper/cover_letter.md` has the submission date and ORCID filled in, while
+  `paper/SUBMISSION_CHECKLIST.md` records the remaining portal/editorial actions.
+- `paper/supplement.tex` and `paper/checklists/` contain the supplementary methods
+  and reporting checklists intended for upload with the manuscript.
 
 ---
 
@@ -91,22 +106,24 @@ step, not the rule layer**.
 | **Type** | Empirical epidemiology (observational, cross-sectional) | Patient-safety engineering + open benchmark (methods) |
 | **Data** | Real public survey microdata (KNHANES/NHANES, adults 40–69) | 71-case referral benchmark, expert-authored/synthetic — **no patient data** |
 | **Method** | Survey-weighted, design-based regression | Guideline-derived deterministic red-flag rules + extraction + one evaluation harness |
-| **Headline result** | Stress → **tinnitus OR 1.42** (p<0.001) but **threshold OR 1.18** (n.s.): a **symptom-vs-threshold dissociation** | Rule coverage **100%**; end-to-end recall **naive 56% → MedGemma 78% → tuned 100%** → **extraction is the safety bottleneck** |
-| **Role of AI** | None in the result; AI/safety is a *prospective plan* | AI/LLM extraction **is the subject**; a real MedGemma eval is executed and **resolves circularity** |
+| **Headline result** | Stress → **tinnitus OR 1.42** vs. **better-ear hearing loss OR 1.18**: a contrast of degree, with the threshold result sensitive to middle-ear exclusion | Rule coverage **100%**; end-to-end recall **naive 56% → MedGemma 78% → tuned 100%** → **extraction is the safety bottleneck** |
+| **Role of AI** | None in the empirical result; prospective cross-national validation is separated from completed analyses | AI/LLM extraction **is the subject**; a real MedGemma eval is executed and **addresses benchmark circularity** |
 | **Claim discipline** | Association, **not** causation or prevention | A finite-set 100% is a *target*, not a deployment guarantee |
 | **Target venue** | *American Journal of Audiology* (SCIE) | *Journal of the American Medical Informatics Association*, JAMIA (SCIE) |
 
-**In one line:** *Paper A* establishes, on real survey data, that stress is tied to
-the tinnitus **symptom** more than to measured hearing **damage**; *Paper B* builds
-and stress-tests the **safety layer** that stops an AI pipeline from missing the
-rare, dangerous acute case hidden among common benign "stress-related" tinnitus.
+**In one line:** *Paper A* reports that perceived stress is associated more
+strongly with the tinnitus **symptom** than with better-ear hearing loss, without
+claiming causation or absence of a threshold association; *Paper B* builds and
+stress-tests a **safety layer** for the rare, dangerous acute case hidden among
+common benign "stress-related" tinnitus presentations.
 
 ## How the two papers relate
 
 - **Paper A supplies the clinical motivation.** Because "stress-related tinnitus"
   is common and usually benign, the dangerous case is the **rare acute
-  presentation hiding among many benign ones** — and stress does *not* track the
-  real audiometric damage, so "it's just stress" is an unsafe default.
+  presentation hiding among many benign ones**. A cross-sectional association
+  cannot justify dismissing measured, acute, or asymmetric hearing loss as
+  "just stress."
 - **Paper B supplies the safeguard.** It is the executed, results-bearing version
   of STARS's prospective safety component: a deterministic red-flag floor + honest
   measurement showing extraction (not the rules) is the bottleneck, so
